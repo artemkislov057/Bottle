@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Utilities
 {
-    class MyDbContext : DbContext
+    public class MyDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
 

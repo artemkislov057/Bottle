@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Bottle.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Bottle.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return Ok(DBConnection.db.GetAllData());
         }
     }
 }
