@@ -1,6 +1,6 @@
 using System;
 
-namespace Bottle.Models
+namespace BottleProject.Models
 {
     public class ErrorViewModel
     {
