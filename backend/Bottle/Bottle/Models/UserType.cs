@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BottleProject.Models
+namespace Bottle.Models
 {
     public class UserType
     {

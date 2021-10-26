@@ -1,4 +1,4 @@
-﻿namespace BottleProject.Utilities
+﻿namespace Bottle.Models
 {
     public class ContentType
     {

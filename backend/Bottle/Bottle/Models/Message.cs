@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BottleProject.Utilities
+namespace Bottle.Models
 {
     public class Message
     {

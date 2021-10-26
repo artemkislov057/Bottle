@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BottleProject.Utilities
+namespace Bottle.Models
 {
     public static class DBConnection
     {

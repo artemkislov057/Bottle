@@ -31,7 +31,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult RegisterUser([FromBody]User data)
         {
-            return Ok($"Зарегистрирован пользователь\nid:{data.Id}\tlogin:{data.Login}");
+            return Ok($"Зарегистрирован пользователь\nid:{data.Id}\t");
         }
 
         [HttpDelete]

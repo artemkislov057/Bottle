@@ -1,11 +1,11 @@
-﻿using BottleProject.Models;
+﻿using Bottle.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BottleProject.Utilities
+namespace Bottle.Models
 {
     public class MyDbContext : DbContext
     {

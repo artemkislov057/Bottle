@@ -1,4 +1,4 @@
-using BottleProject.Utilities;
+using Bottle.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BottleProject
+namespace Bottle
 {
     public class Startup
     {
