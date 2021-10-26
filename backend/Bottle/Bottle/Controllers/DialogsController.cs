@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    [Route("/[controller]")]
+    [Route("api/dialogs")]
     public class DialogsController : Controller
     {
-        [HttpPost("{dialogId}")]
-        public IActionResult SendMessage(int dialogId)
+        [HttpPost("{dialog-id}")]
+        public IActionResult SendMessage([FromRoute(Name = "dialog-id")]int dialogId)
         {
             return Ok($"Сообщение отправлено в {dialogId} диалог.");
         }
 
-        [HttpGet("{dialogId}")]
-        public IActionResult GetMessages(int dialogId)
+        [HttpGet("{dialog-id}")]
+        public IActionResult GetMessages([FromRoute(Name = "dialog-id")]int dialogId)
         {
             return Ok($"JSON с сообщениями из диалога с {dialogId} ID");
         }
 
-        [HttpPost("{dialogId}/rating")]
-        public IActionResult Rate(int dialogId)
+        [HttpPost("{dialog-id}/rating")]
+        public IActionResult Rate([FromRoute(Name = "dialog-id")]int dialogId)
         {
             return Ok("Поставили оценку.");
         }

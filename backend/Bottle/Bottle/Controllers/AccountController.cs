@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bottle.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +9,29 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    [Route("/[controller]")]
+    [Route("api/account")]
     public class AccountController : Controller
     {
+        /// <summary>
+        /// Регистрирует пользователя
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     POST /account
+        ///     {
+        ///         "id": 5,
+        ///         "login": "artem",
+        ///         "password": "krutoiparol"
+        ///     }
+        /// </remarks>
+        /// <returns></returns>
+        /// <response code="200">Пользователь зарегистрирован</response>
         [HttpPost]
-        public IActionResult RegisterUser()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult RegisterUser([FromBody]User data)
         {
-            return Ok("Зарегистрирован.");
+            return Ok($"Зарегистрирован пользователь\nid:{data.Id}\tlogin:{data.Login}");
         }
 
         [HttpDelete]
@@ -25,15 +43,7 @@ namespace Bottle.Controllers
         [HttpGet]
         public IActionResult GetInformation(string fields = "")
         {
-            var arrValue = fields.Split(',');
-            var result = new StringBuilder("{");
-            foreach (var e in arrValue)
-            {
-                result.Append($"\"{e}\" : \"{e.Length}\",");
-            }
-            if (arrValue.Length > 0)
-                result[result.Length - 1] = '}';
-            return Ok(result.ToString());
+            return Ok("Информация о пользователе");
         }
 
         [HttpPatch]

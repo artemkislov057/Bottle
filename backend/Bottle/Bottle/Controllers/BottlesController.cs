@@ -7,35 +7,35 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    [Route("/[controller]")]
+    [Route("api/bottle")]
     public class BottlesController : Controller
     {
-        [HttpGet("{bottleId}")]
-        public IActionResult GetInformation(int bottleId)
+        [HttpGet("{bottle-id}")]
+        public IActionResult GetInformation([FromRoute(Name = "bottle-id")]int bottleId)
         {
             return Ok($"Вот тебе JSON с информацией о бутылке с ID {bottleId}");
         }
 
-        [HttpPost("{bottleId}/pick-up")]
-        public IActionResult PickUp(int bottleId)
+        [HttpPost("{bottle-id}/pick-up")]
+        public IActionResult PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
             return Ok($"Вы подобрали бутылочку с ID {bottleId}. Создан диалог с ID 228");
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody]BottleDescription data)
+        public IActionResult Create()
         {
-            return Json(data);
+            return Ok("Бутылочка создана");
         }
 
-        [HttpPost("{bottleId}/throw")]
-        public IActionResult Throw(int bottleId)
+        [HttpPost("{bottle-id}/throw")]
+        public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
         {
             return Ok($"Вы выбросили бутылку с ID {bottleId} обратно.");
         }
 
-        [HttpDelete("{bottleId}")]
-        public IActionResult Delete(int bottleId)
+        [HttpDelete("{bottle-id}")]
+        public IActionResult Delete([FromRoute(Name = "bottle-id")] int bottleId)
         {
             return Ok($"Вы удалили бутылку с ID {bottleId}");
         }
