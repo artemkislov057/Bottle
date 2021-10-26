@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "G:\\C# Programs\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj": {}
+    "E:\\MyPrograms\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj": {}
   },
   "projects": {
-    "G:\\C# Programs\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj": {
+    "E:\\MyPrograms\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\C# Programs\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj",
+        "projectUniqueName": "E:\\MyPrograms\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj",
         "projectName": "Bottle",
-        "projectPath": "G:\\C# Programs\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj",
-        "packagesPath": "C:\\Users\\Ivanosess\\.nuget\\packages\\",
-        "outputPath": "G:\\C# Programs\\Bottle\\backend\\Bottle\\Bottle\\obj\\",
+        "projectPath": "E:\\MyPrograms\\Bottle\\backend\\Bottle\\Bottle\\Bottle.csproj",
+        "packagesPath": "C:\\Users\\artem\\.nuget\\packages\\",
+        "outputPath": "E:\\MyPrograms\\Bottle\\backend\\Bottle\\Bottle\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Ivanosess\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\artem\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -71,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

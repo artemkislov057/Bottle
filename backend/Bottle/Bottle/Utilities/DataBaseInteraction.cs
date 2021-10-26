@@ -19,7 +19,7 @@ namespace Bottle.Utilities
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(
-                "server=localhost;user=root;password=root;database=usersdb;",
+                "server=26.146.242.167;user=root;password=root;database=usersdb;",
                 new MySqlServerVersion(new Version(7, 4, 16))
             );
         }
