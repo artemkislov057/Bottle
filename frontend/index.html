@@ -11,10 +11,14 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin=""></script>
+
+    <script src="Control.OSMGeocoder.js"></script>
+
     <link rel="stylesheet" href="style.css">
     
 </head>
 <body>    
+    <div class="mapid" id="mapid"></div>
     <button class="profile">Profile</button>
     <select name="" id="categories">
         <option selected>Все места</option>
@@ -22,12 +26,10 @@
         <option>Продажи</option>
         <option>...</option>
     </select>
-    <input type="search" placeholder="Найти" id="search-field">
+    <form class="search-form">
+        <input type="search" placeholder="Найти" id="search-field" class="search-field">
+    </form>
     <button class="chat">Chat</button>
     <button class="new-bottle">New bottle</button>
-
-    <div class="mapid" id="mapid"></div>
-    
     <script src="index.js"></script>
-</body>
 </html>

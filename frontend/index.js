@@ -26,3 +26,18 @@ let myIcon = L.icon({
 mymap.addEventListener('click', (e) => {    
     L.marker(e.latlng, {icon: myIcon}).addTo(mymap).bindPopup("<b>QQ</b>").openPopup();
 })
+
+let osmGeocoder = new L.Control.OSMGeocoder();
+
+mymap.addControl(osmGeocoder);
+
+let input = document.querySelector('.search-form');
+let input_field = document.querySelector('.search-field');
+let submit_button = document.querySelector('.geo-submit');
+let geo_input = document.querySelector('.geo-input');
+
+input.addEventListener('submit', (e) => {
+    e.preventDefault();    
+    geo_input.value = input_field.value
+    submit_button.click();
+})
