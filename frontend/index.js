@@ -22,13 +22,61 @@ let myIcon = L.icon({
 //     className: 'test-icon',    
 // });
 
+
 //отображение маркера при клике
 mymap.addEventListener('click', (e) => {    
-    L.marker(e.latlng, {icon: myIcon}).addTo(mymap).bindPopup("<b>QQ</b>").openPopup();
+    // L.marker(e.latlng, {icon: myIcon}).addTo(mymap).bindPopup("<b>QQ</b>").openPopup();
+
+    let div = document.createElement('div');
+    div.classList = 'marker-info';
+
+    let h = document.createElement('h2');
+    div.appendChild(h);
+
+    let p = document.createElement('p');
+    p.classList = 'marker-info-street';
+    div.appendChild(p);
+
+    let div2 = document.createElement('div');
+    div2.classList = 'marker-info-field';
+
+    let p2 = document.createElement('p');
+    p2.classList = 'marker-info-field-des'
+    div2.appendChild(p2);
+
+    let div3 = document.createElement('div');
+    div3.classList = 'marker-info-field-image';
+    div2.appendChild(div3);
+
+    let image = document.createElement('img');
+    image.classList = 'marker-info-field-image';
+    div3.appendChild(image);
+
+    let image1 = document.createElement('img');
+    image1.classList = 'marker-info-field-image';
+    div3.appendChild(image1);
+
+    div.appendChild(div2);
+
+    let btn = document.createElement('button');
+    btn.classList = 'marker-info-button';
+
+    div.appendChild(btn);
+
+    //в будущем всю инфу брать из бд(?)
+    h.textContent = 'Заголовок';
+    p.textContent = 'Улица ###';
+    p2.textContent = 'Информация о маркере Информация о маркере Информация о маркере Информация о маркере';
+    image.src = 'test-icon2.jpg';
+    image1.src = 'test-icon2.jpg';
+    btn.textContent = 'К диалогу';
+
+    L.marker(e.latlng, {icon: myIcon}).addTo(mymap).bindPopup(div).openPopup();
 })
 
-let osmGeocoder = new L.Control.OSMGeocoder();
 
+//поиск по адресам
+let osmGeocoder = new L.Control.OSMGeocoder();
 mymap.addControl(osmGeocoder);
 
 let input = document.querySelector('.search-form');
