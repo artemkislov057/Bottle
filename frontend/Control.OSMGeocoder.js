@@ -40,7 +40,8 @@ L.Control.OSMGeocoder = L.Control.extend({
 			}).addTo(this._map);
 			
 			
-			L.marker(new L.LatLng(x, y)).addTo(this._map).bindPopup(`<b>${results[0].display_name}</b>`).openPopup();
+			// L.marker(new L.LatLng(x, y)).addTo(this._map).bindPopup(`<b>${results[0].display_name}</b>`).openPopup();
+            L.marker(new L.LatLng(x, y)).addTo(this._map);
 		}
 	},
 
