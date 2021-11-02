@@ -1,4 +1,5 @@
 ﻿using Bottle.Models;
+using Bottle.Models.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -35,6 +36,12 @@ namespace Bottle.Controllers
         public IActionResult GetMessages([FromRoute(Name = "dialog-id")]int dialogId, [FromQuery(Name = "message-id")]int? messageId = null, int? length = null)
         {
             return Ok($"JSON с сообщениями из диалога с {dialogId} ID");
+        }
+
+        [HttpPost("close")]
+        public IActionResult Close()
+        {
+            return Ok("Dialog is closed");
         }
 
         /// <summary>

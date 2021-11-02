@@ -1,4 +1,6 @@
 ﻿using Bottle.Models;
+using Bottle.Models.Database;
+using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +14,12 @@ namespace Bottle.Controllers
     [Route("api/bottles")]
     public class BottlesController : Controller
     {
+        private BottleDbContext db;
+        public BottlesController(BottleDbContext db)
+        {
+            this.db = db;
+        }
+
         /// <summary>
         /// Получить информацию о бутылочке
         /// </summary>
@@ -21,7 +29,12 @@ namespace Bottle.Controllers
         [HttpGet("{bottle-id}")]
         public IActionResult GetInformation([FromRoute(Name = "bottle-id")]int bottleId, string[] fields = null)
         {
-            return Ok($"Вот тебе JSON с информацией о бутылке с ID {bottleId}");
+            var bottle = db.GetBottle(bottleId);
+            if (bottle != null)
+            {
+                return Json(new BottleModel(bottle));
+            }
+            return BadRequest("bottle not found");
         }
 
         /// <summary>
@@ -32,30 +45,41 @@ namespace Bottle.Controllers
         [HttpPost("{bottle-id}/pick-up")]
         public IActionResult PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
-            return Ok($"Вы подобрали бутылочку с ID {bottleId}. Создан диалог с ID 228");
+            var bottle = db.GetBottle(bottleId);
+            var user = db.GetUser(User.Identity.Name);
+            if (bottle == null || !bottle.Active || bottle.User == user) return BadRequest();
+            bottle.Active = false;
+            var dialog = new Dialog { Bottle = bottle, Recipient = user };
+            db.Dialogs.Add(dialog);
+            db.SaveChanges();
+            return Json(new { dialogId = dialog.Id });
         }
 
         /// <summary>
         /// Создать бутылочку
         /// </summary>
-        /// <param name="bottle"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Create([FromBody]Models.Bottle bottle)
+        public IActionResult Create([FromBody]CreateBottleModel data)
         {
-            return Ok("Бутылочка создана");
+            var user = db.GetUser(User.Identity.Name);
+            var bottle = new Models.Database.Bottle(data, user);
+            db.Bottles.Add(bottle);
+            db.SaveChanges();
+            return Json(new BottleModel(bottle));
         }
 
-        /// <summary>
-        /// Выбросить бутылочку
-        /// </summary>
-        /// <param name="bottleId"></param>
-        /// <returns></returns>
-        [HttpPost("{bottle-id}/throw")]
-        public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
-        {
-            return Ok($"Вы выбросили бутылку с ID {bottleId} обратно.");
-        }
+        ///// <summary>
+        ///// Выбросить бутылочку
+        ///// </summary>
+        ///// <param name="bottleId"></param>
+        ///// <returns></returns>
+        //[HttpPost("{bottle-id}/throw")]
+        //public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
+        //{
+        //    return Ok($"Вы выбросили бутылку с ID {bottleId} обратно.");
+        //}
 
         /// <summary>
         /// Удалить бутылочку
@@ -65,7 +89,15 @@ namespace Bottle.Controllers
         [HttpDelete("{bottle-id}")]
         public IActionResult Delete([FromRoute(Name = "bottle-id")] int bottleId)
         {
-            return Ok($"Вы удалили бутылку с ID {bottleId}");
+            var bottle = db.GetBottle(bottleId);
+            var user = db.GetUser(User.Identity.Name);
+            if (bottle != null && bottle.User == user)
+            {
+                db.Bottles.Remove(bottle);
+                db.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         /// <summary>
@@ -79,7 +111,7 @@ namespace Bottle.Controllers
         [HttpGet]
         public IActionResult GetBottles(string category = null, int? radius = null, int? latitude = null, int? longitude = null)
         {
-            return Ok("JSON с информацией о бутылках.");
+            return Json(db.Bottles.Select(b => new BottleModel(b)));
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using Bottle.Models;
+﻿using Bottle.Models.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Bottle.Utilities
 {
@@ -11,7 +8,12 @@ namespace Bottle.Utilities
     {
         public BottleDbContext(DbContextOptions<BottleDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            if (Database.EnsureCreated())
+            {
+                UserTypes.Add(new UserType { Type = "DefaultUser" });
+                UserTypes.Add(new UserType { Type = "Commercial" });
+                SaveChanges();
+            }
         }
 
         public DbSet<User> Users { get; set; }
@@ -19,8 +21,18 @@ namespace Bottle.Utilities
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
-        public DbSet<Models.Bottle> Bottles { get; set; }
+        public DbSet<Models.Database.Bottle> Bottles { get; set; }
         public DbSet<BottleContent> BottleContents { get; set; }
         public DbSet<ContentType> ContentTypes { get; set; }
+
+        public User GetUser(string nickname)
+        {
+            return Users.FirstOrDefault(u => u.Nickname == nickname);
+        }
+
+        public Models.Database.Bottle GetBottle(int id)
+        {
+            return Bottles.FirstOrDefault(b => b.Id == id);
+        }
     }
 }

@@ -1,21 +1,22 @@
 ﻿using Bottle.Models;
+using Bottle.Models.Database;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
     [Route("api/account")]
+    [Authorize]
     public class AccountController : Controller
     {
         private BottleDbContext db;
@@ -33,9 +34,9 @@ namespace Bottle.Controllers
         ///     {
         ///         "nickname": "artem",
         ///         "password": "pass",
-        ///         "email": "artem@gmai.com",
-        ///         "sex": "mail",
-        ///         "type": 0
+        ///         "email": "artem@gmail.com",
+        ///         "sex": "male",
+        ///         "type": 1
         ///     }
         /// 
         /// </remarks>
@@ -43,6 +44,7 @@ namespace Bottle.Controllers
         /// <response code="201">Пользователь зарегистрирован</response>
         /// <response code="400">Пользователь с таким никнеймом или почтой уже существует или данные некорректные</response>
         [HttpPost]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegisterUser([FromBody] RegistrationUserModel data)
@@ -56,11 +58,11 @@ namespace Bottle.Controllers
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
                     await Authenticate(user);
-                    return Created(string.Empty, user);
+                    return Created(string.Empty, new Account(user));
                 }
                 else
                 {
-                    return BadRequest("Аккаунт с такой почтой или никнеймом уже существует");
+                    return BadRequest("Аккаунт с такой почтой или никнеймом существует");
                 }
             }
             return BadRequest("Некорректные данные");
@@ -72,6 +74,7 @@ namespace Bottle.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel data)
         {
             if (ModelState.IsValid && !(string.IsNullOrEmpty(data.Nickname) && string.IsNullOrEmpty(data.Email)))
@@ -92,7 +95,6 @@ namespace Bottle.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("logout")]
-        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -105,10 +107,10 @@ namespace Bottle.Controllers
         /// <param name="fields">Поля, которые надо получить. Если ничего не присваивать, в результате будут все поля.</param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
         public IActionResult GetInformation(string[] fields = null)
         {
-            return Json(db.Users.FirstOrDefault(u => u.Nickname == HttpContext.User.Identity.Name));
+            var user = db.GetUser(User.Identity.Name);
+            return Json(new Account(user));
         }
 
         /// <summary>
@@ -117,7 +119,6 @@ namespace Bottle.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPatch]
-        [Authorize]
         public IActionResult ChangeInformation([FromBody] User data)
         {
             return StatusCode(501);
@@ -128,14 +129,35 @@ namespace Bottle.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpDelete]
-        [Authorize]
         public async Task<IActionResult> DeleteUser()
         {
-            User user = db.Users.FirstOrDefault(u => u.Nickname == User.Identity.Name);
+            User user = db.GetUser(User.Identity.Name);
             db.Users.Remove(user);
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await db.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpPost("avatar")]
+        public IActionResult ChangeAvatar(IFormFile file)
+        {
+            if (file == null) return BadRequest();
+            byte[] imageData = null;
+            using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)file.Length);
+            }
+            var user = db.GetUser(User.Identity.Name);
+            user.Avatar = imageData;
+            db.SaveChanges();
+            return Ok();
+        }
+
+        [HttpGet("avatar")]
+        public IActionResult GetAvatar()
+        {
+            var user = db.GetUser(User.Identity.Name);
+            return File(user.Avatar, "image/jpg");
         }
 
         private async Task Authenticate(User user)
