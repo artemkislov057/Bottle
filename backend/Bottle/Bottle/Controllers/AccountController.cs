@@ -26,6 +26,36 @@ namespace Bottle.Controllers
         }
 
         /// <summary>
+        /// Выйти из аккаунта
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Получить информацию о пользователе
+        /// </summary>
+        /// <param name="fields">Поля, которые надо получить. Если ничего не присваивать, в результате будут все поля.</param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetInformation(string[] fields = null)
+        {
+            var user = db.GetUser(User.Identity.Name);
+            return Ok(new Account(user));
+        }
+
+        [HttpGet("avatar")]
+        public IActionResult GetAvatar()
+        {
+            var user = db.GetUser(User.Identity.Name);
+            return File(user.Avatar, "image/jpg");
+        }
+
+        /// <summary>
         /// Зарегистрировать пользователя
         /// </summary>
         /// <remarks>
@@ -82,35 +112,29 @@ namespace Bottle.Controllers
                 User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
                 if (user != null)
                 {
-                    if (user.Password != data.Password) return BadRequest("Неправильный пароль");
+                    if (user.Password != data.Password) 
+                        return BadRequest("Неправильный пароль");
                     await Authenticate(user);
-                    return Json(user);
+                    return Ok(user);
                 }
             }
             return BadRequest("Некорректные данные");
         }
 
-        /// <summary>
-        /// Выйти из аккаунта
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("logout")]
-        public async Task<IActionResult> Logout()
+        [HttpPost("avatar")]
+        public IActionResult ChangeAvatar(IFormFile file)
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok();
-        }
-
-        /// <summary>
-        /// Получить информацию о пользователе
-        /// </summary>
-        /// <param name="fields">Поля, которые надо получить. Если ничего не присваивать, в результате будут все поля.</param>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult GetInformation(string[] fields = null)
-        {
+            if (file == null) 
+                return BadRequest();
+            byte[] imageData = null;
+            using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)file.Length);
+            }
             var user = db.GetUser(User.Identity.Name);
-            return Json(new Account(user));
+            user.Avatar = imageData;
+            db.SaveChanges();
+            return Ok();
         }
 
         /// <summary>
@@ -119,9 +143,13 @@ namespace Bottle.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPatch]
-        public IActionResult ChangeInformation([FromBody] User data)
+        public IActionResult ChangeInformation([FromBody] Account data)
         {
-            return StatusCode(501);
+            var user = db.GetUser(User.Identity.Name);
+            user.Nickname = data.Nickname is null ? user.Nickname : data.Nickname;
+            user.Sex = data.Sex is null ? user.Sex : data.Sex;
+            db.SaveChanges();
+            return Ok(new Account(user));
         }
 
         /// <summary>
@@ -138,33 +166,15 @@ namespace Bottle.Controllers
             return Ok();
         }
 
-        [HttpPost("avatar")]
-        public IActionResult ChangeAvatar(IFormFile file)
-        {
-            if (file == null) return BadRequest();
-            byte[] imageData = null;
-            using (var binaryReader = new BinaryReader(file.OpenReadStream()))
-            {
-                imageData = binaryReader.ReadBytes((int)file.Length);
-            }
-            var user = db.GetUser(User.Identity.Name);
-            user.Avatar = imageData;
-            db.SaveChanges();
-            return Ok();
-        }
 
-        [HttpGet("avatar")]
-        public IActionResult GetAvatar()
-        {
-            var user = db.GetUser(User.Identity.Name);
-            return File(user.Avatar, "image/jpg");
-        }
+
+
 
         private async Task Authenticate(User user)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Nickname)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
             };
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));

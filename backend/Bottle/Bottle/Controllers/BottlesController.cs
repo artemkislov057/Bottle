@@ -29,7 +29,7 @@ namespace Bottle.Controllers
             var bottle = db.GetBottle(bottleId);
             if (bottle != null)
             {
-                return Json(new BottleModel(bottle));
+                return Ok(new BottleModel(bottle));
             }
             return BadRequest("bottle not found");
         }
@@ -44,12 +44,13 @@ namespace Bottle.Controllers
         {
             var bottle = db.GetBottle(bottleId);
             var user = db.GetUser(User.Identity.Name);
-            if (bottle == null || !bottle.Active || bottle.User == user) return BadRequest();
+            if (bottle == null || !bottle.Active || bottle.User == user)
+                return BadRequest();
             bottle.Active = false;
             var dialog = new Dialog { Bottle = bottle, Recipient = user };
             db.Dialogs.Add(dialog);
             db.SaveChanges();
-            return Json(new { dialogId = dialog.Id });
+            return Ok(new { dialogId = dialog.Id });
         }
 
         /// <summary>
@@ -64,19 +65,27 @@ namespace Bottle.Controllers
             var bottle = new Models.Database.Bottle(data, user);
             db.Bottles.Add(bottle);
             db.SaveChanges();
-            return Json(new BottleModel(bottle));
+            return Ok(new BottleModel(bottle));
         }
 
-        ///// <summary>
-        ///// Выбросить бутылочку
-        ///// </summary>
-        ///// <param name="bottleId"></param>
-        ///// <returns></returns>
-        //[HttpPost("{bottle-id}/throw")]
-        //public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
-        //{
-        //    return Ok($"Вы выбросили бутылку с ID {bottleId} обратно.");
-        //}
+        /// <summary>
+        /// Выбросить бутылочку
+        /// </summary>
+        /// <param name="bottleId"></param>
+        /// <returns></returns>
+        [HttpPost("{bottle-id}/throw")]
+        public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
+        {
+            var bottle = db.GetBottle(bottleId);
+            var user = db.GetUser(User.Identity.Name);
+            if (bottle == null || bottle.Active || bottle.User == user)
+                return BadRequest();
+            bottle.Active = true;
+            var dialog = db.Dialogs.FirstOrDefault(d => d.RecipientId == user.Id && d.BottleId == bottleId);
+            db.Dialogs.Remove(dialog);
+            db.SaveChanges();
+            return Ok($"Вы выбросили бутылку с ID {bottleId} обратно.");
+        }
 
         /// <summary>
         /// Удалить бутылочку
@@ -108,7 +117,7 @@ namespace Bottle.Controllers
         [HttpGet]
         public IActionResult GetBottles(string category = null, int? radius = null, int? latitude = null, int? longitude = null)
         {
-            return Json(db.Bottles.Select(b => new BottleModel(b)));
+            return Ok(db.Bottles.Select(b => new BottleModel(b)));
         }
     }
 }

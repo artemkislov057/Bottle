@@ -8,6 +8,11 @@ namespace Bottle.Models
 {
     public class Account
     {
+        public Account()
+        {
+
+        }
+
         public Account(User user)
         {
             Id = user.Id;

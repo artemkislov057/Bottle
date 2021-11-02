@@ -15,10 +15,6 @@ namespace Bottle.Models.Database
         public string Sex { get; set; }
         public int Type { get; set; }
 
-        public List<Bottle> Bottles { get; set; }
-        public List<Dialog> Dialogs { get; set; }
-        public List<Message> Messages { get; set; }
-
         [ForeignKey("Type")]
         public UserType UserType { get; set; }
         public CommercialData CommercialData { get; set; }

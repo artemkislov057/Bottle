@@ -25,14 +25,28 @@ namespace Bottle.Utilities
         public DbSet<BottleContent> BottleContents { get; set; }
         public DbSet<ContentType> ContentTypes { get; set; }
 
-        public User GetUser(string nickname)
+        public User GetUser(string id)
         {
-            return Users.FirstOrDefault(u => u.Nickname == nickname);
+            return Users.FirstOrDefault(u => u.Id.ToString() == id);
         }
 
         public Models.Database.Bottle GetBottle(int id)
         {
             return Bottles.FirstOrDefault(b => b.Id == id);
+        }
+
+        public Models.Database.Dialog GetDialog(int id)
+        {
+            return Dialogs.FirstOrDefault(b => b.Id == id);
+        }
+
+        public Models.Database.User GetUserByDialog(int dialogId)
+        {
+            var dialog = Dialogs.FirstOrDefault(d => d.Id == dialogId);
+            var bottle = Bottles.FirstOrDefault(b => b.Id == dialog.BottleId);
+            var user = Users.FirstOrDefault(u => u.Id == bottle.UserId);
+
+            return user;
         }
     }
 }
