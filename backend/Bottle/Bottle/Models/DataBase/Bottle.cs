@@ -30,6 +30,7 @@ namespace Bottle.Models.Database
         public DateTime Created { get; set; }
         public bool Active { get; set; }
 
+        public int UserId { get; set; }
         public User User { get; set; }
 
         public List<Dialog> Dialogs { get; set; }

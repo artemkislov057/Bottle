@@ -7,8 +7,11 @@ namespace Bottle.Models.Database
     {
         public int Id { get; set; }
 
+
+        public int BottleId { get; set; }
         public Bottle Bottle { get; set; }
 
+        public int RecipientId { get; set; }
         public User Recipient { get; set; }
 
         public List<Message> Messages { get; set; }

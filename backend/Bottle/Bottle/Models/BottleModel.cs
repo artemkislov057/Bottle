@@ -20,7 +20,7 @@ namespace Bottle.Models
             Category = entityBottle.Category;
             LifeTime = entityBottle.LifeTime;
             Created = entityBottle.Created;
-            UserId = entityBottle.User.Id;
+            UserId = entityBottle.UserId;
         }
 
         public int Id { get; set; }

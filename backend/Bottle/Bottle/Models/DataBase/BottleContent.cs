@@ -7,6 +7,7 @@ namespace Bottle.Models.Database
         public int Id { get; set; }
         public string Attachment { get; set; }
 
+        public int BottleId { get; set; }
         public Bottle Bottle;
 
         public ContentType Type { get; set; }
