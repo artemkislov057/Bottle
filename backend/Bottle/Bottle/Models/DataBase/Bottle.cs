@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bottle.Models.Database
 {
@@ -13,7 +14,8 @@ namespace Bottle.Models.Database
 
         public Bottle(CreateBottleModel createBottleModel, User user) : this()
         {
-            Coordinates = createBottleModel.Coordinates;
+            Lat = createBottleModel.Lat;
+            Lng = createBottleModel.Lng;
             Title = createBottleModel.Title;
             Description = createBottleModel.Description;
             Category = createBottleModel.Category;
@@ -24,7 +26,12 @@ namespace Bottle.Models.Database
         }
 
         public int Id { get; set; }
-        public string Coordinates { get; set; }
+
+        [Column(TypeName = "decimal(18, 15)")]
+        public decimal Lat { get; set; }
+
+        [Column(TypeName = "decimal(18, 15)")]
+        public decimal Lng { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }

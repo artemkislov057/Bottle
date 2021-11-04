@@ -15,7 +15,8 @@ namespace Bottle.Models
         public BottleModel(Database.Bottle entityBottle)
         {
             Id = entityBottle.Id;
-            Coordinates = entityBottle.Coordinates;
+            Lat = entityBottle.Lat;
+            Lng = entityBottle.Lng;
             Title = entityBottle.Title;
             Description = entityBottle.Description;
             Category = entityBottle.Category;
@@ -26,7 +27,8 @@ namespace Bottle.Models
         }
 
         public int Id { get; set; }
-        public string Coordinates { get; set; }
+        public decimal Lat { get; set; }
+        public decimal Lng { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }

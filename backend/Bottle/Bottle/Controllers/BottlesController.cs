@@ -127,23 +127,23 @@ namespace Bottle.Controllers
         /// Получить бутылочки
         /// </summary>
         /// <param name="category">Категория бутылочки</param>
-        /// <param name="radius">Радиус, в котором искать бутылочки(в метрах)</param>
-        /// <param name="coordinates">Координаты записанные через запятую, без пробела (пример "56.840865,60.651072")</param>
+        /// <param name="radius">Радиус, в котором искать бутылочки(в км)</param>
+        /// <param name="lat">Широта центра поиска бутылочек</param>
+        /// <param name="lng">Долгота центра поиска бутылочек</param>
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult GetBottles(string category = null, int? radius = null, string coordinates = null)
+        public IActionResult GetBottles(string category = null, double? radius = null, decimal? lat = null, decimal? lng = null)
         {
             IEnumerable<Models.Database.Bottle> result = null;
             var bottles = db.Bottles.Where(b => b.Active);
             if (category != null)
                 bottles = bottles.Where(b => b.Category == category);
             result = bottles;
-            if (!(radius == null || string.IsNullOrEmpty(coordinates)))
+            if (!(radius == null || lat == null || lng == null))
             {
-                var center = ConvertStringToCoordinates(coordinates);
-                result = bottles.ToList().Where(b => IsPointInCircle(center, ConvertStringToCoordinates(b.Coordinates), radius.Value));
+                result = bottles.ToList().Where(b => IsPointInCircle(lat.Value, lng.Value, b.Lat, b.Lng, radius.Value));
             }
             return Ok(result.Select(b => new BottleModel(b)));
         }
@@ -166,20 +166,16 @@ namespace Bottle.Controllers
 
 
 
-        private static Tuple<decimal, decimal> ConvertStringToCoordinates(string point)
-        {
-            var coordinates = point.Split(",");
-            return Tuple.Create(decimal.Parse(coordinates[0], CultureInfo.InvariantCulture), decimal.Parse(coordinates[1], CultureInfo.InvariantCulture));
-        }
+        
 
-        private bool IsPointInCircle(Tuple<decimal, decimal> center, Tuple<decimal, decimal> point, int radius)
+        private bool IsPointInCircle(decimal Lat1, decimal Lng1, decimal Lat2, decimal Lng2, double radius)
         {
-            return GetDistanceFromLatLon(center.Item1, center.Item2, point.Item1, point.Item2) <= radius;
+            return GetDistanceFromLatLon(Lat1, Lng1, Lat2, Lng2) <= radius;
         }
 
         private static double GetDistanceFromLatLon(decimal lat1, decimal lon1, decimal lat2, decimal lon2)
         {
-            const int R = 6371 * 1000;
+            const int R = 6371;
             var dLat = DegToRad(lat2 - lat1);
             var dLon = DegToRad(lon2 - lon1);
             var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +

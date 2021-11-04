@@ -7,7 +7,8 @@ namespace Bottle.Models
 {
     public class CreateBottleModel
     {
-        public string Coordinates { get; set; }
+        public decimal Lat { get; set; }
+        public decimal Lng { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
