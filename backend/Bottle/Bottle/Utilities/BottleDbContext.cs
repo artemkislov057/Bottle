@@ -47,7 +47,6 @@ namespace Bottle.Utilities
         {
             var user = GetUser(id);
             user.Rate(value);
-
         }
     }
 }

@@ -49,14 +49,14 @@ namespace Bottle.Controllers
         /// Получить сообщения из диалога
         /// </summary>
         /// <param name="dialogId">ID диалога</param>
-        /// <param name="messageId">ID последнего сообщения, с которого начать отсчет массива. Если не указывать, по умолчанию будет ID последнего сообщения в диалоге</param>
+        /// <param name="skipMessageCount">Количество сообщений, которые нужно пропустить</param>
         /// <param name="length">Длина возвращаемого массива</param>
         [HttpGet("{dialog-id}/messages")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult GetMessages([FromRoute(Name = "dialog-id")]int dialogId, 
-            [FromQuery(Name = "message-id")]int? messageId = null, int? length = null)
+        public IActionResult GetMessages([FromRoute(Name = "dialog-id")] int dialogId,
+            [FromQuery(Name = "message-id")] int skipMessageCount = 0, int? length = null)
         {
             var user = db.GetUser(User.Identity.Name);
             var dialog = db.GetDialog(dialogId);
@@ -65,7 +65,9 @@ namespace Bottle.Controllers
             if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
             {
                 var messages = db.Messages.Where(m => m.DialogId == dialogId);
-                return Ok(messages.Select(m => new MessageModel(m)));
+                if (length == null)
+                    return Ok(messages.Select(m => new MessageModel(m)));
+                return Ok(messages.OrderByDescending(m => m.Id).Skip(skipMessageCount).Take(length.Value).Reverse().Select(m => new MessageModel(m)));
             }
             return BadRequest();
         }
@@ -81,7 +83,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult Close([FromRoute(Name = "dialog-id")]int dialogId)
+        public IActionResult Close([FromRoute(Name = "dialog-id")] int dialogId)
         {
             var dialog = db.GetDialog(dialogId);
             if (dialog is null || !dialog.Active)
@@ -105,7 +107,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult Rate([FromRoute(Name = "dialog-id")]int dialogId, [FromBody] int rate)
+        public IActionResult Rate([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] int rate)
         {
             var dialog = db.GetDialog(dialogId);
             if (!dialog.Active && Models.Database.User.IsValidRating(rate))
@@ -156,7 +158,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult GetDialog([FromRoute(Name = "dialog-id")]int dialogId)
+        public IActionResult GetDialog([FromRoute(Name = "dialog-id")] int dialogId)
         {
             var dialog = db.GetDialog(dialogId);
             if (dialog == null)
