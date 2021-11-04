@@ -25,7 +25,7 @@ namespace Bottle.Models
         public int Id { get; set; }
         public int? BottleId { get; set; }
         public int BottleOwnerId { get; set; }
-        public int RecipientId { get; set; }
+        public int? RecipientId { get; set; }
         public bool Active { get; set; }
     }
 }

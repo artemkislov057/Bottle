@@ -16,7 +16,7 @@ namespace Bottle.Models.Database
         public int BottleOwnerId { get; set; }
         public User BottleOwner { get; set; }
 
-        public int RecipientId { get; set; }
+        public int? RecipientId { get; set; }
         public User Recipient { get; set; }
 
         public List<Message> Messages { get; set; }
