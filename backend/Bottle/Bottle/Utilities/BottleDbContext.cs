@@ -27,7 +27,10 @@ namespace Bottle.Utilities
 
         public User GetUser(string id)
         {
-            return Users.FirstOrDefault(u => u.Id.ToString() == id);
+            var user = Users.FirstOrDefault(u => u.Id.ToString() == id);
+            if (user.Type == 2)
+                user.CommercialData = CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
+            return user;
         }
 
         public Models.Database.Bottle GetBottle(int id)

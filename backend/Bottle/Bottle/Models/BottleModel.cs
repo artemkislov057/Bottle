@@ -12,7 +12,7 @@ namespace Bottle.Models
 
         }
 
-        public BottleModel(Bottle.Models.Database.Bottle entityBottle)
+        public BottleModel(Database.Bottle entityBottle)
         {
             Id = entityBottle.Id;
             Coordinates = entityBottle.Coordinates;
@@ -20,6 +20,7 @@ namespace Bottle.Models
             Category = entityBottle.Category;
             LifeTime = entityBottle.LifeTime;
             Created = entityBottle.Created;
+            Active = entityBottle.Active;
             UserId = entityBottle.UserId;
         }
 
@@ -29,6 +30,7 @@ namespace Bottle.Models
         public string Category { get; set; }
         public long LifeTime { get; set; }
         public DateTime Created { get; set; }
+        public bool Active { get; set; }
         public int UserId { get; set; }
     }
 }

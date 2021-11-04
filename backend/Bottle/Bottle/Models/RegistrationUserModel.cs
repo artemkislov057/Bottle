@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bottle.Models
 {
@@ -20,7 +16,6 @@ namespace Bottle.Models
         [Required]
         public string Sex { get; set; }
 
-        [Required]
-        public int Type { get; set; }
+        public CommercialModel CommercialData { get; set; }
     }
 }

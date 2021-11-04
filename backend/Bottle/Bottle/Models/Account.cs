@@ -22,6 +22,7 @@ namespace Bottle.Models
                 Rating = (decimal)user.RatingSum / user.RatingCount;
             Sex = user.Sex;
             Type = user.Type;
+            CommercialData = user.CommercialData == null ? null : new CommercialModel(user.CommercialData);
         }
 
         public int Id { get; set; }
@@ -30,13 +31,6 @@ namespace Bottle.Models
         public decimal Rating { get; set; }
         public string Sex { get; set; }
         public int Type { get; set; }
-
-        //public List<Bottle> Bottles { get; set; }
-        //public List<Dialog> Dialogs { get; set; }
-        //public List<Message> Messages { get; set; }
-
-
-        //public UserType UserType { get; set; }
-        //public CommercialData CommercialData { get; set; }
+        public CommercialModel CommercialData { get; set; }
     }
 }

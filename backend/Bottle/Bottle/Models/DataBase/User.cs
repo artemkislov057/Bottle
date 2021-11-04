@@ -21,10 +21,16 @@ namespace Bottle.Models.Database
 
         public void Rate(int value)
         {
-            if (value < 0 || value > 5)
-                return;
-            RatingSum += value;
-            RatingCount++;
+            if (IsValidRating(value))
+            {
+                RatingSum += value;
+                RatingCount++;
+            }
+        }
+
+        public static bool IsValidRating(int value)
+        {
+            return value >= 0 && value <= 5;
         }
     }
 }

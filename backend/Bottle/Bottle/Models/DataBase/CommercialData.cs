@@ -4,6 +4,20 @@ namespace Bottle.Models.Database
 {
     public class CommercialData
     {
+
+        public CommercialData()
+        {
+
+        }
+
+        public CommercialData(CommercialModel model)
+        {
+            FullName = model.FullName;
+            Company = model.Company;
+            IdentificationNumber = model.IdentificationNumber;
+            PSRN = model.PSRN;
+        }
+
         public int Id { get; set; }
         public string FullName { get; set; }
         public string Company { get; set; }

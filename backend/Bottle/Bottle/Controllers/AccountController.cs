@@ -39,10 +39,9 @@ namespace Bottle.Controllers
         /// <summary>
         /// Получить информацию о пользователе
         /// </summary>
-        /// <param name="fields">Поля, которые надо получить. Если ничего не присваивать, в результате будут все поля.</param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult GetInformation(string[] fields = null)
+        public IActionResult GetInformation()
         {
             var user = db.GetUser(User.Identity.Name);
             return Ok(new Account(user));
@@ -52,6 +51,8 @@ namespace Bottle.Controllers
         public IActionResult GetAvatar()
         {
             var user = db.GetUser(User.Identity.Name);
+            if (user.Avatar == null)
+                return NotFound();
             return File(user.Avatar, "image/jpg");
         }
 
@@ -65,8 +66,7 @@ namespace Bottle.Controllers
         ///         "nickname": "artem",
         ///         "password": "pass",
         ///         "email": "artem@gmail.com",
-        ///         "sex": "male",
-        ///         "type": 1
+        ///         "sex": "male"
         ///     }
         /// 
         /// </remarks>
@@ -84,7 +84,16 @@ namespace Bottle.Controllers
                 User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
                 if (user == null)
                 {
-                    user = new User { Nickname = data.Nickname, Email = data.Email, Password = data.Password, Sex = data.Sex, Type = data.Type };
+                    user = new User { Nickname = data.Nickname, Email = data.Email, Password = data.Password, Sex = data.Sex };
+                    if (data.CommercialData == null)
+                    {
+                        user.Type = 1;
+                    }
+                    else
+                    {
+                        user.Type = 2;
+                        user.CommercialData = new CommercialData(data.CommercialData);
+                    }
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
                     await Authenticate(user);
@@ -115,7 +124,7 @@ namespace Bottle.Controllers
                     if (user.Password != data.Password) 
                         return BadRequest("Неправильный пароль");
                     await Authenticate(user);
-                    return Ok(user);
+                    return Ok(new Account(user));
                 }
             }
             return BadRequest("Некорректные данные");
@@ -148,6 +157,13 @@ namespace Bottle.Controllers
             var user = db.GetUser(User.Identity.Name);
             user.Nickname = data.Nickname is null ? user.Nickname : data.Nickname;
             user.Sex = data.Sex is null ? user.Sex : data.Sex;
+            if (user.Type == 2)
+            {
+                user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
+                user.CommercialData.Company = data.CommercialData.Company is null ? user.CommercialData.Company : data.CommercialData.Company;
+                user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
+                user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
+            }
             db.SaveChanges();
             return Ok(new Account(user));
         }

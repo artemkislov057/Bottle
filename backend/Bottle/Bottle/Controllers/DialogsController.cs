@@ -30,10 +30,17 @@ namespace Bottle.Controllers
         public IActionResult SendMessage([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] string value)
         {
             var dialog = db.GetDialog(dialogId);
-            var message = new Message { DialogId = dialogId, SenderId = db.GetUser(User.Identity.Name).Id, Value = value, DateTime = DateTime.Now };
-            db.Messages.Add(message);
-            db.SaveChanges();
-            return Ok(new MessageModel(message));
+            if (dialog == null || !dialog.Active)
+                return BadRequest();
+            var user = db.GetUser(User.Identity.Name);
+            if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
+            {
+                var message = new Message { DialogId = dialogId, SenderId = user.Id, Value = value, DateTime = DateTime.Now };
+                db.Messages.Add(message);
+                db.SaveChanges();
+                return Ok(new MessageModel(message));
+            }
+            return BadRequest();
         }
 
         /// <summary>
@@ -43,17 +50,20 @@ namespace Bottle.Controllers
         /// <param name="messageId">ID последнего сообщения, с которого начать отсчет массива. Если не указывать, по умолчанию будет ID последнего сообщения в диалоге</param>
         /// <param name="length">Длина возвращаемого массива</param>
         /// <returns></returns>
-        [HttpGet("{dialog-id}")]
+        [HttpGet("{dialog-id}/messages")]
         public IActionResult GetMessages([FromRoute(Name = "dialog-id")]int dialogId, 
             [FromQuery(Name = "message-id")]int? messageId = null, int? length = null)
         {
-            if (!db.Dialogs.Any(d => d.Id == dialogId))
-            {
+            var user = db.GetUser(User.Identity.Name);
+            var dialog = db.GetDialog(dialogId);
+            if (dialog == null)
                 return BadRequest();
+            if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
+            {
+                var messages = db.Messages.Where(m => m.DialogId == dialogId);
+                return Ok(messages.Select(m => new MessageModel(m)));
             }
-            var dialogMessages = db.Messages.Where(d => d.DialogId == dialogId);
-
-            return Ok(dialogMessages);
+            return BadRequest();
         }
 
         [HttpPost("{dialog-id}/close")]
@@ -63,8 +73,7 @@ namespace Bottle.Controllers
             if (dialog is null || !dialog.Active)
                 return BadRequest();
             var user = db.GetUser(User.Identity.Name);
-            var bottle = db.GetBottle(dialog.BottleId);
-            if (dialog.RecipientId == user.Id || bottle.UserId == user.Id)
+            if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
             {
                 dialog.Active = false;
                 db.SaveChanges();
@@ -83,16 +92,15 @@ namespace Bottle.Controllers
         public IActionResult Rate([FromRoute(Name = "dialog-id")]int dialogId, [FromBody] int rate)
         {
             var dialog = db.GetDialog(dialogId);
-            if (!dialog.Active)
+            if (!dialog.Active && Models.Database.User.IsValidRating(rate))
             {
                 var requestUser = db.GetUser(User.Identity.Name);
-                var bottle = db.GetBottle(dialog.BottleId);
                 if (requestUser.Id == dialog.RecipientId && dialog.BottleRate is null)
                 {
-                    db.SetUserRate(bottle.UserId.ToString(), rate);
+                    db.SetUserRate(dialog.BottleOwnerId.ToString(), rate);
                     dialog.BottleRate = rate;
                 }
-                else if (requestUser.Id == bottle.UserId && dialog.RecipientRate is null)
+                else if (requestUser.Id == dialog.BottleOwnerId && dialog.RecipientRate is null)
                 {
                     db.SetUserRate(dialog.RecipientId.ToString(), rate);
                     dialog.RecipientRate = rate;
@@ -119,17 +127,21 @@ namespace Bottle.Controllers
         public IActionResult GetDialogs()
         {
             var dialogs = db.Dialogs
-                .Where(d => d.RecipientId.ToString() == User.Identity.Name)
-                .Where(d => d.BottleRate == null);
-            var bottles = db.Bottles.Where(b => b.UserId.ToString() == User.Identity.Name);
-            foreach (var bottle in bottles)
+                .Where(d => d.RecipientId.ToString() == User.Identity.Name && d.BottleRate == null || d.BottleOwnerId.ToString() == User.Identity.Name && d.RecipientRate == null);
+            return Ok(dialogs.Select(d => new DialogModel(d)));
+        }
+
+        [HttpGet("{dialog-id}")]
+        public IActionResult GetDialog([FromRoute(Name = "dialog-id")]int dialogId)
+        {
+            var dialog = db.GetDialog(dialogId);
+            if (dialog == null)
+                return BadRequest();
+            if (dialog.BottleOwnerId.ToString() == User.Identity.Name || dialog.RecipientId.ToString() == User.Identity.Name)
             {
-                var bottleDialogs = db.Dialogs
-                    .Where(d => d.BottleId == bottle.Id)
-                    .Where(d => d.RecipientRate == null);
-                dialogs = dialogs.Concat(bottleDialogs);
+                return Ok(new DialogModel(dialog));
             }
-            return Ok(dialogs);
+            return BadRequest();
         }
     }
 }
