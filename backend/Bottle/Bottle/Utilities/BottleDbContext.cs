@@ -1,5 +1,6 @@
 ﻿using Bottle.Models.Database;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace Bottle.Utilities
@@ -35,7 +36,24 @@ namespace Bottle.Utilities
 
         public Models.Database.Bottle GetBottle(int id)
         {
-            return Bottles.FirstOrDefault(b => b.Id == id);
+            var result = Bottles.FirstOrDefault(b => b.Id == id);
+            if (result == null)
+                return null;
+            if (result.EndTime <= DateTime.UtcNow)
+            {
+                Bottles.Remove(result);
+                SaveChanges();
+                return null;
+            }
+            return result;
+        }
+
+        public DbSet<Models.Database.Bottle> GetBottles()
+        {
+            var timeoutBottles = Bottles.Where(b => b.EndTime <= DateTime.UtcNow);
+            Bottles.RemoveRange(timeoutBottles);
+            SaveChanges();
+            return Bottles;
         }
 
         public Models.Database.Dialog GetDialog(int id)

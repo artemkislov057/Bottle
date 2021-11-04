@@ -137,7 +137,7 @@ namespace Bottle.Controllers
         public IActionResult GetBottles(string category = null, double? radius = null, decimal? lat = null, decimal? lng = null)
         {
             IEnumerable<Models.Database.Bottle> result = null;
-            var bottles = db.Bottles.Where(b => b.Active);
+            var bottles = db.GetBottles().Where(b => b.Active);
             if (category != null)
                 bottles = bottles.Where(b => b.Category == category);
             result = bottles;
@@ -156,7 +156,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public IActionResult GetMyBottles()
         {
-            var bottles = db.Bottles.Where(b => b.UserId.ToString() == User.Identity.Name);
+            var bottles = db.GetBottles().Where(b => b.UserId.ToString() == User.Identity.Name);
             return Ok(bottles.Select(b => new BottleModel(b)));
         }
 

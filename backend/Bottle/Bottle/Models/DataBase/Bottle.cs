@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bottle.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,8 +20,8 @@ namespace Bottle.Models.Database
             Title = createBottleModel.Title;
             Description = createBottleModel.Description;
             Category = createBottleModel.Category;
-            LifeTime = createBottleModel.LifeTime;
-            Created = DateTime.Now;
+            Created = DateTime.UtcNow;
+            EndTime = Created + TimeSpan.FromSeconds(createBottleModel.LifeTime);
             Active = true;
             User = user;
         }
@@ -35,8 +36,8 @@ namespace Bottle.Models.Database
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
-        public long LifeTime { get; set; }
         public DateTime Created { get; set; }
+        public DateTime EndTime { get; set; }
         public bool Active { get; set; }
 
         public int UserId { get; set; }

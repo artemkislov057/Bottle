@@ -20,8 +20,9 @@ namespace Bottle.Models
             Title = entityBottle.Title;
             Description = entityBottle.Description;
             Category = entityBottle.Category;
-            LifeTime = entityBottle.LifeTime;
             Created = entityBottle.Created;
+            EndTime = entityBottle.EndTime;
+            LifeTime = (int)(EndTime - Created).TotalSeconds;
             Active = entityBottle.Active;
             UserId = entityBottle.UserId;
         }
@@ -34,6 +35,7 @@ namespace Bottle.Models
         public string Category { get; set; }
         public long LifeTime { get; set; }
         public DateTime Created { get; set; }
+        public DateTime EndTime { get; set; }
         public bool Active { get; set; }
         public int UserId { get; set; }
     }
