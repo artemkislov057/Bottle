@@ -3,7 +3,9 @@ using Bottle.Models.Database;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Bottle.Controllers
@@ -108,7 +110,7 @@ namespace Bottle.Controllers
         /// Получить массив бутылочек в соответствии с параметрами
         /// </summary>
         /// <param name="category">Категория бутылочки</param>
-        /// <param name="radius">Радиус, в котором искать бутылочки</param>
+        /// <param name="radius">Радиус, в котором искать бутылочки(в метрах)</param>
         /// <param name="coordinates">Координаты</param>
         /// <returns></returns>
         [HttpGet]
@@ -121,7 +123,8 @@ namespace Bottle.Controllers
             result = bottles;
             if (!(radius == null || string.IsNullOrEmpty(coordinates)))
             {
-                result = bottles.ToList().Where(b => IsPointInCircle(b.Coordinates, coordinates, radius.Value));
+                var center = ConvertStringToCoordinates(coordinates);
+                result = bottles.ToList().Where(b => IsPointInCircle(center, ConvertStringToCoordinates(b.Coordinates), radius.Value));
             }
             return Ok(result.Select(b => new BottleModel(b)));
         }
@@ -133,9 +136,39 @@ namespace Bottle.Controllers
             return Ok(bottles.Select(b => new BottleModel(b)));
         }
 
-        private bool IsPointInCircle(string point, string center, int radius)
+
+
+
+
+
+
+        private static Tuple<decimal, decimal> ConvertStringToCoordinates(string point)
         {
-            return true;
+            var coordinates = point.Split(",");
+            return Tuple.Create(decimal.Parse(coordinates[0], CultureInfo.InvariantCulture), decimal.Parse(coordinates[1], CultureInfo.InvariantCulture));
+        }
+
+        private bool IsPointInCircle(Tuple<decimal, decimal> center, Tuple<decimal, decimal> point, int radius)
+        {
+            return GetDistanceFromLatLon(center.Item1, center.Item2, point.Item1, point.Item2) <= radius;
+        }
+
+        private static double GetDistanceFromLatLon(decimal lat1, decimal lon1, decimal lat2, decimal lon2)
+        {
+            const int R = 6371 * 1000;
+            var dLat = DegToRad(lat2 - lat1);
+            var dLon = DegToRad(lon2 - lon1);
+            var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                Math.Cos(DegToRad(lat1)) * Math.Cos(DegToRad(lat2)) *
+                Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            var d = R * c;
+            return d;
+        }
+
+        private static double DegToRad(decimal angle)
+        {
+            return (double)(angle * (decimal)Math.PI / 180);
         }
     }
 }
