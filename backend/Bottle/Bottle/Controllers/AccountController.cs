@@ -28,8 +28,9 @@ namespace Bottle.Controllers
         /// <summary>
         /// Выйти из аккаунта
         /// </summary>
-        /// <returns></returns>
         [HttpPost("logout")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -39,15 +40,22 @@ namespace Bottle.Controllers
         /// <summary>
         /// Получить информацию о пользователе
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
         public IActionResult GetInformation()
         {
             var user = db.GetUser(User.Identity.Name);
             return Ok(new Account(user));
         }
 
+        /// <summary>
+        /// Получить аватар пользователя
+        /// </summary>
         [HttpGet("avatar")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
         public IActionResult GetAvatar()
         {
             var user = db.GetUser(User.Identity.Name);
@@ -59,24 +67,11 @@ namespace Bottle.Controllers
         /// <summary>
         /// Зарегистрировать пользователя
         /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// 
-        ///     {
-        ///         "nickname": "artem",
-        ///         "password": "pass",
-        ///         "email": "artem@gmail.com",
-        ///         "sex": "male"
-        ///     }
-        /// 
-        /// </remarks>
-        /// <returns></returns>
-        /// <response code="201">Пользователь зарегистрирован</response>
-        /// <response code="400">Пользователь с таким никнеймом или почтой уже существует или данные некорректные</response>
+        /// <param name="data">Данные, необходимые для регистрации</param>
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> RegisterUser([FromBody] RegistrationUserModel data)
         {
             if (ModelState.IsValid)
@@ -110,9 +105,11 @@ namespace Bottle.Controllers
         /// <summary>
         /// Войти в аккаунт
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">Данные, необходимые для входа в аккаунт</param>
         [HttpPost("login")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel data)
         {
@@ -121,7 +118,7 @@ namespace Bottle.Controllers
                 User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
                 if (user != null)
                 {
-                    if (user.Password != data.Password) 
+                    if (user.Password != data.Password)
                         return BadRequest("Неправильный пароль");
                     await Authenticate(user);
                     return Ok(new Account(user));
@@ -130,10 +127,17 @@ namespace Bottle.Controllers
             return BadRequest("Некорректные данные");
         }
 
+        /// <summary>
+        /// Изменить аватар пользователя
+        /// </summary>
+        /// <param name="file">Загружаемое фото</param>
         [HttpPost("avatar")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult ChangeAvatar(IFormFile file)
         {
-            if (file == null) 
+            if (file == null)
                 return BadRequest();
             byte[] imageData = null;
             using (var binaryReader = new BinaryReader(file.OpenReadStream()))
@@ -149,30 +153,36 @@ namespace Bottle.Controllers
         /// <summary>
         /// Изменить данные пользователя
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
         [HttpPatch]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult ChangeInformation([FromBody] Account data)
         {
-            var user = db.GetUser(User.Identity.Name);
-            user.Nickname = data.Nickname is null ? user.Nickname : data.Nickname;
-            user.Sex = data.Sex is null ? user.Sex : data.Sex;
-            if (user.Type == 2)
+            if (ModelState.IsValid)
             {
-                user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
-                user.CommercialData.Company = data.CommercialData.Company is null ? user.CommercialData.Company : data.CommercialData.Company;
-                user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
-                user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
+                var user = db.GetUser(User.Identity.Name);
+                user.Nickname = data.Nickname is null ? user.Nickname : data.Nickname;
+                user.Sex = data.Sex is null ? user.Sex : data.Sex;
+                if (user.Type == 2)
+                {
+                    user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
+                    user.CommercialData.Company = data.CommercialData.Company is null ? user.CommercialData.Company : data.CommercialData.Company;
+                    user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
+                    user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
+                }
+                db.SaveChanges();
+                return Ok(new Account(user));
             }
-            db.SaveChanges();
-            return Ok(new Account(user));
+            return BadRequest();
         }
 
         /// <summary>
         /// Удалить пользователя
         /// </summary>
-        /// <returns></returns>
         [HttpDelete]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
         public async Task<IActionResult> DeleteUser()
         {
             User user = db.GetUser(User.Identity.Name);

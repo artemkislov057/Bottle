@@ -15,6 +15,7 @@ namespace Bottle.Models.Database
         {
             Coordinates = createBottleModel.Coordinates;
             Title = createBottleModel.Title;
+            Description = createBottleModel.Description;
             Category = createBottleModel.Category;
             LifeTime = createBottleModel.LifeTime;
             Created = DateTime.Now;
@@ -25,6 +26,7 @@ namespace Bottle.Models.Database
         public int Id { get; set; }
         public string Coordinates { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
         public string Category { get; set; }
         public long LifeTime { get; set; }
         public DateTime Created { get; set; }

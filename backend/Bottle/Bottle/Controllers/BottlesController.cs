@@ -23,9 +23,11 @@ namespace Bottle.Controllers
         /// <summary>
         /// Получить информацию о бутылочке
         /// </summary>
-        /// <param name="bottleId"></param>
-        /// <returns></returns>
+        /// <param name="bottleId">ID бутылочки</param>
         [HttpGet("{bottle-id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult GetInformation([FromRoute(Name = "bottle-id")]int bottleId)
         {
             var bottle = db.GetBottle(bottleId);
@@ -39,9 +41,11 @@ namespace Bottle.Controllers
         /// <summary>
         /// Подобрать бутылочку
         /// </summary>
-        /// <param name="bottleId"></param>
-        /// <returns></returns>
+        /// <param name="bottleId">ID бутылочки</param>
         [HttpPost("{bottle-id}/pick-up")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = db.GetBottle(bottleId);
@@ -58,24 +62,35 @@ namespace Bottle.Controllers
         /// <summary>
         /// Создать бутылочку
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <param name="data">Данные, необходимые для создания бутылочки</param>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult Create([FromBody]CreateBottleModel data)
         {
-            var user = db.GetUser(User.Identity.Name);
-            var bottle = new Models.Database.Bottle(data, user);
-            db.Bottles.Add(bottle);
-            db.SaveChanges();
-            return Ok(new BottleModel(bottle));
+            if (ModelState.IsValid)
+            {
+                var user = db.GetUser(User.Identity.Name);
+                var bottle = new Models.Database.Bottle(data, user);
+                db.Bottles.Add(bottle);
+                db.SaveChanges();
+                return Created(string.Empty, new BottleModel(bottle));
+            }
+            return BadRequest();
         }
 
         /// <summary>
-        /// Выбросить бутылочку
+        /// Выбросить свою бутылочку обратно
         /// </summary>
-        /// <param name="bottleId"></param>
-        /// <returns></returns>
+        /// <remarks>
+        /// Если кто-то поднял вашу бутылочку
+        /// </remarks>
+        /// <param name="bottleId">ID бутылочки</param>
         [HttpPost("{bottle-id}/throw")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = db.GetBottle(bottleId);
@@ -90,9 +105,11 @@ namespace Bottle.Controllers
         /// <summary>
         /// Удалить бутылочку
         /// </summary>
-        /// <param name="bottleId"></param>
-        /// <returns></returns>
+        /// <param name="bottleId">ID бутылочки</param>
         [HttpDelete("{bottle-id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult Delete([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = db.GetBottle(bottleId);
@@ -107,13 +124,15 @@ namespace Bottle.Controllers
         }
 
         /// <summary>
-        /// Получить массив бутылочек в соответствии с параметрами
+        /// Получить бутылочки
         /// </summary>
         /// <param name="category">Категория бутылочки</param>
         /// <param name="radius">Радиус, в котором искать бутылочки(в метрах)</param>
-        /// <param name="coordinates">Координаты</param>
-        /// <returns></returns>
+        /// <param name="coordinates">Координаты записанные через запятую, без пробела (пример "56.840865,60.651072")</param>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult GetBottles(string category = null, int? radius = null, string coordinates = null)
         {
             IEnumerable<Models.Database.Bottle> result = null;
@@ -129,7 +148,12 @@ namespace Bottle.Controllers
             return Ok(result.Select(b => new BottleModel(b)));
         }
 
+        /// <summary>
+        /// Получить свои бутылочки
+        /// </summary>
         [HttpGet("my")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
         public IActionResult GetMyBottles()
         {
             var bottles = db.Bottles.Where(b => b.UserId.ToString() == User.Identity.Name);

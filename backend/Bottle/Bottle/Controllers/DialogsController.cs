@@ -23,10 +23,12 @@ namespace Bottle.Controllers
         /// <summary>
         /// Отправить сообщение
         /// </summary>
-        /// <param name="dialogId"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="dialogId">ID диалога</param>
+        /// <param name="value">Текст сообщения</param>
         [HttpPost("{dialog-id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult SendMessage([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] string value)
         {
             var dialog = db.GetDialog(dialogId);
@@ -46,11 +48,13 @@ namespace Bottle.Controllers
         /// <summary>
         /// Получить сообщения из диалога
         /// </summary>
-        /// <param name="dialogId"></param>
+        /// <param name="dialogId">ID диалога</param>
         /// <param name="messageId">ID последнего сообщения, с которого начать отсчет массива. Если не указывать, по умолчанию будет ID последнего сообщения в диалоге</param>
         /// <param name="length">Длина возвращаемого массива</param>
-        /// <returns></returns>
         [HttpGet("{dialog-id}/messages")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult GetMessages([FromRoute(Name = "dialog-id")]int dialogId, 
             [FromQuery(Name = "message-id")]int? messageId = null, int? length = null)
         {
@@ -66,7 +70,17 @@ namespace Bottle.Controllers
             return BadRequest();
         }
 
+        /// <summary>
+        /// Закрыть диалог
+        /// </summary>
+        /// <remarks>
+        /// При этом появляется возможность поставить оценку диалогу через POST api/dialogs/{dialog-id}/rating
+        /// </remarks>
+        /// <param name="dialogId">ID диалога</param>
         [HttpPost("{dialog-id}/close")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult Close([FromRoute(Name = "dialog-id")]int dialogId)
         {
             var dialog = db.GetDialog(dialogId);
@@ -85,10 +99,12 @@ namespace Bottle.Controllers
         /// <summary>
         /// Поставить оценку
         /// </summary>
-        /// <param name="dialogId"></param>
-        /// <param name="rate"></param>
-        /// <returns></returns>
+        /// <param name="dialogId">ID диалога</param>
+        /// <param name="rate">Оценка от 0 до 5</param>
         [HttpPost("{dialog-id}/rating")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult Rate([FromRoute(Name = "dialog-id")]int dialogId, [FromBody] int rate)
         {
             var dialog = db.GetDialog(dialogId);
@@ -122,8 +138,9 @@ namespace Bottle.Controllers
         /// <summary>
         /// Получить диалоги
         /// </summary>
-        /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
         public IActionResult GetDialogs()
         {
             var dialogs = db.Dialogs
@@ -131,7 +148,14 @@ namespace Bottle.Controllers
             return Ok(dialogs.Select(d => new DialogModel(d)));
         }
 
+        /// <summary>
+        /// Получить информацию о диалоге по ID
+        /// </summary>
+        /// <param name="dialogId">ID диалога</param>
         [HttpGet("{dialog-id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
         public IActionResult GetDialog([FromRoute(Name = "dialog-id")]int dialogId)
         {
             var dialog = db.GetDialog(dialogId);
