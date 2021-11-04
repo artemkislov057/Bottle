@@ -40,13 +40,11 @@ namespace Bottle.Utilities
             return Dialogs.FirstOrDefault(b => b.Id == id);
         }
 
-        public Models.Database.User GetUserByDialog(int dialogId)
+        public void SetUserRate(string id, int value)
         {
-            var dialog = Dialogs.FirstOrDefault(d => d.Id == dialogId);
-            var bottle = Bottles.FirstOrDefault(b => b.Id == dialog.BottleId);
-            var user = Users.FirstOrDefault(u => u.Id == bottle.UserId);
+            var user = GetUser(id);
+            user.Rate(value);
 
-            return user;
         }
     }
 }

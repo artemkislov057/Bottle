@@ -18,5 +18,13 @@ namespace Bottle.Models.Database
         [ForeignKey("Type")]
         public UserType UserType { get; set; }
         public CommercialData CommercialData { get; set; }
+
+        public void Rate(int value)
+        {
+            if (value < 0 || value > 5)
+                return;
+            RatingSum += value;
+            RatingCount++;
+        }
     }
 }

@@ -47,7 +47,7 @@ namespace Bottle.Controllers
             if (bottle == null || !bottle.Active || bottle.User == user)
                 return BadRequest();
             bottle.Active = false;
-            var dialog = new Dialog { Bottle = bottle, Recipient = user };
+            var dialog = new Dialog { Bottle = bottle, Recipient = user, Active = true };
             db.Dialogs.Add(dialog);
             db.SaveChanges();
             return Ok(new { dialogId = dialog.Id });
@@ -68,24 +68,24 @@ namespace Bottle.Controllers
             return Ok(new BottleModel(bottle));
         }
 
-        /// <summary>
-        /// Выбросить бутылочку
-        /// </summary>
-        /// <param name="bottleId"></param>
-        /// <returns></returns>
-        [HttpPost("{bottle-id}/throw")]
-        public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
-        {
-            var bottle = db.GetBottle(bottleId);
-            var user = db.GetUser(User.Identity.Name);
-            if (bottle == null || bottle.Active || bottle.User == user)
-                return BadRequest();
-            bottle.Active = true;
-            var dialog = db.Dialogs.FirstOrDefault(d => d.RecipientId == user.Id && d.BottleId == bottleId);
-            db.Dialogs.Remove(dialog);
-            db.SaveChanges();
-            return Ok($"Вы выбросили бутылку с ID {bottleId} обратно.");
-        }
+        ///// <summary>
+        ///// Выбросить бутылочку
+        ///// </summary>
+        ///// <param name="bottleId"></param>
+        ///// <returns></returns>
+        //[HttpPost("{bottle-id}/throw")]
+        //public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
+        //{
+        //    var bottle = db.GetBottle(bottleId);
+        //    var user = db.GetUser(User.Identity.Name);
+        //    if (bottle == null || bottle.Active || bottle.User == user)
+        //        return BadRequest();
+        //    bottle.Active = true;
+        //    var dialog = db.Dialogs.FirstOrDefault(d => d.RecipientId == user.Id && d.BottleId == bottleId);
+        //    db.Dialogs.Remove(dialog);
+        //    db.SaveChanges();
+        //    return Ok($"Вы выбросили бутылку с ID {bottleId} обратно.");
+        //}
 
         /// <summary>
         /// Удалить бутылочку

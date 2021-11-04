@@ -24,7 +24,7 @@ namespace Bottle.Controllers
         /// Отправить сообщение
         /// </summary>
         /// <param name="dialogId"></param>
-        /// <param name="data"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         [HttpPost("{dialog-id}")]
         public IActionResult SendMessage([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] string value)
@@ -49,33 +49,66 @@ namespace Bottle.Controllers
         {
             if (!db.Dialogs.Any(d => d.Id == dialogId))
             {
-                return BadRequest("Пошел нахуй");
+                return BadRequest();
             }
             var dialogMessages = db.Messages.Where(d => d.DialogId == dialogId);
 
             return Ok(dialogMessages);
         }
 
-        [HttpPost("close")]
-        public IActionResult Close()
+        [HttpPost("{dialog-id}/close")]
+        public IActionResult Close([FromRoute(Name = "dialog-id")]int dialogId)
         {
-            return Ok("Dialog is closed");
+            var dialog = db.GetDialog(dialogId);
+            if (dialog is null || !dialog.Active)
+                return BadRequest();
+            var user = db.GetUser(User.Identity.Name);
+            var bottle = db.GetBottle(dialog.BottleId);
+            if (dialog.RecipientId == user.Id || bottle.UserId == user.Id)
+            {
+                dialog.Active = false;
+                db.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         /// <summary>
         /// Поставить оценку
         /// </summary>
         /// <param name="dialogId"></param>
-        /// <param name="data"></param>
+        /// <param name="rate"></param>
         /// <returns></returns>
         [HttpPost("{dialog-id}/rating")]
         public IActionResult Rate([FromRoute(Name = "dialog-id")]int dialogId, [FromBody] int rate)
         {
-            var user = db.GetUserByDialog(dialogId);
-            user.RatingSum += rate;
-            user.RatingCount += 1;
-            db.SaveChanges();
-            return Ok("Поставили оценку.");
+            var dialog = db.GetDialog(dialogId);
+            if (!dialog.Active)
+            {
+                var requestUser = db.GetUser(User.Identity.Name);
+                var bottle = db.GetBottle(dialog.BottleId);
+                if (requestUser.Id == dialog.RecipientId && dialog.BottleRate is null)
+                {
+                    db.SetUserRate(bottle.UserId.ToString(), rate);
+                    dialog.BottleRate = rate;
+                }
+                else if (requestUser.Id == bottle.UserId && dialog.RecipientRate is null)
+                {
+                    db.SetUserRate(dialog.RecipientId.ToString(), rate);
+                    dialog.RecipientRate = rate;
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                if (!(dialog.RecipientRate is null || dialog.BottleRate is null))
+                {
+                    db.Dialogs.Remove(dialog);
+                }
+                db.SaveChanges();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         /// <summary>
@@ -85,7 +118,18 @@ namespace Bottle.Controllers
         [HttpGet]
         public IActionResult GetDialogs()
         {
-            return Ok(db.Dialogs.Where(d => d.RecipientId.ToString() == User.Identity.Name));
+            var dialogs = db.Dialogs
+                .Where(d => d.RecipientId.ToString() == User.Identity.Name)
+                .Where(d => d.BottleRate == null);
+            var bottles = db.Bottles.Where(b => b.UserId.ToString() == User.Identity.Name);
+            foreach (var bottle in bottles)
+            {
+                var bottleDialogs = db.Dialogs
+                    .Where(d => d.BottleId == bottle.Id)
+                    .Where(d => d.RecipientRate == null);
+                dialogs = dialogs.Concat(bottleDialogs);
+            }
+            return Ok(dialogs);
         }
     }
 }

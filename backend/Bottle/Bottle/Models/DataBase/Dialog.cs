@@ -6,7 +6,9 @@ namespace Bottle.Models.Database
     public class Dialog
     {
         public int Id { get; set; }
-
+        public bool Active { get; set; }
+        public int? BottleRate { get; set; }
+        public int? RecipientRate { get; set; }
 
         public int BottleId { get; set; }
         public Bottle Bottle { get; set; }
