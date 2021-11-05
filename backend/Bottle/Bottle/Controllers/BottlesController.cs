@@ -64,7 +64,7 @@ namespace Bottle.Controllers
         /// </summary>
         /// <param name="data">Данные, необходимые для создания бутылочки</param>
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         public IActionResult Create([FromBody]CreateBottleModel data)

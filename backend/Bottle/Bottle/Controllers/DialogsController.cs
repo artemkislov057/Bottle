@@ -147,7 +147,11 @@ namespace Bottle.Controllers
         {
             var dialogs = db.Dialogs
                 .Where(d => d.RecipientId.ToString() == User.Identity.Name && d.BottleRate == null || d.BottleOwnerId.ToString() == User.Identity.Name && d.RecipientRate == null);
-            return Ok(dialogs.Select(d => new DialogModel(d)));
+            return Ok(dialogs.ToList().Select(d =>
+            {
+                var lastMessage = db.Messages.Where(m => m.DialogId == d.Id).OrderByDescending(m => m.Id).FirstOrDefault();
+                return new DialogModel(d, lastMessage);
+            }));
         }
 
         /// <summary>
@@ -165,7 +169,8 @@ namespace Bottle.Controllers
                 return BadRequest();
             if (dialog.BottleOwnerId.ToString() == User.Identity.Name || dialog.RecipientId.ToString() == User.Identity.Name)
             {
-                return Ok(new DialogModel(dialog));
+                var lastMessage = db.Messages.Where(m => m.DialogId == dialog.Id).OrderByDescending(m => m.Id).FirstOrDefault();
+                return Ok(new DialogModel(dialog, lastMessage));
             }
             return BadRequest();
         }

@@ -22,10 +22,16 @@ namespace Bottle.Models
             Active = dialog.Active;
         }
 
+        public DialogModel(Dialog dialog, Message lastMessage) : this(dialog)
+        {
+            LastMessage = new MessageModel(lastMessage);
+        }
+
         public int Id { get; set; }
         public int? BottleId { get; set; }
         public int BottleOwnerId { get; set; }
         public int? RecipientId { get; set; }
         public bool Active { get; set; }
+        public MessageModel LastMessage { get; set; }
     }
 }
