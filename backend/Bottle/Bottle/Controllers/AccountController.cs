@@ -121,7 +121,8 @@ namespace Bottle.Controllers
                     if (user.Password != data.Password)
                         return BadRequest("Неправильный пароль");
                     await Authenticate(user);
-                    return Ok(new Account(user));
+                    var cd = db.CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
+                    return Ok(new Account(user, cd));
                 }
             }
             return BadRequest("Некорректные данные");

@@ -23,7 +23,12 @@ namespace Bottle.Models
                 Rating = (decimal)user.RatingSum / user.RatingCount;
             Sex = user.Sex;
             Type = user.Type;
-            CommercialData = user.CommercialData == null ? null : new CommercialModel(user.CommercialData);
+            CommercialData = user.CommercialData is null ? null : new CommercialModel(user.CommercialData);
+        }
+
+        public Account(User user, CommercialData commercialData) : this(user)
+        {
+            CommercialData = commercialData is null ? null : new CommercialModel(commercialData);
         }
 
         public int Id { get; set; }
