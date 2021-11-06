@@ -288,3 +288,4 @@ function check_name_adress(name, adress) {
 
 // let leaflet = require('./node_modules/leaflet');
 // console.log(leaflet)
+let a = 10;
