@@ -21,6 +21,7 @@ L.Control.OSMGeocoder = L.Control.extend({
 				first = new L.LatLng(bbox[0], bbox[2]),
 				second = new L.LatLng(bbox[1], bbox[3]),
 				bounds = new L.LatLngBounds([first, second]);
+			
 			this._map.fitBounds(bounds);
 
             //my
@@ -42,6 +43,7 @@ L.Control.OSMGeocoder = L.Control.extend({
 			
 			// L.marker(new L.LatLng(x, y)).addTo(this._map).bindPopup(`<b>${results[0].display_name}</b>`).openPopup();
             L.marker(new L.LatLng(x, y)).addTo(this._map);
+			
 		}
 	},
 
@@ -115,19 +117,18 @@ L.Control.OSMGeocoder = L.Control.extend({
 		result[0]["class"]="boundary";
 		result[0]["display_name"]="Position: "+lat+" "+lon;
 		result[0]["lat"] = lat;
-		result[0]["lon"] = lon;
+		result[0]["lon"] = lon;		
 		return result;
 	},
 	_isLatLon : function (q) {
 		//"lon lat" => xx.xxx x.xxxxx
 		var re = /(-?\d+\.\d+)\s(-?\d+\.\d+)/;
 		var m = re.exec(q);
-		if (m != undefined) return m;
-
+		if (m != undefined) return m;		
 		//lat...xx.xxx...lon...x.xxxxx
 		re = /lat\D*(-?\d+\.\d+)\D*lon\D*(-?\d+\.\d+)/;
 		m = re.exec(q);
-		//showRegExpResult(m);
+		//showRegExpResult(m);		
 		if (m != undefined) return m;
 		else return null;
 	},
@@ -137,58 +138,64 @@ L.Control.OSMGeocoder = L.Control.extend({
 		//re = /[NS]\s*(\d+)\D*(\d+\.\d+).?\s*[EW]\s*(\d+)\D*(\d+\.\d+)\D*/;
 		re = /([ns])\s*(\d+)\D*(\d+\.\d+).?\s*([ew])\s*(\d+)\D*(\d+\.\d+)/i;
 		m = re.exec(q.toLowerCase());
-		//showRegExpResult(m);
+		//showRegExpResult(m);		
 		if ((m != undefined)) return m;
 		else return null;
 		// +- dec min +- dec min
-	},
+	},	
 
-	_geocode : function (event) {
+	_geocode : function (event, add_event=false) {
 		L.DomEvent.preventDefault(event);
-		var q = this._input.value;
+		var q = this._input.value;		
 		//try to find corrdinates
 		if (this._isLatLon(q) != null)
-		{
+		{			
 			var m = this._isLatLon(q);
 			console.log("LatLon: "+m[1]+" "+m[2]);
 			//m = {lon, lat}
-			this.options.callback.call(this, this._createSearchResult(m[1],m[2]));
+			this.options.callback.call(this, this._createSearchResult(m[1],m[2]));			
 			return;
 		}
 		else if (this._isLatLon_decMin(q) != null)
-		{
+		{			
 			var m = this._isLatLon_decMin(q);
 			//m: [ns, lat dec, lat min, ew, lon dec, lon min]
 			var temp  = new Array();
 			temp['n'] = 1;
 			temp['s'] = -1;
 			temp['e'] = 1;
-			temp['w'] = -1;
+			temp['w'] = -1;			
 			this.options.callback.call(this,this._createSearchResult(
 				temp[m[1]]*(Number(m[2]) + m[3]/60),
 				temp[m[4]]*(Number(m[5]) + m[6]/60)
-			));
+			));			
 			return;
 		}
 
 		//and now Nominatim
 		//http://wiki.openstreetmap.org/wiki/Nominatim
 		console.log(this._callbackId);
-		window[("_l_osmgeocoder_"+this._callbackId)] = L.Util.bind(this.options.callback, this);
 
+		//пробуем возвращать координаты и ставить метку вне геокодера
+		// if(add_event) {
+		// 	window[("_l_osmgeocoder_"+this._callbackId)] = L.Util.bind(this.my_geocode_obj.callback, this);
+		// } else {
+		// 	window[("_l_osmgeocoder_"+this._callbackId)] = L.Util.bind(this.options.callback, this);
+		// }
+		
 
 		/* Set up params to send to Nominatim */
-		var params = {
-			// Defaults
-			q: this._input.value,
-			json_callback : ("_l_osmgeocoder_"+this._callbackId++),
-			format: 'json'
-		};
+		// var params = {
+		// 	// Defaults
+		// 	q: this._input.value,
+		// 	json_callback : ("_l_osmgeocoder_"+this._callbackId++),
+		// 	format: 'json'
+		// };		
 
 		if (this.options.bounds && this.options.bounds != null) {
 			if( this.options.bounds instanceof L.LatLngBounds ) {
 				params.viewbox = this.options.bounds.toBBoxString();
-				params.bounded = 1;
+				params.bounded = 1;								
 			}
 			else {
 				console.log('bounds must be of type L.LatLngBounds');
@@ -205,21 +212,50 @@ L.Control.OSMGeocoder = L.Control.extend({
 			}
 		}
 
-		var protocol = location.protocol;
-		if (protocol == "file:") protocol = "https:";
-		var url = protocol + "//nominatim.openstreetmap.org/search" + L.Util.getParamString(params),
-			script = document.createElement("script");
+		// var protocol = location.protocol;
+		// if (protocol == "file:") protocol = "https:";
+		// var url = protocol + "//nominatim.openstreetmap.org/search" + L.Util.getParamString(params),
+		// 	script = document.createElement("script");
 
 
 
 
-		script.type = "text/javascript";
-		script.src = url;
-		script.id = this._callbackId;
-		document.getElementsByTagName("head")[0].appendChild(script);
+		// script.type = "text/javascript";
+		// script.src = url;
+		// script.id = this._callbackId;
+		// document.getElementsByTagName("head")[0].appendChild(script);
+
+		let params = {
+			// Defaults
+			q: this._input.value,
+			format: 'json'
+		};
+		let url = "https://nominatim.openstreetmap.org/search" + L.Util.getParamString(params);
+
+		return fetch(url).then(res => res.json()).then(res => {
+			return res;			
+		})
+		// console.log(url)
 	},
 
-	_expand: function () {
+	my_geocode_obj: {		
+		callback: function(results) {
+			if (results.length == 0) {
+				console.log("ERROR: didn't find a result");
+				return;
+			}
+			var bbox = results[0].boundingbox,
+				first = new L.LatLng(bbox[0], bbox[2]),
+				second = new L.LatLng(bbox[1], bbox[3]),
+				bounds = new L.LatLngBounds([first, second]);
+			
+			this._map.fitBounds(bounds);
+			console.log('Работает');
+			return 10;
+		}
+	},
+
+	_expand: function () {		
 		L.DomUtil.addClass(this._container, 'leaflet-control-geocoder-expanded');
 	},
 
