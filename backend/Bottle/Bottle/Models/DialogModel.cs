@@ -24,7 +24,8 @@ namespace Bottle.Models
 
         public DialogModel(Dialog dialog, Message lastMessage) : this(dialog)
         {
-            LastMessage = new MessageModel(lastMessage);
+            if (lastMessage != null)
+                LastMessage = new MessageModel(lastMessage);
         }
 
         public int Id { get; set; }
