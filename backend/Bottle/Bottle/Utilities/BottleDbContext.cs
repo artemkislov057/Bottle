@@ -60,6 +60,11 @@ namespace Bottle.Utilities
             return Dialogs.FirstOrDefault(b => b.Id == id);
         }
 
+        public Message GetLastMessage(Dialog dialog)
+        {
+            return Messages.Where(m => m.DialogId == dialog.Id).OrderByDescending(m => m.Id).FirstOrDefault();
+        }
+
         public void SetUserRate(string id, int value)
         {
             var user = GetUser(id);

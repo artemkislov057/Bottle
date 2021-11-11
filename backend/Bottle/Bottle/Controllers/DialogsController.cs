@@ -29,7 +29,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult SendMessage([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] string value)
+        public async Task<IActionResult> SendMessage([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] string value)
         {
             var dialog = db.GetDialog(dialogId);
             if (dialog == null || !dialog.Active)
@@ -37,10 +37,13 @@ namespace Bottle.Controllers
             var user = db.GetUser(User.Identity.Name);
             if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
             {
-                var message = new Message { DialogId = dialogId, SenderId = user.Id, Value = value, DateTime = DateTime.Now };
+                var message = new Message { DialogId = dialogId, SenderId = user.Id, Value = value, DateTime = DateTime.UtcNow };
                 db.Messages.Add(message);
                 db.SaveChanges();
-                return Ok(new MessageModel(message));
+                var recipientId = user.Id == dialog.RecipientId ? dialog.BottleOwnerId : dialog.RecipientId;
+                var messageModel = new MessageModel(message);
+                await WebSocketController.SendMessage(recipientId.ToString(), new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.SendMessage, Model = messageModel });
+                return Ok(messageModel);
             }
             return BadRequest();
         }
@@ -83,7 +86,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult Close([FromRoute(Name = "dialog-id")] int dialogId)
+        public async Task<IActionResult> Close([FromRoute(Name = "dialog-id")] int dialogId)
         {
             var dialog = db.GetDialog(dialogId);
             if (dialog is null || !dialog.Active)
@@ -93,6 +96,9 @@ namespace Bottle.Controllers
             {
                 dialog.Active = false;
                 db.SaveChanges();
+                var recipientId = user.Id == dialog.RecipientId ? dialog.BottleOwnerId : dialog.RecipientId;
+                await WebSocketController.SendMessage(recipientId.ToString(),
+                    new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CloseDialog, Model = new DialogModel(dialog, db.GetLastMessage(dialog)) });
                 return Ok();
             }
             return BadRequest();
@@ -149,8 +155,7 @@ namespace Bottle.Controllers
                 .Where(d => d.RecipientId.ToString() == User.Identity.Name && d.BottleRate == null || d.BottleOwnerId.ToString() == User.Identity.Name && d.RecipientRate == null);
             return Ok(dialogs.ToList().Select(d =>
             {
-                var lastMessage = db.Messages.Where(m => m.DialogId == d.Id).OrderByDescending(m => m.Id).FirstOrDefault();
-                return new DialogModel(d, lastMessage);
+                return new DialogModel(d, db.GetLastMessage(d));
             }));
         }
 
@@ -169,8 +174,7 @@ namespace Bottle.Controllers
                 return BadRequest();
             if (dialog.BottleOwnerId.ToString() == User.Identity.Name || dialog.RecipientId.ToString() == User.Identity.Name)
             {
-                var lastMessage = db.Messages.Where(m => m.DialogId == dialog.Id).OrderByDescending(m => m.Id).FirstOrDefault();
-                return Ok(new DialogModel(dialog, lastMessage));
+                return Ok(new DialogModel(dialog, db.GetLastMessage(dialog)));
             }
             return BadRequest();
         }

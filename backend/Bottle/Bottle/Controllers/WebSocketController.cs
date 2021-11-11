@@ -1,6 +1,8 @@
 ﻿using Bottle.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    public class WebSocketController : ControllerBase
+    public class WebSocketController : Controller
     {
 
         // Список всех клиентов
@@ -20,13 +22,14 @@ namespace Bottle.Controllers
         // Блокировка для обеспечения потокабезопасности
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
 
-        [HttpGet("/ws")]
+        [HttpGet("ws")]
+        [Authorize]
         public async Task Index()
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                var client = new WebSocketUser(webSocket);
+                var client = new WebSocketUser(webSocket, User.Identity.Name);
                 client.SendMessage += async (message) =>
                 {
                     if (message == "disconnect")
@@ -50,10 +53,26 @@ namespace Bottle.Controllers
                 };
                 Clients.Add(client);
                 await client.Listen();
+                Clients.Remove(client);
             }
             else
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            }
+        }
+
+        public async static Task SendMessage(string id, object model)
+        {
+            var result = JsonConvert.SerializeObject(model);
+            await SendMessage(id, result);
+        }
+
+        public async static Task SendMessage(string id, string message)
+        {
+            var webSocketClients = Clients.Where(client => client.id == id);
+            foreach (var e in webSocketClients)
+            {
+                await e.Echo(message);
             }
         }
     }

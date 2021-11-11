@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
@@ -10,17 +11,25 @@ namespace Bottle.Utilities
 {
     public class WebSocketUser
     {
-        public WebSocketUser(WebSocket webSocket)
+        public WebSocketUser(WebSocket webSocket, string id)
         {
             this.webSocket = webSocket;
             cancelTokenSource = new();
             token = cancelTokenSource.Token;
+            this.id = id;
         }
 
         public readonly int BufferSize = 1024 * 4;
+        public readonly string id;
 
         public event Action<string> SendMessage;
         public event Action<WebSocketCloseStatus> ClientClosedConnection;
+
+        public async Task Echo(object model)
+        {
+            var message = JsonConvert.SerializeObject(model);
+            await Echo(message);
+        }
 
         public async Task Echo(string message)
         {
@@ -37,7 +46,7 @@ namespace Bottle.Utilities
                 {
                     await Task.Delay(100).ConfigureAwait(false);
                 }
-                if (cancelTokenSource.IsCancellationRequested)
+                if (cancelTokenSource.IsCancellationRequested || webSocket.State != WebSocketState.Open)
                 {
                     return;
                 }
