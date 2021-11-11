@@ -32,22 +32,15 @@ namespace Bottle.Utilities
         {
             while (true)
             {
-                var buffer = new byte[BufferSize];
-                var result = Enumerable.Empty<byte>();
-                var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
-                result = result.Concat(buffer.Take(receiveResult.Count));
-                while (!(receiveResult.EndOfMessage || receiveResult.CloseStatus.HasValue))
+                var task = ListenMessage();
+                while (!task.IsCompleted)
                 {
-                    receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
-                    result = result.Concat(buffer.Take(receiveResult.Count));
+                    await Task.Delay(100).ConfigureAwait(false);
                 }
-                if (receiveResult.CloseStatus.HasValue)
+                if (cancelTokenSource.IsCancellationRequested)
                 {
-                    ClientClosedConnection?.Invoke(receiveResult.CloseStatus.Value);
-                    await Close(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
-                    break;
+                    return;
                 }
-                SendMessage?.Invoke(Encoding.UTF8.GetString(result.ToArray()));
             }
         }
 
@@ -60,5 +53,25 @@ namespace Bottle.Utilities
         private readonly WebSocket webSocket;
         private CancellationTokenSource cancelTokenSource;
         private CancellationToken token;
+
+        private async Task ListenMessage()
+        {
+            var buffer = new byte[BufferSize];
+            var result = Enumerable.Empty<byte>();
+            var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
+            result = result.Concat(buffer.Take(receiveResult.Count));
+            while (!(receiveResult.EndOfMessage || receiveResult.CloseStatus.HasValue))
+            {
+                receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
+                result = result.Concat(buffer.Take(receiveResult.Count));
+            }
+            if (receiveResult.CloseStatus.HasValue)
+            {
+                ClientClosedConnection?.Invoke(receiveResult.CloseStatus.Value);
+                await Close(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+                return;
+            }
+            SendMessage?.Invoke(Encoding.UTF8.GetString(result.ToArray()));
+        }
     }
 }

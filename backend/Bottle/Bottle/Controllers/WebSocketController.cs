@@ -49,12 +49,7 @@ namespace Bottle.Controllers
                     Clients.Remove(client);
                 };
                 Clients.Add(client);
-                var task = client.Listen();
-                while (!task.IsCompleted)
-                {
-                    await Task.Delay(100).ConfigureAwait(false);
-                }
-                Clients.Remove(client);
+                await client.Listen();
             }
             else
             {
