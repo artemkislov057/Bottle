@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Bottle.Utilities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,38 +15,46 @@ namespace Bottle.Controllers
     {
 
         // Список всех клиентов
-        private static readonly List<WebSocket> Clients = new List<WebSocket>();
+        private static readonly HashSet<WebSocketUser> Clients = new();
 
         // Блокировка для обеспечения потокабезопасности
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
 
-
-        private async Task Echo(HttpContext context, WebSocket webSocket)
-        {
-            var buffer = new byte[1024 * 4];
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            while (!result.CloseStatus.HasValue)
-            {
-                foreach (var client in Clients)
-                {
-                    await client.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
-                }
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
-            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-            Clients.Remove(webSocket);
-        }
-
         [HttpGet("/ws")]
-        public async Task Get()
+        public async Task Index()
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
-                using WebSocket webSocket = await
-                                   HttpContext.WebSockets.AcceptWebSocketAsync();
-                Clients.Add(webSocket);
-
-                    await Echo(HttpContext, webSocket);
+                using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+                var client = new WebSocketUser(webSocket);
+                client.SendMessage += async (message) =>
+                {
+                    if (message == "disconnect")
+                    {
+                        await client.Close(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+                        Clients.Remove(client);
+                        return;
+                    }
+                    foreach (var e in Clients)
+                    {
+                        await e.Echo(message);
+                    }
+                };
+                client.ClientClosedConnection += async (message) =>
+                {
+                    foreach (var e in Clients)
+                    {
+                        await e.Echo("Пользователь отключился");
+                    }
+                    Clients.Remove(client);
+                };
+                Clients.Add(client);
+                var task = client.Listen();
+                while (!task.IsCompleted)
+                {
+                    await Task.Delay(100).ConfigureAwait(false);
+                }
+                Clients.Remove(client);
             }
             else
             {
@@ -53,4 +62,4 @@ namespace Bottle.Controllers
             }
         }
     }
-    }
+}

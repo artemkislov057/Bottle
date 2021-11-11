@@ -87,12 +87,10 @@ namespace Bottle
 
             app.UseRouting();
 
-            var webSocketOptions = new WebSocketOptions()
+            app.UseWebSockets(new WebSocketOptions
             {
                 KeepAliveInterval = TimeSpan.FromSeconds(120),
-            };
-
-            app.UseWebSockets(webSocketOptions);
+            });
 
 
             app.UseAuthentication();
