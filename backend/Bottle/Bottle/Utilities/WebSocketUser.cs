@@ -63,6 +63,11 @@ namespace Bottle.Utilities
             cancelTokenSource.Cancel();
         }
 
+        public void SetCoordinates(string model)
+        {
+            Coordinates = JsonConvert.DeserializeObject<CoordinatesModel>(model, jsonSerializerSettings);
+        }
+
         private readonly WebSocket webSocket;
         private CancellationTokenSource cancelTokenSource;
         private CancellationToken token;

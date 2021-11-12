@@ -3,8 +3,6 @@ using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,22 +31,8 @@ namespace Bottle.Controllers
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 var client = new WebSocketUser(webSocket, User.Identity.Name);
-                client.SendMessage += (message) =>
-                {
-                    var coordinates = JsonConvert.DeserializeObject<CoordinatesModel>(message);
-                    client.Coordinates = coordinates;
-                };
-                client.ClientClosedConnection += async (message) =>
-                {
-                    foreach (var c in Clients)
-                    {
-                        foreach (var ws in c.Value)
-                        {
-                            await ws.Echo("Пользователь отключился");
-                        }
-                    }
-                    Clients[client.id].Remove(client);
-                };
+                client.SendMessage += message => client.SetCoordinates(message);
+                client.ClientClosedConnection += message => Clients[client.id].Remove(client);
                 if (Clients.TryGetValue(User.Identity.Name, out var webSockets))
                 {
                     webSockets.Add(client);
