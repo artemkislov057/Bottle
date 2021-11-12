@@ -62,7 +62,13 @@ namespace Bottle.Utilities
 
         public Message GetLastMessage(Dialog dialog)
         {
-            return Messages.Where(m => m.DialogId == dialog.Id).OrderByDescending(m => m.Id).FirstOrDefault();
+            var dialogMessages = Messages.Where(m => m.DialogId == dialog.Id);
+            if (dialogMessages.Any())
+            {
+                var id = dialogMessages.Max(m => m.Id);
+                return dialogMessages.FirstOrDefault(m => m.Id == id);
+            }
+            return null;
         }
 
         public void SetUserRate(string id, int value)

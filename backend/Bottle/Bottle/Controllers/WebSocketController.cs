@@ -1,4 +1,5 @@
-﻿using Bottle.Utilities;
+﻿using Bottle.Models;
+using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace Bottle.Controllers
     {
 
         // Список всех клиентов
-        private static readonly HashSet<WebSocketUser> Clients = new();
+        private static readonly Dictionary<string, HashSet<WebSocketUser>> Clients = new();
 
         // Блокировка для обеспечения потокабезопасности
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
@@ -30,30 +31,32 @@ namespace Bottle.Controllers
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 var client = new WebSocketUser(webSocket, User.Identity.Name);
-                client.SendMessage += async (message) =>
+                client.SendMessage += (message) =>
                 {
-                    if (message == "disconnect")
-                    {
-                        await client.Close(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
-                        Clients.Remove(client);
-                        return;
-                    }
-                    foreach (var e in Clients)
-                    {
-                        await e.Echo(message);
-                    }
+                    var coordinates = JsonConvert.DeserializeObject<CoordinatesModel>(message);
+                    client.Coordinates = coordinates;
                 };
                 client.ClientClosedConnection += async (message) =>
                 {
-                    foreach (var e in Clients)
+                    foreach (var c in Clients)
                     {
-                        await e.Echo("Пользователь отключился");
+                        foreach (var ws in c.Value)
+                        {
+                            await ws.Echo("Пользователь отключился");
+                        }
                     }
-                    Clients.Remove(client);
+                    Clients[client.id].Remove(client);
                 };
-                Clients.Add(client);
+                if (Clients.TryGetValue(User.Identity.Name, out var webSockets))
+                {
+                    webSockets.Add(client);
+                }
+                else
+                {
+                    Clients[User.Identity.Name] = new() { client };
+                }
                 await client.Listen();
-                Clients.Remove(client);
+                Clients[client.id].Remove(client);
             }
             else
             {
@@ -61,19 +64,62 @@ namespace Bottle.Controllers
             }
         }
 
-        public async static Task SendMessage(string id, object model)
+        public static async Task SendMessage(string id, object model)
         {
             var result = JsonConvert.SerializeObject(model);
             await SendMessage(id, result);
         }
 
-        public async static Task SendMessage(string id, string message)
+        public static async Task SendMessage(string id, string message)
         {
-            var webSocketClients = Clients.Where(client => client.id == id);
-            foreach (var e in webSocketClients)
+            if (Clients.TryGetValue(id, out var webSocketClients))
             {
-                await e.Echo(message);
+                foreach (var e in webSocketClients)
+                {
+                    await e.Echo(message);
+                }
             }
+        }
+
+        public static async Task OnCreatingDialog(string id, DialogModel dialog)
+        {
+            if (Clients.TryGetValue(id, out var webSocketClients))
+            {
+                foreach (var e in webSocketClients)
+                {
+                    await e.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CreateDialog, Model = dialog });
+                }
+            }
+        }
+
+        public static async Task OnCreatingBottle(Models.Database.Bottle model)
+        {
+            var recipientWebSockets = await GetRecipientWebSockets(model);
+            foreach (var ws in recipientWebSockets)
+            {
+                await ws.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CreateBottle, Model = new BottleModel(model) });
+            }
+        }
+
+        public static async Task OnPickedUdBottle(Models.Database.Bottle model)
+        {
+            var recipientWebSockets = await GetRecipientWebSockets(model);
+            foreach (var ws in recipientWebSockets)
+            {
+                await ws.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.BottlePickedUp, Model = new BottleModel(model) });
+            }
+        }
+
+        private static async Task<IEnumerable<WebSocketUser>> GetRecipientWebSockets(Models.Database.Bottle model)
+        {
+            var allWebSockets = Clients.SelectMany(c => c.Value);
+            return await Task.Run(() =>
+            {
+                return allWebSockets.Where(ws =>
+                {
+                    return BottlesController.IsPointInCircle(ws.Coordinates.Lat, ws.Coordinates.Lng, model.Lat, model.Lng, ws.Coordinates.Radius);
+                });
+            });
         }
     }
 }

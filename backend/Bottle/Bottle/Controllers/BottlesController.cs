@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
@@ -46,7 +47,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult PickUp([FromRoute(Name = "bottle-id")] int bottleId)
+        public async Task<IActionResult> PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = db.GetBottle(bottleId);
             var user = db.GetUser(User.Identity.Name);
@@ -56,6 +57,8 @@ namespace Bottle.Controllers
             var dialog = new Dialog { Bottle = bottle, BottleOwnerId = bottle.UserId, Recipient = user };
             db.Dialogs.Add(dialog);
             db.SaveChanges();
+            await WebSocketController.OnPickedUdBottle(bottle);
+            await WebSocketController.OnCreatingDialog(bottle.UserId.ToString(), new DialogModel(dialog));
             return Ok(new { dialogId = dialog.Id });
         }
 
@@ -67,7 +70,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult Create([FromBody]CreateBottleModel data)
+        public async Task<IActionResult> Create([FromBody]CreateBottleModel data)
         {
             if (ModelState.IsValid)
             {
@@ -75,6 +78,7 @@ namespace Bottle.Controllers
                 var bottle = new Models.Database.Bottle(data, user);
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
+                await WebSocketController.OnCreatingBottle(bottle);
                 return Created(string.Empty, new BottleModel(bottle));
             }
             return BadRequest();
@@ -168,7 +172,7 @@ namespace Bottle.Controllers
 
         
 
-        private bool IsPointInCircle(decimal Lat1, decimal Lng1, decimal Lat2, decimal Lng2, double radius)
+        public static bool IsPointInCircle(decimal Lat1, decimal Lng1, decimal Lat2, decimal Lng2, double radius)
         {
             return GetDistanceFromLatLon(Lat1, Lng1, Lat2, Lng2) <= radius;
         }

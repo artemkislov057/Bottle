@@ -152,8 +152,8 @@ namespace Bottle.Controllers
         public IActionResult GetDialogs()
         {
             var dialogs = db.Dialogs
-                .Where(d => d.RecipientId.ToString() == User.Identity.Name && d.BottleRate == null || d.BottleOwnerId.ToString() == User.Identity.Name && d.RecipientRate == null);
-            return Ok(dialogs.ToList().Select(d =>
+                .Where(d => d.RecipientId.ToString() == User.Identity.Name && d.BottleRate == null || d.BottleOwnerId.ToString() == User.Identity.Name && d.RecipientRate == null).ToList();
+            return Ok(dialogs.Select(d =>
             {
                 return new DialogModel(d, db.GetLastMessage(d));
             }));

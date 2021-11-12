@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bottle.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace Bottle.Utilities
 
         public readonly int BufferSize = 1024 * 4;
         public readonly string id;
+
+        public CoordinatesModel Coordinates { get; set; }
 
         public event Action<string> SendMessage;
         public event Action<WebSocketCloseStatus> ClientClosedConnection;

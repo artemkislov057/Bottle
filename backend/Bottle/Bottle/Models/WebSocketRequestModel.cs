@@ -15,8 +15,9 @@ namespace Bottle.Models
             SendMessage = 1,
             CloseDialog = 2,
             CreateBottle = 3,
-            BottlePickedUp = 4,
-            BottleEndLife = 5
+            CreateDialog = 4,
+            BottlePickedUp = 5,
+            BottleEndLife = 6
         }
     }
 }
