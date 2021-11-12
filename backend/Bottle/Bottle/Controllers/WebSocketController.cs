@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
+    [Route("ws")]
     public class WebSocketController : Controller
     {
 
@@ -23,7 +24,7 @@ namespace Bottle.Controllers
         // Блокировка для обеспечения потокабезопасности
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
 
-        [HttpGet("ws")]
+        [HttpGet]
         [Authorize]
         public async Task Index()
         {
@@ -62,6 +63,12 @@ namespace Bottle.Controllers
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
+        }
+
+        [HttpGet("event-types")]
+        public IActionResult GetWebSocketEventTypes()
+        {
+            return Ok(Enum.GetValues<WebSocketRequestModel.EventType>().ToDictionary(v => v));
         }
 
         public static async Task SendMessage(string id, object model)
