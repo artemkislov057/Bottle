@@ -1,5 +1,6 @@
 ﻿using Bottle.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace Bottle.Utilities
 
         public async Task Echo(object model)
         {
-            var message = JsonConvert.SerializeObject(model);
+            var message = JsonConvert.SerializeObject(model, jsonSerializerSettings);
             await Echo(message);
         }
 
@@ -65,6 +66,11 @@ namespace Bottle.Utilities
         private readonly WebSocket webSocket;
         private CancellationTokenSource cancelTokenSource;
         private CancellationToken token;
+        private static JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new DefaultContractResolver { NamingStrategy = new CamelCaseNamingStrategy() },
+            Formatting = Formatting.Indented
+        };
 
         private async Task ListenMessage()
         {

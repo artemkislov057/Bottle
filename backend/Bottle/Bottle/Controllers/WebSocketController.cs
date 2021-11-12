@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,19 +72,24 @@ namespace Bottle.Controllers
             return Ok(Enum.GetValues<WebSocketRequestModel.EventType>().ToDictionary(v => v));
         }
 
-        public static async Task SendMessage(string id, object model)
-        {
-            var result = JsonConvert.SerializeObject(model);
-            await SendMessage(id, result);
-        }
-
-        public static async Task SendMessage(string id, string message)
+        public static async Task EchoWebSocketsUser(string id, string message)
         {
             if (Clients.TryGetValue(id, out var webSocketClients))
             {
                 foreach (var e in webSocketClients)
                 {
                     await e.Echo(message);
+                }
+            }
+        }
+
+        public static async Task OnSendMessage(string id, MessageModel model)
+        {
+            if (Clients.TryGetValue(id, out var webSocketClients))
+            {
+                foreach (var e in webSocketClients)
+                {
+                    await e.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.SendMessage, Model = model });
                 }
             }
         }
@@ -95,6 +101,17 @@ namespace Bottle.Controllers
                 foreach (var e in webSocketClients)
                 {
                     await e.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CreateDialog, Model = dialog });
+                }
+            }
+        }
+
+        public static async Task OnClosedDialog(string id, DialogModel dialog)
+        {
+            if (Clients.TryGetValue(id, out var webSocketClients))
+            {
+                foreach (var e in webSocketClients)
+                {
+                    await e.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CloseDialog, Model = dialog });
                 }
             }
         }

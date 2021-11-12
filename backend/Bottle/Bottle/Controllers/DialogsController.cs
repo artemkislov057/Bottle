@@ -42,7 +42,7 @@ namespace Bottle.Controllers
                 db.SaveChanges();
                 var recipientId = user.Id == dialog.RecipientId ? dialog.BottleOwnerId : dialog.RecipientId;
                 var messageModel = new MessageModel(message);
-                await WebSocketController.SendMessage(recipientId.ToString(), new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.SendMessage, Model = messageModel });
+                await WebSocketController.OnSendMessage(recipientId.ToString(), messageModel);
                 return Ok(messageModel);
             }
             return BadRequest();
@@ -97,8 +97,7 @@ namespace Bottle.Controllers
                 dialog.Active = false;
                 db.SaveChanges();
                 var recipientId = user.Id == dialog.RecipientId ? dialog.BottleOwnerId : dialog.RecipientId;
-                await WebSocketController.SendMessage(recipientId.ToString(),
-                    new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CloseDialog, Model = new DialogModel(dialog, db.GetLastMessage(dialog)) });
+                await WebSocketController.OnClosedDialog(recipientId.ToString(), new DialogModel(dialog, db.GetLastMessage(dialog)));
                 return Ok();
             }
             return BadRequest();
