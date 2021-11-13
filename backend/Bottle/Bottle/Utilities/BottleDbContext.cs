@@ -1,7 +1,9 @@
-﻿using Bottle.Models.Database;
+﻿using Bottle.Controllers;
+using Bottle.Models.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Bottle.Utilities
 {
@@ -33,13 +35,14 @@ namespace Bottle.Utilities
             return user;
         }
 
-        public Models.Database.Bottle GetBottle(int id)
+        public async Task<Models.Database.Bottle> GetBottle(int id)
         {
             var result = Bottles.FirstOrDefault(b => b.Id == id);
             if (result == null)
                 return null;
             if (result.Active && result.EndTime <= DateTime.UtcNow)
             {
+                await WebSocketController.OnTimeoutBottle(new(result));
                 Bottles.Remove(result);
                 SaveChanges();
                 return null;
@@ -47,15 +50,16 @@ namespace Bottle.Utilities
             return result;
         }
 
-        public DbSet<Models.Database.Bottle> GetBottles()
+        public async Task<DbSet<Models.Database.Bottle>> GetBottles()
         {
             var timeoutBottles = Bottles.Where(b => b.Active && b.EndTime <= DateTime.UtcNow);
+            await WebSocketController.OnTimeoutBottles(timeoutBottles.Select(b => new Models.BottleModel(b)));
             Bottles.RemoveRange(timeoutBottles);
             SaveChanges();
             return Bottles;
         }
 
-        public Models.Database.Dialog GetDialog(int id)
+        public Dialog GetDialog(int id)
         {
             return Dialogs.FirstOrDefault(b => b.Id == id);
         }

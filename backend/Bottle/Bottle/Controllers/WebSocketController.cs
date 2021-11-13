@@ -56,6 +56,17 @@ namespace Bottle.Controllers
             return Ok(Enum.GetValues<WebSocketRequestModel.EventType>().ToDictionary(v => v));
         }
 
+        public static async Task EchoWebSocketsUser(string id, object model)
+        {
+            if (Clients.TryGetValue(id, out var webSocketClients))
+            {
+                foreach (var e in webSocketClients)
+                {
+                    await e.Echo(model);
+                }
+            }
+        }
+
         public static async Task EchoWebSocketsUser(string id, string message)
         {
             if (Clients.TryGetValue(id, out var webSocketClients))
@@ -67,58 +78,81 @@ namespace Bottle.Controllers
             }
         }
 
-        public static async Task OnSendMessage(string id, MessageModel model)
+        public static async Task OnSendMessage(string id, MessageModel message)
         {
-            if (Clients.TryGetValue(id, out var webSocketClients))
+            await EchoWebSocketsUser(id, new WebSocketRequestModel
             {
-                foreach (var e in webSocketClients)
-                {
-                    await e.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.SendMessage, Model = model });
-                }
-            }
+                EventNumber = WebSocketRequestModel.EventType.SendMessage,
+                Model = message
+            });
         }
 
         public static async Task OnCreatingDialog(string id, DialogModel dialog)
         {
-            if (Clients.TryGetValue(id, out var webSocketClients))
+            await EchoWebSocketsUser(id, new WebSocketRequestModel
             {
-                foreach (var e in webSocketClients)
-                {
-                    await e.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CreateDialog, Model = dialog });
-                }
-            }
+                EventNumber = WebSocketRequestModel.EventType.CreateDialog,
+                Model = dialog
+            });
         }
 
         public static async Task OnClosedDialog(string id, DialogModel dialog)
         {
-            if (Clients.TryGetValue(id, out var webSocketClients))
+            await EchoWebSocketsUser(id, new WebSocketRequestModel
             {
-                foreach (var e in webSocketClients)
+                EventNumber = WebSocketRequestModel.EventType.CloseDialog,
+                Model = dialog
+            });
+        }
+
+        public static async Task OnCreatingBottle(BottleModel bottle)
+        {
+            var recipientWebSockets = await GetRecipientWebSockets(bottle);
+            foreach (var ws in recipientWebSockets)
+            {
+                await ws.Echo(new WebSocketRequestModel
                 {
-                    await e.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CloseDialog, Model = dialog });
-                }
+                    EventNumber = WebSocketRequestModel.EventType.CreateBottle,
+                    Model = bottle
+                });
             }
         }
 
-        public static async Task OnCreatingBottle(Models.Database.Bottle model)
+        public static async Task OnPickedUdBottle(BottleModel bottle)
         {
-            var recipientWebSockets = await GetRecipientWebSockets(model);
+            var recipientWebSockets = await GetRecipientWebSockets(bottle);
             foreach (var ws in recipientWebSockets)
             {
-                await ws.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.CreateBottle, Model = new BottleModel(model) });
+                await ws.Echo(new WebSocketRequestModel
+                {
+                    EventNumber = WebSocketRequestModel.EventType.BottlePickedUp,
+                    Model = bottle
+                });
             }
         }
 
-        public static async Task OnPickedUdBottle(Models.Database.Bottle model)
+        public static async Task OnTimeoutBottle(BottleModel bottle)
         {
-            var recipientWebSockets = await GetRecipientWebSockets(model);
+            var recipientWebSockets = await GetRecipientWebSockets(bottle);
             foreach (var ws in recipientWebSockets)
             {
-                await ws.Echo(new WebSocketRequestModel { EventNumber = WebSocketRequestModel.EventType.BottlePickedUp, Model = new BottleModel(model) });
+                await ws.Echo(new WebSocketRequestModel
+                {
+                    EventNumber = WebSocketRequestModel.EventType.BottleEndLife,
+                    Model = bottle
+                });
             }
         }
 
-        private static async Task<IEnumerable<WebSocketUser>> GetRecipientWebSockets(Models.Database.Bottle model)
+        public static async Task OnTimeoutBottles(IEnumerable<BottleModel> bottles)
+        {
+            foreach (var bottle in bottles)
+            {
+                await OnTimeoutBottle(bottle);
+            }
+        }
+
+        private static async Task<IEnumerable<WebSocketUser>> GetRecipientWebSockets(BottleModel model)
         {
             var allWebSockets = Clients.SelectMany(c => c.Value);
             return await Task.Run(() =>
