@@ -38,7 +38,7 @@ namespace Bottle.Utilities
             var result = Bottles.FirstOrDefault(b => b.Id == id);
             if (result == null)
                 return null;
-            if (result.EndTime <= DateTime.UtcNow)
+            if (result.Active && result.EndTime <= DateTime.UtcNow)
             {
                 Bottles.Remove(result);
                 SaveChanges();
@@ -49,7 +49,7 @@ namespace Bottle.Utilities
 
         public DbSet<Models.Database.Bottle> GetBottles()
         {
-            var timeoutBottles = Bottles.Where(b => b.EndTime <= DateTime.UtcNow);
+            var timeoutBottles = Bottles.Where(b => b.Active && b.EndTime <= DateTime.UtcNow);
             Bottles.RemoveRange(timeoutBottles);
             SaveChanges();
             return Bottles;

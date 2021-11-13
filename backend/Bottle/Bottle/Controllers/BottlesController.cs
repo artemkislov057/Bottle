@@ -54,8 +54,10 @@ namespace Bottle.Controllers
             if (bottle == null || !bottle.Active || bottle.User == user)
                 return BadRequest();
             bottle.Active = false;
-            var dialog = new Dialog { Bottle = bottle, BottleOwnerId = bottle.UserId, Recipient = user };
+            var dialog = new Dialog { BottleId = bottle.Id, BottleOwnerId = bottle.UserId, RecipientId = user.Id };
             db.Dialogs.Add(dialog);
+            db.SaveChanges();
+            bottle.DialogId = dialog.Id;
             db.SaveChanges();
             await WebSocketController.OnPickedUdBottle(bottle);
             await WebSocketController.OnCreatingDialog(bottle.UserId.ToString(), new DialogModel(dialog));
@@ -84,27 +86,27 @@ namespace Bottle.Controllers
             return BadRequest();
         }
 
-        /// <summary>
-        /// Выбросить свою бутылочку обратно
-        /// </summary>
-        /// <remarks>
-        /// Если кто-то поднял вашу бутылочку
-        /// </remarks>
-        /// <param name="bottleId">ID бутылочки</param>
-        [HttpPost("{bottle-id}/throw")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(403)]
-        public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
-        {
-            var bottle = db.GetBottle(bottleId);
-            var user = db.GetUser(User.Identity.Name);
-            if (bottle == null || bottle.Active || bottle.UserId != user.Id)
-                return BadRequest();
-            bottle.Active = true;
-            db.SaveChanges();
-            return Ok(new BottleModel(bottle));
-        }
+        ///// <summary>
+        ///// Выбросить свою бутылочку обратно
+        ///// </summary>
+        ///// <remarks>
+        ///// Если кто-то поднял вашу бутылочку
+        ///// </remarks>
+        ///// <param name="bottleId">ID бутылочки</param>
+        //[HttpPost("{bottle-id}/throw")]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(400)]
+        //[ProducesResponseType(403)]
+        //public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
+        //{
+        //    var bottle = db.GetBottle(bottleId);
+        //    var user = db.GetUser(User.Identity.Name);
+        //    if (bottle == null || bottle.Active || bottle.UserId != user.Id)
+        //        return BadRequest();
+        //    bottle.Active = true;
+        //    db.SaveChanges();
+        //    return Ok(new BottleModel(bottle));
+        //}
 
         /// <summary>
         /// Удалить бутылочку
@@ -118,7 +120,7 @@ namespace Bottle.Controllers
         {
             var bottle = db.GetBottle(bottleId);
             var user = db.GetUser(User.Identity.Name);
-            if (bottle != null && bottle.User == user)
+            if (bottle != null && bottle.Active && bottle.UserId == user.Id)
             {
                 db.Bottles.Remove(bottle);
                 db.SaveChanges();

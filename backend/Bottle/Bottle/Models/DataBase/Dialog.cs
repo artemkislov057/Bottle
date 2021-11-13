@@ -11,6 +11,7 @@ namespace Bottle.Models.Database
         public int? RecipientRate { get; set; }
 
         public int? BottleId { get; set; }
+        [ForeignKey("BottleId")]
         public Bottle Bottle { get; set; }
 
         public int BottleOwnerId { get; set; }

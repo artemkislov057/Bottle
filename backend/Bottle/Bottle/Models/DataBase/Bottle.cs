@@ -43,7 +43,8 @@ namespace Bottle.Models.Database
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public List<Dialog> Dialogs { get; set; }
+        public int? DialogId { get; set; }
+        public Dialog Dialog { get; set; }
         public List<BottleContent> BottleContents { get; set; }
     }
 }
