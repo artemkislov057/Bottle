@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Roboto";
+    color: #2F3952;
+}
+
+.modal{
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 386px;
+    height: 231px; 
+    background: white;
+    border-radius: 26px;
+    
+}
+
+.modal-header{
+    padding-top: 16px ;
+    padding-bottom: 13px;
+    display: flex;
+    justify-content:center;
+    flex-wrap: wrap;
+
+}
+
+.hystmodal__close{
+    top: -140px;
+    right: 67px;
+}
+
+.modal-title{
+    font-family: Roboto;
+    font-size: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #2F3952;
+      
+}
+
+.modal-body{
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    align-items: center;
+}
+
+.emoji1{
+    width: 64px;
+    height: 64px;
+    border: none;
+    background: url('../../image/Emoji1.svg');
+    filter: drop-shadow(0px 2.11248px 2.11248px rgba(0, 0, 0, 0.25));
+    cursor: pointer;
+    margin-left: 11px;
+}
+
+.emoji2{
+    width: 64px;
+    height: 64px;
+    border: none;
+    background: url('../../image/Emoji2.svg');
+    filter: drop-shadow(0px 2.11248px 2.11248px rgba(0, 0, 0, 0.25));
+    cursor: pointer;
+}
+
+.emoji3{
+    width: 64px;
+    height: 64px;
+    border: none;
+    background: url('../../image/Emoji3.svg');
+    filter: drop-shadow(0px 2.11248px 2.11248px rgba(0, 0, 0, 0.25));
+    cursor: pointer;
+}
+
+.emoji4{
+    width: 64px;
+    height: 64px;
+    border: none;
+    background: url('../../image/Emoji4.svg');
+    filter: drop-shadow(0px 2.11248px 2.11248px rgba(0, 0, 0, 0.25));
+    cursor: pointer;
+}
+
+.emoji5{
+    width: 64px;
+    height: 64px;
+    border: none;
+    background: url('../../image/Emoji5.svg');
+    filter: drop-shadow(0px 2.11248px 2.11248px rgba(0, 0, 0, 0.25));
+    cursor: pointer;
+    margin-right: 11px;
+}
