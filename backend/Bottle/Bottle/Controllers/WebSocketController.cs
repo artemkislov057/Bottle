@@ -159,7 +159,7 @@ namespace Bottle.Controllers
             {
                 return allWebSockets.Where(ws =>
                 {
-                    return BottlesController.IsPointInCircle(ws.Coordinates.Lat, ws.Coordinates.Lng, model.Lat, model.Lng, ws.Coordinates.Radius);
+                    return ws.Coordinates != null && BottlesController.IsPointInCircle(ws.Coordinates.Lat, ws.Coordinates.Lng, model.Lat, model.Lng, ws.Coordinates.Radius);
                 });
             });
         }
