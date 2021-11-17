@@ -54,6 +54,7 @@ namespace Bottle
                 var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,6 +91,11 @@ namespace Bottle
                 c.SwaggerEndpoint("swagger/v1/swagger.json", "Bottle api");
                 c.RoutePrefix = string.Empty;
             });
+
+            app.UseCors(builder => builder.WithOrigins("http://127.0.0.1:5500")
+                                          .AllowAnyHeader()
+                                          .AllowAnyMethod()
+                                          .AllowCredentials());
 
             app.UseEndpoints(endpoints =>
             {
