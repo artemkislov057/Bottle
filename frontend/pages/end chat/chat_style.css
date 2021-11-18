@@ -56,7 +56,7 @@ body {
     height: 84.1px;
     border: none;
     justify-content: center;
-    background: url('../../image/yes!.svg');
+    background: url('../image/yes!.svg');
     cursor: pointer;
 }
 
@@ -65,6 +65,6 @@ body {
     height: 84.1px;
     border: none;
     justify-content: center;
-    background: url('../../image/no!.svg');  
+    background: url('../image/no!.svg');  
     cursor: pointer;
 }
