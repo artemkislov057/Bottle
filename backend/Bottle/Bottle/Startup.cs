@@ -35,6 +35,8 @@ namespace Bottle
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Events.OnRedirectToLogin = context =>
                     {
                         context.Response.StatusCode = 403;
@@ -92,7 +94,7 @@ namespace Bottle
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseCors(builder => builder.WithOrigins("http://127.0.0.1:5500")
+            app.UseCors(builder => builder.WithOrigins("http://127.0.0.1:5500", "https://127.0.0.1:5500")
                                           .AllowAnyHeader()
                                           .AllowAnyMethod()
                                           .AllowCredentials());
