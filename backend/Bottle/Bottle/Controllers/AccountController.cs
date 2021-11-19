@@ -72,7 +72,7 @@ namespace Bottle.Controllers
         [AllowAnonymous]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> RegisterUser([FromForm] RegistrationUserModel data)
+        public async Task<IActionResult> RegisterUser([FromBody] RegistrationUserModel data)
         {
             if (ModelState.IsValid)
             {
@@ -111,7 +111,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] LoginModel data)
+        public async Task<IActionResult> Login([FromBody] LoginModel data)
         {
             if (ModelState.IsValid && !(string.IsNullOrEmpty(data.Nickname) && string.IsNullOrEmpty(data.Email)))
             {
