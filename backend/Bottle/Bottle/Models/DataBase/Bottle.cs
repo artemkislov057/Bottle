@@ -17,6 +17,8 @@ namespace Bottle.Models.Database
         {
             Lat = createBottleModel.Lat;
             Lng = createBottleModel.Lng;
+            GeoObjectName = createBottleModel.GeoObjectName;
+            Address = createBottleModel.Address;
             Title = createBottleModel.Title;
             Description = createBottleModel.Description;
             Category = createBottleModel.Category;
