@@ -17,6 +17,8 @@ namespace Bottle.Models
             Id = entityBottle.Id;
             Lat = entityBottle.Lat;
             Lng = entityBottle.Lng;
+            GeoObjectName = entityBottle.GeoObjectName;
+            Address = entityBottle.Address;
             Title = entityBottle.Title;
             Description = entityBottle.Description;
             Category = entityBottle.Category;
@@ -30,6 +32,8 @@ namespace Bottle.Models
         public int Id { get; set; }
         public decimal Lat { get; set; }
         public decimal Lng { get; set; }
+        public string GeoObjectName { get; set; }
+        public string Address { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
