@@ -15,6 +15,7 @@ namespace Bottle.Utilities
             {
                 UserTypes.Add(new UserType { Type = "DefaultUser" });
                 UserTypes.Add(new UserType { Type = "Commercial" });
+                Users.Add(new User { Nickname = "Admin", Password = "Admin", Email = "Admin@admin.ru", Sex = "атакующий вертолетик", Type = 1 });
                 SaveChanges();
             }
         }
