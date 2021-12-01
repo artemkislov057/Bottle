@@ -1,3 +1,12 @@
+import '/style.css';
+import './hystmodal.min.css';
+import './Control.OSMGeocoder';
+import './hystmodal.min';
+import blueMarker from './marker_siniy.svg';
+import testIcon2 from './test-icon2.jpg';
+import docIcon from './faylikonka.svg';
+
+
 let mymap = L.map('mapid').setView([56.85, 60.6], 13);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -17,63 +26,7 @@ let myIcon = L.icon({
     iconSize: [50, 50],    
 });
 
-//создание кастомной иконки с привязкой класса
-// let iconn = L.divIcon({ 
-//     className: 'test-icon',    
-// });
-
-
-//отображение маркера при клике
-// mymap.addEventListener('click', (e) => {    
-//     // L.marker(e.latlng, {icon: myIcon}).addTo(mymap).bindPopup("<b>QQ</b>").openPopup();
-
-//     let div = document.createElement('div');
-//     div.classList = 'marker-info';
-
-//     let h = document.createElement('h2');
-//     div.appendChild(h);
-
-//     let p = document.createElement('p');
-//     p.classList = 'marker-info-street';
-//     div.appendChild(p);
-
-//     let div2 = document.createElement('div');
-//     div2.classList = 'marker-info-field';
-
-//     let p2 = document.createElement('p');
-//     p2.classList = 'marker-info-field-des'
-//     div2.appendChild(p2);
-
-//     let div3 = document.createElement('div');
-//     div3.classList = 'marker-info-field-image';
-//     div2.appendChild(div3);
-
-//     let image = document.createElement('img');
-//     image.classList = 'marker-info-field-image';
-//     div3.appendChild(image);
-
-//     let image1 = document.createElement('img');
-//     image1.classList = 'marker-info-field-image';
-//     div3.appendChild(image1);
-
-//     div.appendChild(div2);
-
-//     let btn = document.createElement('button');
-//     btn.classList = 'marker-info-button';
-
-//     div.appendChild(btn);
-
-//     //в будущем всю инфу брать из бд(?)
-//     h.textContent = 'Заголовок';
-//     p.textContent = 'Улица ###';
-//     p2.textContent = 'Информация о маркере Информация о маркере Информация о маркере Информация о маркере';
-//     image.src = 'test-icon2.jpg';
-//     image1.src = 'test-icon2.jpg';
-//     btn.textContent = 'К диалогу';
-
-//     L.marker(e.latlng, {icon: myIcon}).addTo(mymap).bindPopup(div).openPopup();
-// })
-
+let bottleIdOnMap = []
 
 //поиск по адресам
 let osmGeocoder = new L.Control.OSMGeocoder();
@@ -136,27 +89,92 @@ let modal_create_button = document.querySelector('.modal-window-exit-button');
 let marker_create_bottle;
 
 let create_modal_window_button = document.querySelector('.new-bottle');
+let profileButton = document.querySelector('.profile');
+let chatButton = document.querySelector('.chat');
 
+let userImageList = document.querySelector('.modal-user-image-list');
+let divUserImage = document.querySelector('.modal-window-user-image');
+let addUserImageInput = document.querySelector('.modal-user-input-image');
+
+create_modal_window_button.addEventListener('click', () => {
+    mymap.closePopup();
+})
+
+//получение всех бутылок на карте
+fetch('https://localhost:44358/api/bottles', {   
+    credentials: 'include',
+    headers: {
+        'Content-Type': 'application/json'            
+    }
+})
+.then(res => res.json())
+.then(res => {
+    let newIcon = L.icon({
+        iconUrl: blueMarker,
+        iconSize: [50, 50],    
+    });
+    for(let e of res){            
+        if(!(e.id in bottleIdOnMap)) {
+            // console.log(e)
+            new Bottle(e.id, "Да..", [e.lat, e.lng], newIcon, e.geoObjectName, e.address, e.title, e.description, false);
+            bottleIdOnMap.push(e.id)            
+            
+        }
+    }
+})
+
+//обновление инфы о бутылках
+let ws = new WebSocket('wss:/localhost:44358/ws')
+
+ws.onopen = function() {
+    ws.send(JSON.stringify({
+        lat:56.85,//
+        lng: 60.6,
+        radius: 100//
+    }))
+}
+
+ws.onmessage = function(e) {
+    // console.log(JSON.parse(e.data))
+    if(JSON.parse(e.data).eventNumber == 3) {
+        let newIcon = L.icon({
+            iconUrl: blueMarker,
+            iconSize: [50, 50],    
+        });
+        let bottleData = JSON.parse(e.data).model;
+        if(!(bottleData.id in bottleIdOnMap)) {
+            new Bottle(bottleData.id, "Да..", [bottleData.lat, bottleData.lng], newIcon, bottleData.geoObjectName, bottleData.address, bottleData.title, bottleData.description, false);
+            bottleIdOnMap.push(e.id)        
+        }
+    }
+}
+
+//логика создания бутылки через модалку
 modal_window.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    //обнуляем у кнопки создания модалки data- атрибут, чтобы во время ожидания выбора м/п-ния метки не открывать заново создание бутылки
-    //из за этого если нажать на кнопку во время ожидания -> ошибка в консоль
-    create_modal_window_button.dataset.hystmodal = "";
+    create_modal_window_button.style.visibility = "hidden";
+    profileButton.style.visibility = "hidden";
+    chatButton.style.visibility = "hidden";
     
-    myModal.close();//обнулить все поля
+    myModal.close();
 
     let quest_marker;
     let once_click_on_map_flag = true;
 
     let back_button = document.querySelector('.back-to-not-create');
     back_button.style.display = "block";
+
     back_button.addEventListener('click', () => {
         once_click_on_map_flag = false;
         back_button.style.display = "none";
-        create_modal_window_button.dataset.hystmodal = "#myModal";
+        create_modal_window_button.style.visibility = "visible";
+        profileButton.style.visibility = "visible";
+        chatButton.style.visibility = "visible";
         modal_h.value = "";
         modal_description.value = "";
+        userImageList.innerHTML = "";
+        addUserImageInput.value = '';
         if(quest_marker) mymap.removeLayer(quest_marker);
     })
 
@@ -184,23 +202,53 @@ modal_window.addEventListener('submit', (event) => {
 
             let quest_yes_button = document.querySelector('.quest-yes-button');
             let quest_no_button = document.querySelector('.quest-no-button');
-
             quest_yes_button.addEventListener('click', () => {
                 mymap.removeLayer(quest_marker);
 
-                let div = create_div_popup(name, adress);
+                let newIcon = L.icon({
+                    iconUrl: blueMarker,
+                    iconSize: [50, 50],    
+                });
+                
+                console.log(event)
 
-                marker_create_bottle = L.marker(e.latlng, {icon: myIcon});
-                marker_create_bottle.addTo(mymap).bindPopup(div).openPopup();
+                let a = fetch('https://localhost:44358/api/bottles', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        lat: e.latlng.lat,
+                        lng: e.latlng.lng,
+                        title: modal_h.value,                
+                        geoObjectName: name,
+                        address: adress,
+                        description: modal_description.value,
+                        category: "Пока в разработке эти категории...",//
+                        lifeTime: 10000//    
+                    }),
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'            
+                    }
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        new Bottle(res.id, "Пока в разработке эти категории...", e.latlng, newIcon, name, adress, modal_h.value, modal_description.value);
 
-                modal_h.value = "";
-                modal_description.value = "";
+                        bottleIdOnMap.push(res.id);
 
-                once_click_on_map_flag = false;
+                        modal_h.value = "";
+                        modal_description.value = "";
 
-                create_modal_window_button.dataset.hystmodal = "#myModal";
+                        once_click_on_map_flag = false;
 
-                back_button.style.display = "none";
+                        create_modal_window_button.style.visibility = "visible";
+                        profileButton.style.visibility = "visible";
+                        chatButton.style.visibility = "visible";
+
+                        back_button.style.display = "none";
+
+                        userImageList.innerHTML = "";
+                        addUserImageInput.value = '';        
+                    })
             })
 
             quest_no_button.addEventListener('click', () => {
@@ -211,51 +259,70 @@ modal_window.addEventListener('submit', (event) => {
     });
 })
 
+class Bottle {    
+    constructor(id,category, latlng, icon, name, adress, title, description, focusOnBottle=true) {        
+        this.id = id;
+        this.category = category;
+        this.latlng = latlng;
+        this.icon = icon;
+        this.name = name;
+        this.adress = adress;
+        this.div = this._createDiv(name, adress, title, description);
 
-function create_div_popup(name, adress) {
-    let div = document.createElement('div');
-    div.classList = 'marker-info';
+        if(focusOnBottle)
+            this.markerBottle = L.marker(latlng, {icon: icon}).addTo(mymap).bindPopup(this.div).openPopup();
+        else this.markerBottle = L.marker(latlng, {icon: icon}).addTo(mymap).bindPopup(this.div);
+    }
 
-    let h = document.createElement('h2');
-    div.appendChild(h);
-
-    let p = document.createElement('p');
-    p.classList = 'marker-info-street';
-    div.appendChild(p);
-
-    let div2 = document.createElement('div');
-    div2.classList = 'marker-info-field';
-
-    let p2 = document.createElement('text-area');
-    p2.classList = 'marker-info-field-des'
-    div2.appendChild(p2);
-
-    let div3 = document.createElement('div');
-    div3.classList = 'marker-info-field-image';
-    div2.appendChild(div3);
-
-    let image = document.createElement('img');
-    image.classList = 'marker-info-field-image';
-    div3.appendChild(image);
-
-    let image1 = document.createElement('img');
-    image1.classList = 'marker-info-field-image';
-    div3.appendChild(image1);
-
-    div.appendChild(div2);
-
-    let btn = document.createElement('button');
-    btn.classList = 'marker-info-button';
-    div.appendChild(btn);
+    _createDiv(name, adress, title, description) {
+        let div = document.createElement('div');
+        div.classList = 'marker-info';
     
-    h.textContent = modal_h.value;
-    p.textContent = check_name_adress(name, adress);
-    p2.textContent = modal_description.value;
-    image.src = 'test-icon2.jpg';//
-    image1.src = 'test-icon2.jpg';//
-    btn.textContent = 'К диалогу';
+        let h = document.createElement('h2');
+        h.classList = 'marker-info-h2';
+        div.appendChild(h);
+    
+        let p = document.createElement('p');
+        p.classList = 'marker-info-street';
+        div.appendChild(p);
 
-    return div;
+        let textarea = document.createElement('textarea');
+        textarea.classList = 'marker-info-field-des';
+        textarea.setAttribute('readonly', 'readonly');
+        div.appendChild(textarea);
+        
+        let listDiv = document.createElement('div');
+        listDiv.classList = 'modal-window-user-image-list-popup';
+        div.appendChild(listDiv);
+
+        let btn = document.createElement('button');
+        btn.classList = 'marker-info-button';
+        div.appendChild(btn);
+        
+
+        h.textContent = title;
+        p.textContent = check_name_adress(name, adress);
+        textarea.textContent = description;
+
+        let data = userImageList.cloneNode(true);        
+        data.childNodes.forEach(element => {                
+            element.childNodes.forEach(e => {
+                if(e.nodeName == 'BUTTON') {
+                    e.remove();
+                }
+            })            
+        });
+        
+        listDiv.appendChild(data);
+        btn.textContent = 'К диалогу';
+    
+        return div;
+    }
+
+    removeMarker() {        
+        mymap.removeLayer(this.markerBottle);
+        console.log(`bottle id=${this.id}, name=${this.name}, adress=${this.adress} has been removed`);
+    }
 }
 
 function create_quest_div_popup(name, adress) {
@@ -286,5 +353,191 @@ function check_name_adress(name, adress) {
     return name && adress ? `${name}, ${adress_parts}` : !name && adress ? adress_parts : name && !adress ? name : "";
 }
 
-// let leaflet = require('./node_modules/leaflet');
-// console.log(leaflet)
+
+addUserImageInput = document.querySelector('.modal-user-input-image');
+
+//обработка файлов из модалки создания бутылки
+addUserImageInput.addEventListener('change', (evt) => {
+    // divUserImage.style.display = 'block';
+    let files = evt.target.files; // FileList object
+
+    // Loop through the FileList and render image files as thumbnails.
+    for (let i = 0, f; f = files[i]; i++) {
+
+      // Only process image files.
+    //   if (!f.type.match('image.*')) {
+    //     continue;
+    //   }
+
+      let reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+          // Render thumbnail.
+            let span = document.createElement('span');
+            if (f.type.match('image.*')) {                
+                span.innerHTML = ['<img class="user-image" src="', e.target.result,
+                                    '" title="', escape(theFile.name), '"/>'].join('');               
+            } else {                
+                let div = document.createElement('div');
+                span.appendChild(div);
+                let img = document.createElement('img');
+                img.classList = 'user-image';
+                img.src = docIcon;
+                div.appendChild(img);
+            }
+
+            document.querySelector('.modal-user-image-list').insertBefore(span, null);
+            let p = document.createElement('p');
+        
+            if(theFile.name.length > 10)
+                p.textContent = theFile.name.substring(0,10)+'...';
+            else p.textContent = theFile.name;
+            span.appendChild(p)
+
+            let btn = document.createElement('button');
+            btn.classList = 'modal-user-image-delete-button';
+            btn.type = 'button';
+            
+            span.appendChild(btn);
+            btn.addEventListener('click', () => {
+                userImageList.removeChild(span)
+            })
+            console.log(theFile)
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(f);
+    }
+}, false)
+
+
+let fuckApi = {
+    "nickname": "fuck",
+    "password": "string",
+    "email": "fuck",
+    "sex": "string",
+    "commercialData": {
+      "fullName": "string",
+      "company": "string",
+      "identificationNumber": "string",
+      "psrn": "string"
+    }
+  }
+
+let fuckApi2 = {
+    nickname: "fuck",
+    password: "string",
+    email: "fuck",
+    sex: "string",
+    commercialData: {
+        fullName: "string",
+        company: "string",
+        identificationNumber: "string",
+        psrn: "string"
+    }
+}
+
+let logFuckApi2 = {
+    nickname: "fuck",
+    email: "fuck",
+    password: "string",
+}
+
+let fuckApi3 = {
+    nickname: "fuck3",
+    password: "string",
+    email: "fuck3",
+    sex: "string",
+    commercialData: {
+        fullName: "string",
+        company: "string",
+        identificationNumber: "string",
+        psrn: "string"
+    }
+}
+
+let logFuckApi3 = {
+    nickname: "fuck3",
+    email: "fuck3",
+    password: "string",
+}
+
+
+//#region 
+// let obj = {
+//     "fullName": "string",
+//     "company": "string",
+//     "identificationNumber": "string",
+//     "psrn": "string"
+//   };
+
+// let fuck2 = new FormData();
+// fuck2.append('Nickname', 'fuck11');
+// fuck2.append('Email', 'fuckYouu');
+// fuck2.append('password', '1111');
+// fuck2.append('sex', 'вертолет');
+// fuck2.append('commercialData.fullname', 'jjj');
+// fuck2.append('commercialData.company', 'jjj');
+// fuck2.append('commercialData.identificationNumber', 'jjj');
+// fuck2.append('commercialData.psrn', 'jjj');
+
+// let fuck3 = new FormData();
+// fuck3.append('Nickname', 'fuck11');
+// fuck3.append('Email', 'fuckYouu');
+// fuck3.append('password', '1111');
+//#endregion
+
+//вход в акк, временно на кнопке чата, чтобы зарегаться - убрать login
+chatButton.addEventListener('click', () => {
+    console.log('click')
+    fetch('https://localhost:44358/api/account/login', {
+        method: 'POST',        
+        body: JSON.stringify(logFuckApi3),
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+            //#region 
+            // 'Access-Control-Allow-Origin': '*',
+            // "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+            // "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",            
+            // 'Content-Type': 'multipart/form-data'
+            //#endregion
+          }
+    })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res)
+    })
+//#region 
+    // fetch('https://localhost:44358/api/account', {
+    //     // method: 'POST',        
+    //     // body: JSON.stringify(fuckApi3),
+    //     credentials: 'include',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //       }
+    // })
+    // .then(res => res.json())
+    // .then(res => {
+    //     console.log(res)
+    // })
+//     fetch('https://localhost:44358/ws/event-types', {               
+//         credentials: 'include',
+//         headers: {
+//             'Content-Type': 'application/json'
+//           }
+//     })
+//     .then(res => res.json())
+//     .then(res => {
+//         console.log(res)
+//     })
+//#endregion
+})
+
+
+    
+
+

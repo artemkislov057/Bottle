@@ -14,13 +14,13 @@
     crossorigin=""></script>
 
     <!-- Geo coder -->
-    <script src="Control.OSMGeocoder.js"></script>
+    <!-- <script src="./Control.OSMGeocoder.js"></script> -->
 
     <!-- modal window lib -->
-    <link rel="stylesheet" href="hystmodal.min.css">
-    <script src="hystmodal.min.js"></script>
+    <!-- <link rel="stylesheet" href="hystmodal.min.css"> -->
+    <!-- <script src="hystmodal.min.js"></script> -->
 
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="/style.css"> -->
     
 </head>
 <body>    
@@ -39,7 +39,7 @@
     </form>
     <button class="chat"></button>
     <button class="new-bottle" data-hystmodal="#myModal"></button>
-    <button class="back-to-not-create"><---</button>
+    <button class="back-to-not-create"></button>
     <div class="hystmodal" id="myModal" aria-hidden="true">
         <div class="hystmodal__wrap">
             <div class="hystmodal__window" role="dialog" aria-modal="true">
@@ -48,8 +48,10 @@
                     <div class="modal-col1">
                         <div class="modal-window-categories">
                             <label for="modal-categories" class="modal-window-categories-name">Категории</label>
-                            <select class="modal-categories" id="modal-categories">
-                                <option selected>Тусовки</option>
+                            <select class="modal-categories" id="modal-categories" required>
+                                <option selected="selected" disabled="disabled">Категории...</option>
+                                <!-- <option selected></option> -->
+                                <option>Тусовки</option>
                                 <option>Продажи</option>
                                 <option>...</option>
                             </select>
@@ -58,26 +60,36 @@
                             <label for="modal-h" class="modal-window-h-name">Заголовок:</label>
                             <input type="text" class="modal-h" id="modal-h" placeholder="Заголовок..." required>
                         </div>
-                        <div class="window-adress">
+                        <!-- <div class="window-adress">
                             <label for="modal-adress" class="modal-window-adress-name">Адрес:</label>
                             <input type="text" class="modal-adress" id="modal-adress" placeholder="Адрес..." disabled>
-                        </div>
-                        <div class="modal-window-exit">
-                            <!-- <button class="modal-window-exit-button">Вернуться на карту</button> -->
-                            <button type="submit" class="modal-window-exit-button">Создать</button>
-                        </div>
+                        </div> -->
+                        
                     </div>
+                    
                     <div class="modal-window-description">
                         <label for="modal-description" class="modal-window-description-name">Описание:</label>
                         <textarea class="modal-description" id="modal-description" required></textarea>
                     </div>
-                    <div class="modal-window-add">
+                    <!-- <div class="modal-window-add">
                         <label class="modal-window-add-name">Дополнительные вложения:</label>
                         <div class=" modal-window-add-buttons">
                             <button class="modal-window-add-button"></button>
                             <button class="modal-window-add-button"></button>
                             <button class="modal-window-add-button"></button>
                         </div>
+                    </div> -->
+                    <div class="modal-window-user-image">
+                        <output class="modal-user-image-list"></output>
+                    </div>
+                    <div class="modal-window-add-exit">
+                        <!-- <button class="modal-window-exit-button">Вернуться на карту</button> -->
+
+                        <!-- <button type="button" class="modal-window-add-button"></button> -->
+                        
+                        <input type="file" id="modal-user-input" class="modal-user-input-image" name="files[]" multiple>
+                        <label for="modal-user-input" class="modal-user-label-image"></label>
+                        <button type="submit" class="modal-window-exit-button">Выбрать адрес</button>                        
                     </div>
                     
                 </form>
@@ -85,6 +97,7 @@
         </div> 
     </div>
     
-    <script src="index.js"></script>
+    <!-- <script src="index.js"></script> -->
+    <!-- <script src="./build/bundle.js"></script> -->
 </body>
 </html>
