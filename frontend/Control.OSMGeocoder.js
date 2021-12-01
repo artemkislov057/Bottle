@@ -233,9 +233,10 @@ L.Control.OSMGeocoder = L.Control.extend({
 		let url = "https://nominatim.openstreetmap.org/search" + L.Util.getParamString(params);
 
 		return fetch(url).then(res => res.json()).then(res => {
+			console.log(url)
 			return res;			
 		})
-		// console.log(url)
+		
 	},
 
 	my_geocode_obj: {		
