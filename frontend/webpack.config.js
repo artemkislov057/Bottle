@@ -16,7 +16,7 @@ const path = require('path');
 module.exports = {
     // entry: './index.js',    
     entry: {
-        main: path.resolve(__dirname, './index.js'),
+        main: './src/pages/MainPage/MainPage.js',
     },
     mode:'production',
     output: {
@@ -31,7 +31,7 @@ module.exports = {
     // },
     plugins: [
         new HTMLWebpackPlugin({
-            template: "./index.html"
+            template: "./src/pages/MainPage/MainPage.html"
         })
     ],
     module: {
