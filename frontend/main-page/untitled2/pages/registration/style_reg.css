@@ -15,7 +15,7 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     width: 647px;
-    height: 484px; 
+    height: 500px; 
     background: #FFFFFF;
     border-radius: 30px;
     transition: all 0.8s ease 0s;
@@ -121,6 +121,8 @@ body {
 }
 
 .container-log input[type = "email"], .container-log input[type = "password"]{
+    padding: 10px;
+    font-size: 17px;
     width: 233px;
     height: 53px;
     border: 2px solid #63CDDA;
@@ -167,4 +169,10 @@ body {
     line-height: 17px;
    margin-bottom: 8px ;
    margin-right: 70px;
+}
+
+.validation-reg {
+    margin-left: 405px;
+    margin-top: 10px;
+    color: crimson;
 }

@@ -41,6 +41,7 @@ body {
 }
 
 .modal-body-create{
+    height: 450px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -121,4 +122,10 @@ body {
     line-height: 31px;
     color: #2F3952;
     cursor: pointer;
+}
+
+.validation-prof {
+    margin-left: 40px;
+    margin-top: 10px;
+    color: crimson;
 }
