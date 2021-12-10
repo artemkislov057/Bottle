@@ -79,25 +79,38 @@ const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@
     });
 })();
 
-document.getElementById('entr-submit').addEventListener('click', () => {
-    console.log('click');
-    email = document.getElementById('entr-email');
-    password = document.getElementById('entr-password');
-    const request = {
-        email: email.value,
-        password: password.value
-    };
-    
-    fetch('https://localhost:44358/api/account/login', {
-        method: 'POST',        
-        body: JSON.stringify(request),
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json'
-          }
-    })
-    .then(res => res.json())
-    .then(res => {
-        console.log(res)
-    })
-});
+
+(function entranceModal() {
+    document.getElementById('entr-submit').addEventListener('click', () => {
+        console.log('click');
+        const email = document.getElementById('entr-email');
+        const password = document.getElementById('entr-password');
+        const request = {
+            email: email.value,
+            password: password.value
+        };
+        
+        fetch('https://localhost:44358/api/account/login', {
+            method: 'POST',        
+            body: JSON.stringify(request),
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => {
+            if(!res.ok) {
+                res.text().then(text => {
+                    document.querySelector('.validation-entr').textContent = text;
+                })
+            }
+            else {
+                document.querySelector('.hystmodal__close').click();
+                return res.json();
+            } 
+        })
+        .then(res => {
+            console.log(res)
+        })
+    });
+})();
