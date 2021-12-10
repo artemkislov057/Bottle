@@ -18,9 +18,9 @@
     <header>
         <div class="page-logo"><img src="logo.svg" alt="логотип"  class="logo"></div>
         <div class="buttons">
-             <div class="buttons_entry"><button onclick="#" class = "button-entry"
+             <div class="buttons_entry"><button class = "button-entry"
                 data-hystmodal="#entranceModal">Вход</button></div>
-             <div class="buttons_reg"><button onclick="#" class = "button-register" data-hystmodal="#regModal">Регистрация</button></div>
+             <div class="buttons_reg"><button class = "button-register" data-hystmodal="#regModal">Регистрация</button></div>
 
         </div>
     </header>
@@ -34,7 +34,7 @@
                 <p><span class="h2">Всякое описание как все хорошо как все шикарно работает и тд что тут можно поделать как найти друзей</span></p>
             </div>
             <div class="content-start-button">
-                <button onclick="#" class="start-button">Начать</button>
+                <button class="start-button">Начать</button>
             </div>
         </div>
     </main>
@@ -68,8 +68,11 @@
                                 <p class="pass_two"> Повторите пароль </p>
                                 <input id='reg-password-two' type="password" name="">
                                 <input id='reg-submit' type="submit" name="" data-hystmodal="#createProfileModal" value="Войти">
+                                
                             </div>
+                            
                         </div>
+                        <div class='validation-reg'> </div>
                     </div>
                 </div>
             </div>
@@ -113,7 +116,7 @@
     <div class="hystmodal" id="createProfileModal" aria-hidden="true">
         <div class="hystmodal__wrap">
             <div class="hystmodal__window" role="dialog" aria-modal="true">
-                <button id='close-profile-modal' data-hystclose class="hystmodal__close">Закрыть</button>
+                <button  data-hystclose class="hystmodal__close">Закрыть</button>
                 <div class="modal-create">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -138,7 +141,9 @@
                             <div class="footer">
                                 <input id='create-prof-submit' type="submit" name="" value="Продолжить">
                             </div>
+                            
                         </div>
+                        <div class='validation-prof'></div>
                     </div>
                 </div>
             </div>
