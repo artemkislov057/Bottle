@@ -52,6 +52,8 @@ body {
 }
 
 .container-nik input[type = "email"]{
+    padding: 10px;
+    font-size: 17px;
     width: 260px;
     height: 61px;
     border: 2px solid #FFE9A7;
