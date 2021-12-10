@@ -80,7 +80,12 @@ const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@
 })();
 
 
+
 (function entranceModal() {
+    document.querySelector('.button-entry').addEventListener('click', () => {
+        document.querySelector('.validation-entr').textContent = '';
+    });
+
     document.getElementById('entr-submit').addEventListener('click', () => {
         console.log('click');
         const email = document.getElementById('entr-email');
