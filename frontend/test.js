@@ -1,1 +1,1 @@
-alert("fuck")
+alert('fuck')

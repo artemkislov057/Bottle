@@ -1,10 +1,14 @@
 import '/style.css';
 import './hystmodal.min.css';
-import './Control.OSMGeocoder';
+import 'leaflet';
+// import './Control.OSMGeocoder';
 import './hystmodal.min';
 import blueMarker from './marker_siniy.svg';
+import yellowMarker from './marker_zhelty.svg';
 import testIcon2 from './test-icon2.jpg';
 import docIcon from './faylikonka.svg';
+import './customGeocoder'
+import { GeoCoder } from './customGeocoder';
 
 
 let mymap = L.map('mapid').setView([56.85, 60.6], 13);
@@ -26,11 +30,13 @@ let myIcon = L.icon({
     iconSize: [50, 50],    
 });
 
-let bottleIdOnMap = []
+let bottleIdOnMap = [];
+let bottleDataOnMap = [];
+let markerDataOnMap = new Map();
 
 //поиск по адресам
-let osmGeocoder = new L.Control.OSMGeocoder();
-mymap.addControl(osmGeocoder);
+// let osmGeocoder = new L.Control.OSMGeocoder();
+// mymap.addControl(osmGeocoder);
 
 let input = document.querySelector('.search-form');
 let input_field = document.querySelector('.search-field');
@@ -40,13 +46,13 @@ let geo_input = document.querySelector('.geo-input');
 let marker_search;
 input.addEventListener('submit', (e) => {
     e.preventDefault();
-    geo_input.value = input_field.value;
+    // geo_input.value = input_field.value;
 
     if(marker_search)
         mymap.removeLayer(marker_search);
     
-    
-    osmGeocoder._geocode(e).then(results => {
+        let geoCoderr = new GeoCoder(input_field.value);
+        geoCoderr._geocode(e).then(results => {
         if (results.length == 0) {
             console.log("ERROR: didn't find a result");
             return;
@@ -82,7 +88,6 @@ let myModal = new HystModal({
 let modal_window = document.querySelector('.modal-window');
 let modal_h = document.querySelector('.modal-h');
 let modal_categories = document.querySelector('.modal-categories');
-let modal_adress = document.querySelector('.modal-adress');
 let modal_description = document.querySelector('.modal-description');
 let modal_create_button = document.querySelector('.modal-window-exit-button');
 
@@ -101,27 +106,41 @@ create_modal_window_button.addEventListener('click', () => {
 })
 
 //получение всех бутылок на карте
-fetch('https://localhost:44358/api/bottles', {   
-    credentials: 'include',
-    headers: {
-        'Content-Type': 'application/json'            
-    }
-})
-.then(res => res.json())
-.then(res => {
-    let newIcon = L.icon({
-        iconUrl: blueMarker,
-        iconSize: [50, 50],    
-    });
-    for(let e of res){            
-        if(!(e.id in bottleIdOnMap)) {
-            // console.log(e)
-            new Bottle(e.id, "Да..", [e.lat, e.lng], newIcon, e.geoObjectName, e.address, e.title, e.description, false);
-            bottleIdOnMap.push(e.id)            
-            
+function getAllBottles() {
+    fetch('https://localhost:44358/api/bottles', {   
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'            
         }
-    }
-})
+    })
+    .then(res => res.json())
+    .then(res => {
+        let newIcon = L.icon({
+            iconUrl: blueMarker,
+            iconSize: [50, 50],    
+        });
+        let newIcon2 = L.icon({
+            iconUrl: yellowMarker,
+            iconSize: [50, 50],    
+        });
+        for(let e of res){            
+            if(!(bottleIdOnMap.includes(e.id))) {
+                // console.log(e)
+                // new Bottle(e.id, e.category, [e.lat, e.lng], newIcon, e.geoObjectName, e.address, e.title, e.description, false);
+                if(e.category == 'Тусовки') {
+                    new Bottle(e.id, e.category, [e.lat, e.lng], newIcon2, e.geoObjectName, e.address, e.title, e.description, false);
+                } else {
+                    new Bottle(e.id, e.category, [e.lat, e.lng], newIcon, e.geoObjectName, e.address, e.title, e.description, false);
+                }
+                
+                bottleIdOnMap.push(e.id);
+                bottleDataOnMap.push(e);
+            }
+        }
+    })
+}
+
+getAllBottles();
 
 //обновление инфы о бутылках
 let ws = new WebSocket('wss:/localhost:44358/ws')
@@ -135,19 +154,82 @@ ws.onopen = function() {
 }
 
 ws.onmessage = function(e) {
-    // console.log(JSON.parse(e.data))
+    console.log(JSON.parse(e.data))
     if(JSON.parse(e.data).eventNumber == 3) {
         let newIcon = L.icon({
             iconUrl: blueMarker,
             iconSize: [50, 50],    
         });
         let bottleData = JSON.parse(e.data).model;
-        if(!(bottleData.id in bottleIdOnMap)) {
-            new Bottle(bottleData.id, "Да..", [bottleData.lat, bottleData.lng], newIcon, bottleData.geoObjectName, bottleData.address, bottleData.title, bottleData.description, false);
-            bottleIdOnMap.push(e.id)        
+        if(!(bottleIdOnMap.includes(bottleData.id))) {
+            new Bottle(bottleData.id, bottleData.category, [bottleData.lat, bottleData.lng], newIcon, bottleData.geoObjectName, bottleData.address, bottleData.title, bottleData.description, false);
+            bottleIdOnMap.push(bottleData.id);
+            bottleDataOnMap.push(bottleData);
+            console.log("fucj1")
         }
     }
 }
+
+//попытка фильтрации
+let mainCateg = document.querySelector('.categories');
+mainCateg.addEventListener('change', (e) => {
+    console.log(mainCateg.options[mainCateg.selectedIndex].textContent)
+    switch(mainCateg.options[mainCateg.selectedIndex].textContent) {
+        case 'Тусовки':
+            bottleFilter('Тусовки');
+            break;
+        case 'Продажи':
+            bottleFilter('Продажи');
+            break;
+        case '...':
+            bottleFilter('...');
+            break;
+        default:
+            bottleFilter();
+            break;  
+    }
+})
+
+function bottleFilter(filter=null) {
+    for(let e of bottleDataOnMap) {
+        if(e.category != filter && filter != null){
+            mymap.removeLayer(markerDataOnMap.get(e.id))
+        } else {
+            mymap.addLayer(markerDataOnMap.get(e.id))
+        }
+    }
+}
+
+
+
+//тест чатов
+profileButton.addEventListener('click', () => {
+    fetch('https://localhost:44358/api/account', {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(res => {
+        if(res.id == 1) {
+            fetch('https://localhost:44358/api/dialogs/1', {
+                method: 'POST',
+                credentials: 'include',
+                body: "You dick1",
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.json())
+                .then(res => console.log(res))
+        } else {
+            fetch('https://localhost:44358/api/dialogs/1', {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify("You dick2"),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.json())
+            .then(res => console.log(res))
+        }
+    })
+})
+
 
 //логика создания бутылки через модалку
 modal_window.addEventListener('submit', (event) => {
@@ -175,6 +257,7 @@ modal_window.addEventListener('submit', (event) => {
         modal_description.value = "";
         userImageList.innerHTML = "";
         addUserImageInput.value = '';
+        modal_categories.selectedIndex = 0;
         if(quest_marker) mymap.removeLayer(quest_marker);
     })
 
@@ -210,8 +293,11 @@ modal_window.addEventListener('submit', (event) => {
                     iconSize: [50, 50],    
                 });
                 
-                console.log(event)
-
+                // console.log(event)
+                // let index = event.srcElement[0].options.selectedIndex;
+                // let currentCateg = event.srcElement[0].options[index].textContent;
+                let currentCateg = modal_categories.options[modal_categories.selectedIndex].textContent;
+                
                 let a = fetch('https://localhost:44358/api/bottles', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -221,7 +307,7 @@ modal_window.addEventListener('submit', (event) => {
                         geoObjectName: name,
                         address: adress,
                         description: modal_description.value,
-                        category: "Пока в разработке эти категории...",//
+                        category: currentCateg,//
                         lifeTime: 10000//    
                     }),
                     credentials: 'include',
@@ -231,9 +317,12 @@ modal_window.addEventListener('submit', (event) => {
                 })
                     .then(res => res.json())
                     .then(res => {
-                        new Bottle(res.id, "Пока в разработке эти категории...", e.latlng, newIcon, name, adress, modal_h.value, modal_description.value);
 
-                        bottleIdOnMap.push(res.id);
+                        if(!bottleIdOnMap.includes(res.id)) {
+                            new Bottle(res.id, currentCateg, e.latlng, newIcon, name, adress, modal_h.value, modal_description.value);
+                            bottleIdOnMap.push(res.id);
+                            bottleDataOnMap.push(res)
+                        }
 
                         modal_h.value = "";
                         modal_description.value = "";
@@ -247,7 +336,9 @@ modal_window.addEventListener('submit', (event) => {
                         back_button.style.display = "none";
 
                         userImageList.innerHTML = "";
-                        addUserImageInput.value = '';        
+                        addUserImageInput.value = '';
+
+                        modal_categories.selectedIndex = 0;
                     })
             })
 
@@ -272,6 +363,8 @@ class Bottle {
         if(focusOnBottle)
             this.markerBottle = L.marker(latlng, {icon: icon}).addTo(mymap).bindPopup(this.div).openPopup();
         else this.markerBottle = L.marker(latlng, {icon: icon}).addTo(mymap).bindPopup(this.div);
+        if(markerDataOnMap.get(this.id) == undefined)
+            markerDataOnMap.set(this.id, this.markerBottle);        
     }
 
     _createDiv(name, adress, title, description) {
@@ -315,6 +408,16 @@ class Bottle {
         
         listDiv.appendChild(data);
         btn.textContent = 'К диалогу';
+
+        btn.addEventListener('click', () => {
+            fetch(`https://localhost:44358/api/bottles/${this.id}/pick-up`, {//запретить подбирать бутылку самому себе
+                method: 'POST',
+                credentials: 'include',
+                body: this.id,
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.json())
+                .then(res => console.log(res))
+        })
     
         return div;
     }
@@ -414,6 +517,10 @@ addUserImageInput.addEventListener('change', (evt) => {
 }, false)
 
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////это уже не надо трогать/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 let fuckApi = {
     "nickname": "fuck",
     "password": "string",
@@ -493,51 +600,41 @@ let logFuckApi3 = {
 //вход в акк, временно на кнопке чата, чтобы зарегаться - убрать login
 chatButton.addEventListener('click', () => {
     console.log('click')
-    fetch('https://localhost:44358/api/account/login', {
-        method: 'POST',        
-        body: JSON.stringify(logFuckApi3),
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json'
-            //#region 
-            // 'Access-Control-Allow-Origin': '*',
-            // "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-            // "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",            
-            // 'Content-Type': 'multipart/form-data'
-            //#endregion
-          }
-    })
-    .then(res => res.json())
-    .then(res => {
-        console.log(res)
-    })
-//#region 
-    // fetch('https://localhost:44358/api/account', {
-    //     // method: 'POST',        
-    //     // body: JSON.stringify(fuckApi3),
+    // fetch('https://localhost:44358/api/account/login', {
+    //     method: 'POST',        
+    //     body: JSON.stringify(logFuckApi3),
     //     credentials: 'include',
     //     headers: {
     //         'Content-Type': 'application/json'
+    //         //#region 
+    //         // 'Access-Control-Allow-Origin': '*',
+    //         // "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+    //         // "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",            
+    //         // 'Content-Type': 'multipart/form-data'
+    //         //#endregion
     //       }
     // })
     // .then(res => res.json())
     // .then(res => {
     //     console.log(res)
     // })
-//     fetch('https://localhost:44358/ws/event-types', {               
-//         credentials: 'include',
-//         headers: {
-//             'Content-Type': 'application/json'
-//           }
-//     })
-//     .then(res => res.json())
-//     .then(res => {
-//         console.log(res)
-//     })
-//#endregion
+
+    fetch('https://localhost:44358/api/account', {
+        // method: 'POST',        
+        // body: JSON.stringify(fuckApi3),
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+          }
+    })
+    .then(res => res.json())
+    .then(res => {
+        console.log(res)
+    })
 })
 
 
     
+
 
 

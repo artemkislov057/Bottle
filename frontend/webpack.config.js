@@ -15,9 +15,11 @@ const path = require('path');
 
 module.exports = {
     // entry: './index.js',    
-    entry: {
-        main: path.resolve(__dirname, './index.js'),
-    },
+    // entry: {
+    //     // main: path.resolve(__dirname, './index.js'),
+        
+    // },
+    entry: './src/pages/MainPage/MainPage.js',
     mode:'production',
     output: {
         path: path.resolve(__dirname, 'build'),
@@ -31,7 +33,8 @@ module.exports = {
     // },
     plugins: [
         new HTMLWebpackPlugin({
-            template: "./index.html"
+            // template: "./index.html"
+            template: "./src/pages/MainPage/MainPage.html"
         })
     ],
     module: {
@@ -48,6 +51,11 @@ module.exports = {
                 test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
                 type: 'asset/resource',
             },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ["babel-loader"]
+            }
         ]
     },
     devServer: {
