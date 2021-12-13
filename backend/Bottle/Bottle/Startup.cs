@@ -1,10 +1,12 @@
 using Bottle.Models;
+using Bottle.Models.Database;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,17 +34,28 @@ namespace Bottle
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<BottleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.Cookie.SameSite = SameSiteMode.None;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.Events.OnRedirectToLogin = context =>
-                    {
-                        context.Response.StatusCode = 403;
-                        return Task.CompletedTask;
-                    };
-                });
+
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 1;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+            })
+                .AddEntityFrameworkStores<BottleDbContext>();
+
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //    .AddCookie(options =>
+            //    {
+            //        options.Cookie.SameSite = SameSiteMode.None;
+            //        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //        options.Events.OnRedirectToLogin = context =>
+            //        {
+            //            context.Response.StatusCode = 403;
+            //            return Task.CompletedTask;
+            //        };
+            //    });
             services.AddControllersWithViews();
             services.AddSwaggerGen(c =>
             {

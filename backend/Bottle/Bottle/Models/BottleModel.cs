@@ -41,6 +41,6 @@ namespace Bottle.Models
         public DateTime Created { get; set; }
         public DateTime EndTime { get; set; }
         public bool Active { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

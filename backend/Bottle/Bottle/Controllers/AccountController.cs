@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
@@ -20,9 +21,14 @@ namespace Bottle.Controllers
     public class AccountController : Controller
     {
         private BottleDbContext db;
-        public AccountController(BottleDbContext dbContext)
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+
+        public AccountController(BottleDbContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.db = dbContext;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         /// <summary>
@@ -33,7 +39,9 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            //return Ok();
+            await signInManager.SignOutAsync();
             return Ok();
         }
 
@@ -76,27 +84,47 @@ namespace Bottle.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
-                if (user == null)
+                //User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
+                //if (user == null)
+                //{
+                //    user = new User { Nickname = data.Nickname, Email = data.Email, Password = data.Password, Sex = data.Sex };
+                //    if (data.CommercialData == null)
+                //    {
+                //        user.Type = 1;
+                //    }
+                //    else
+                //    {
+                //        user.Type = 2;
+                //        user.CommercialData = new CommercialData(data.CommercialData);
+                //    }
+                //    db.Users.Add(user);
+                //    await db.SaveChangesAsync();
+                //    await Authenticate(user);
+                //    return Created(string.Empty, new Account(user));
+                //}
+                //else
+                //{
+                //    return BadRequest("Аккаунт с такой почтой или никнеймом существует");
+                //}
+                User user = new User { Email = data.Email, UserName = data.Nickname, Sex = data.Sex };
+                if (data.CommercialData == null)
                 {
-                    user = new User { Nickname = data.Nickname, Email = data.Email, Password = data.Password, Sex = data.Sex };
-                    if (data.CommercialData == null)
-                    {
-                        user.Type = 1;
-                    }
-                    else
-                    {
-                        user.Type = 2;
-                        user.CommercialData = new CommercialData(data.CommercialData);
-                    }
-                    db.Users.Add(user);
-                    await db.SaveChangesAsync();
-                    await Authenticate(user);
+                    user.Type = 1;
+                }
+                else
+                {
+                    user.Type = 2;
+                    user.CommercialData = new CommercialData(data.CommercialData);
+                }
+                var result = await userManager.CreateAsync(user, data.Password);
+                if (result.Succeeded)
+                {
+                    await signInManager.SignInAsync(user, false);
                     return Created(string.Empty, new Account(user));
                 }
                 else
                 {
-                    return BadRequest("Аккаунт с такой почтой или никнеймом существует");
+                    return BadRequest();
                 }
             }
             return BadRequest("Некорректные данные");
@@ -115,14 +143,32 @@ namespace Bottle.Controllers
         {
             if (ModelState.IsValid && !(string.IsNullOrEmpty(data.Nickname) && string.IsNullOrEmpty(data.Email)))
             {
-                User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
+                //User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
+                //if (user != null)
+                //{
+                //    if (user.Password != data.Password)
+                //        return BadRequest("Неправильный пароль");
+                //    await Authenticate(user);
+                //    var cd = db.CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
+                //    return Ok(new Account(user, cd));
+                //}
+                User user;
+                if (data.Nickname != null)
+                {
+                    user = db.Users.FirstOrDefault(u => u.UserName == data.Nickname);
+                }
+                else
+                {
+                    user = db.Users.FirstOrDefault(u => u.Email == data.Email);
+                }
                 if (user != null)
                 {
-                    if (user.Password != data.Password)
-                        return BadRequest("Неправильный пароль");
-                    await Authenticate(user);
-                    var cd = db.CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
-                    return Ok(new Account(user, cd));
+                    var result = await signInManager.PasswordSignInAsync(user.UserName, data.Password, data.RememberMe, false);
+                    if (result.Succeeded)
+                    {
+                        var cd = db.CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
+                        return Ok(new Account(user, cd));
+                    }
                 }
             }
             return BadRequest("Некорректные данные");
@@ -163,7 +209,7 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var user = db.GetUser(User.Identity.Name);
-                user.Nickname = data.Nickname is null ? user.Nickname : data.Nickname;
+                user.UserName = data.Nickname is null ? user.UserName : data.Nickname;
                 user.Sex = data.Sex is null ? user.Sex : data.Sex;
                 if (user.Type == 2)
                 {
@@ -197,14 +243,14 @@ namespace Bottle.Controllers
 
 
 
-        private async Task Authenticate(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
-            };
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
+        //private async Task Authenticate(User user)
+        //{
+        //    var claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
+        //    };
+        //    ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+        //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+        //}
     }
 }

@@ -44,7 +44,7 @@ namespace Bottle.Models.Database
         public DateTime EndTime { get; set; }
         public bool Active { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
 
         public int? DialogId { get; set; }

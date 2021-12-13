@@ -30,8 +30,8 @@ namespace Bottle.Models
 
         public int Id { get; set; }
         public int? BottleId { get; set; }
-        public int BottleOwnerId { get; set; }
-        public int? RecipientId { get; set; }
+        public string BottleOwnerId { get; set; }
+        public string RecipientId { get; set; }
         public bool Active { get; set; }
         public MessageModel LastMessage { get; set; }
     }

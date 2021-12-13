@@ -17,7 +17,7 @@ namespace Bottle.Models
         public Account(User user)
         {
             Id = user.Id;
-            Nickname = user.Nickname;
+            Nickname = user.UserName;
             Email = user.Email;
             if (user.RatingCount > 0)
                 Rating = (decimal)user.RatingSum / user.RatingCount;
@@ -31,7 +31,7 @@ namespace Bottle.Models
             CommercialData = commercialData is null ? null : new CommercialModel(commercialData);
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Nickname { get; set; }
 
         [EmailAddress]

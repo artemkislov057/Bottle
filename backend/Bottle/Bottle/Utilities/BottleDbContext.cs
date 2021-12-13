@@ -1,5 +1,6 @@
 ﻿using Bottle.Controllers;
 using Bottle.Models.Database;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Utilities
 {
-    public class BottleDbContext : DbContext
+    public class BottleDbContext : IdentityDbContext<User>
     {
         public BottleDbContext(DbContextOptions<BottleDbContext> options) : base(options)
         {
@@ -15,12 +16,10 @@ namespace Bottle.Utilities
             {
                 UserTypes.Add(new UserType { Type = "DefaultUser" });
                 UserTypes.Add(new UserType { Type = "Commercial" });
-                Users.Add(new User { Nickname = "Admin", Password = "Admin", Email = "Admin@admin.ru", Sex = "атакующий вертолетик", Type = 1 });
                 SaveChanges();
             }
         }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<CommercialData> CommercialDatas { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
