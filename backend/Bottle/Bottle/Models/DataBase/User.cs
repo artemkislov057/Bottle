@@ -13,6 +13,8 @@ namespace Bottle.Models.Database
         public byte[] Avatar { get; set; }
         public string Sex { get; set; }
         public int Type { get; set; }
+        public ExternalProvider? Provider { get; set; }
+        public string ProviderId { get; set; }
 
         [ForeignKey("Type")]
         public UserType UserType { get; set; }

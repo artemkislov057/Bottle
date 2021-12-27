@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -175,6 +176,51 @@ namespace Bottle.Controllers
         }
 
         /// <summary>
+        /// Войти в аккаунт через внешнего провайдера
+        /// </summary>
+        [HttpPost("external-login")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(403)]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginAsync([FromBody] ExternalLoginModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var externalProviderUser = ExternalProviderUser.GetProvider(model.Provider);
+                if (await externalProviderUser.CheckAuthorizeAsync(model.ProviderId, model.AccessToken))
+                {
+                    var user = db.Users.FirstOrDefault(u => u.Provider != null && u.ProviderId == model.ProviderId);
+                    if (user == null)
+                    {
+                        user = new User { Email = model.RegistrationModel.Email, UserName = model.RegistrationModel.Nickname, Sex = model.RegistrationModel.Sex , Provider = model.Provider, ProviderId = model.ProviderId };
+                        if (model.RegistrationModel.CommercialData == null)
+                        {
+                            user.Type = 1;
+                        }
+                        else
+                        {
+                            user.Type = 2;
+                            user.CommercialData = new CommercialData(model.RegistrationModel.CommercialData);
+                        }
+                        var result = await userManager.CreateAsync(user);
+                        if (result.Succeeded)
+                        {
+                            await signInManager.SignInAsync(user, model.RememberMe);
+                            return Created(string.Empty, new Account(user));
+                        }
+                    }
+                    else
+                    {
+                        await signInManager.SignInAsync(user, model.RememberMe);
+                        return Ok(new Account(user));
+                    }
+                }
+            }
+            return BadRequest();
+        }
+
+        /// <summary>
         /// Изменить аватар пользователя
         /// </summary>
         /// <param name="file">Загружаемое фото</param>
@@ -237,6 +283,13 @@ namespace Bottle.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             await db.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpGet("external-providers")]
+        [AllowAnonymous]
+        public IActionResult GetExternalProviders()
+        {
+            return Ok(Enum.GetValues<ExternalProvider>().ToDictionary(v => v));
         }
 
 
