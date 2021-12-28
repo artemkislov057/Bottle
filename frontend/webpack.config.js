@@ -21,7 +21,7 @@ module.exports = {
     // },
     // entry: './src/pages/MainPage/MainPage.js',    
     entry: {
-        index: './src/pages/FirstPage/FirstPage.js',
+        FirstPage: './src/pages/FirstPage/FirstPage.js',
         MainPage: "./src/pages/MainPage/MainPage.js"
     },    
     mode:'production',
@@ -40,10 +40,12 @@ module.exports = {
         new HTMLWebpackPlugin({
             // template: "./index.html",
             template: "src/pages/FirstPage/FirstPage.html",
+            chunks: ['FirstPage']
         }),
         new HTMLWebpackPlugin({
             filename: 'MainPage.html',
-            template: "src/pages/MainPage/MainPage.html",                  
+            template: "src/pages/MainPage/MainPage.html",   
+            chunks: ['MainPage']               
         })
     ],
     module: {

@@ -5,10 +5,18 @@ import "./pages/create_profile/style_prof.css"
 // import "./pages/create_profile/script_prof"
 // import "./pages/entrance/script"
 // import "./pages/registration/script_reg";
-import "./hystmodal.min.js"
+import "./hystmodal.min"
 import "./hystmodal.min.css"
 import screenmap from "../../../dist/img/screenmap.jpg"
 import logo from "../../../dist/img/logo.svg"
+
+const createProfileModal = new HystModal({
+    linkAttributeName: "data-hystmodal",
+    //настройки, см. API
+});
+
+
+
 
 const email = document.getElementById('reg-email');
 const password = document.getElementById('reg-password');
@@ -17,7 +25,7 @@ const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@
 
 document.querySelector('.main-content_pic').innerHTML = `<img src=${screenmap} alt="screenmap" class="main-content-picture" />`;
 document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="логотип" class="logo">`;
-
+console.log('asdfhdsfhsdf');
 (function registerModal() {
     document.querySelector('.button-register').addEventListener('click', () => {
         document.querySelector('.validation-reg').textContent = '';
@@ -135,3 +143,5 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
         })
     });
 })();
+
+
