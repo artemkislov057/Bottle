@@ -19,11 +19,16 @@ module.exports = {
     //     // main: path.resolve(__dirname, './index.js'),
         
     // },
-    entry: './src/pages/MainPage/MainPage.js',
+    // entry: './src/pages/MainPage/MainPage.js',    
+    entry: {
+        index: './src/pages/FirstPage/FirstPage.js',
+        MainPage: "./src/pages/MainPage/MainPage.js"
+    },    
     mode:'production',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'bundle.js',
+        // filename: 'bundle.js',
+        filename: '[name].js',
         publicPath: '/'
     },    
     // devServer: {
@@ -31,10 +36,14 @@ module.exports = {
     //     historyApiFallback: true,
     //     hot: true,
     // },
-    plugins: [
+    plugins: [       
         new HTMLWebpackPlugin({
-            // template: "./index.html"
-            template: "./src/pages/MainPage/MainPage.html"
+            // template: "./index.html",
+            template: "src/pages/FirstPage/FirstPage.html",
+        }),
+        new HTMLWebpackPlugin({
+            filename: 'MainPage.html',
+            template: "src/pages/MainPage/MainPage.html",                  
         })
     ],
     module: {
