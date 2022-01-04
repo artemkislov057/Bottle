@@ -2,6 +2,7 @@
 using Bottle.Models.Database;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,12 @@ namespace Bottle.Controllers
     public class DialogsController : Controller
     {
         private BottleDbContext db;
-        public DialogsController(BottleDbContext db)
+        private readonly UserManager<User> userManager;
+
+        public DialogsController(BottleDbContext db, UserManager<User> userManager)
         {
             this.db = db;
+            this.userManager = userManager;
         }
 
         /// <summary>
@@ -34,7 +38,7 @@ namespace Bottle.Controllers
             var dialog = db.GetDialog(dialogId);
             if (dialog == null || !dialog.Active)
                 return BadRequest();
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(HttpContext.User);
             if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
             {
                 var message = new Message { DialogId = dialogId, SenderId = user.Id, Value = value, DateTime = DateTime.UtcNow };
@@ -58,10 +62,10 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult GetMessages([FromRoute(Name = "dialog-id")] int dialogId,
+        public async Task<IActionResult> GetMessagesAsync([FromRoute(Name = "dialog-id")] int dialogId,
             [FromQuery(Name = "message-id")] int skipMessageCount = 0, int? length = null)
         {
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(HttpContext.User);
             var dialog = db.GetDialog(dialogId);
             if (dialog == null)
                 return BadRequest();
@@ -91,7 +95,7 @@ namespace Bottle.Controllers
             var dialog = db.GetDialog(dialogId);
             if (dialog is null || !dialog.Active)
                 return BadRequest();
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(HttpContext.User);
             if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
             {
                 dialog.Active = false;
@@ -115,12 +119,12 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult Rate([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] int rate)
+        public async Task<IActionResult> RateAsync([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] int rate)
         {
             var dialog = db.GetDialog(dialogId);
             if (!dialog.Active && Models.Database.User.IsValidRating(rate))
             {
-                var requestUser = db.GetUser(User.Identity.Name);
+                var requestUser = await userManager.GetUserAsync(HttpContext.User);
                 if (requestUser.Id == dialog.RecipientId && dialog.BottleRate is null)
                 {
                     db.SetUserRate(dialog.BottleOwnerId.ToString(), rate);
@@ -153,8 +157,9 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public IActionResult GetDialogs()
         {
+            var userId = userManager.GetUserId(HttpContext.User);
             var dialogs = db.Dialogs
-                .Where(d => d.RecipientId.ToString() == User.Identity.Name && d.BottleRate == null || d.BottleOwnerId.ToString() == User.Identity.Name && d.RecipientRate == null).ToList();
+                .Where(d => d.RecipientId == userId && d.BottleRate == null || d.BottleOwnerId == userId && d.RecipientRate == null).ToList();
             return Ok(dialogs.Select(d =>
             {
                 return new DialogModel(d, db.GetLastMessage(d));
@@ -174,7 +179,8 @@ namespace Bottle.Controllers
             var dialog = db.GetDialog(dialogId);
             if (dialog == null)
                 return BadRequest();
-            if (dialog.BottleOwnerId.ToString() == User.Identity.Name || dialog.RecipientId.ToString() == User.Identity.Name)
+            var userId = userManager.GetUserId(HttpContext.User);
+            if (dialog.BottleOwnerId == userId || dialog.RecipientId == userId)
             {
                 return Ok(new DialogModel(dialog, db.GetLastMessage(dialog)));
             }

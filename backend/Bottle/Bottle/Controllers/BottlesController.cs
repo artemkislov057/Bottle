@@ -2,6 +2,7 @@
 using Bottle.Models.Database;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,17 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "confirmed")]
     [Route("api/bottles")]
     public class BottlesController : Controller
     {
         private BottleDbContext db;
-        public BottlesController(BottleDbContext db)
+        private readonly UserManager<User> userManager;
+
+        public BottlesController(BottleDbContext db, UserManager<User> userManager)
         {
             this.db = db;
+            this.userManager = userManager;
         }
 
         /// <summary>
@@ -50,7 +54,7 @@ namespace Bottle.Controllers
         public async Task<IActionResult> PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = await db.GetBottle(bottleId);
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(HttpContext.User);
             if (bottle == null || !bottle.Active || bottle.User == user)
                 return BadRequest();
             bottle.Active = false;
@@ -76,7 +80,7 @@ namespace Bottle.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = db.GetUser(User.Identity.Name);
+                var user = await userManager.GetUserAsync(HttpContext.User);
                 var bottle = new Models.Database.Bottle(data, user);
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
@@ -85,28 +89,6 @@ namespace Bottle.Controllers
             }
             return BadRequest();
         }
-
-        ///// <summary>
-        ///// Выбросить свою бутылочку обратно
-        ///// </summary>
-        ///// <remarks>
-        ///// Если кто-то поднял вашу бутылочку
-        ///// </remarks>
-        ///// <param name="bottleId">ID бутылочки</param>
-        //[HttpPost("{bottle-id}/throw")]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(400)]
-        //[ProducesResponseType(403)]
-        //public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
-        //{
-        //    var bottle = db.GetBottle(bottleId);
-        //    var user = db.GetUser(User.Identity.Name);
-        //    if (bottle == null || bottle.Active || bottle.UserId != user.Id)
-        //        return BadRequest();
-        //    bottle.Active = true;
-        //    db.SaveChanges();
-        //    return Ok(new BottleModel(bottle));
-        //}
 
         /// <summary>
         /// Удалить бутылочку
@@ -119,7 +101,7 @@ namespace Bottle.Controllers
         public async Task<IActionResult> Delete([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = await db.GetBottle(bottleId);
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(HttpContext.User);
             if (bottle != null && bottle.Active && bottle.UserId == user.Id)
             {
                 db.Bottles.Remove(bottle);
@@ -162,7 +144,8 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> GetMyBottles()
         {
-            var bottles = (await db.GetBottles()).Where(b => b.UserId.ToString() == User.Identity.Name);
+            var userId = userManager.GetUserId(HttpContext.User);
+            var bottles = (await db.GetBottles()).Where(b => b.UserId == userId);
             return Ok(bottles.Select(b => new BottleModel(b)));
         }
 

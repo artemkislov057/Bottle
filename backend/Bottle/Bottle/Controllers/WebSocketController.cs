@@ -1,7 +1,9 @@
 ﻿using Bottle.Models;
+using Bottle.Models.Database;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,12 +18,20 @@ namespace Bottle.Controllers
     [Route("ws")]
     public class WebSocketController : Controller
     {
+        public WebSocketController(UserManager<User> userManager, SignInManager<User> signInManager)
+        {
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+        }
+
 
         // Список всех клиентов
         private static readonly Dictionary<string, HashSet<WebSocketUser>> Clients = new();
 
         // Блокировка для обеспечения потокабезопасности
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
         [HttpGet]
         [Authorize]
@@ -30,16 +40,17 @@ namespace Bottle.Controllers
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                var client = new WebSocketUser(webSocket, User.Identity.Name);
+                var userId = userManager.GetUserId(HttpContext.User);
+                var client = new WebSocketUser(webSocket, userId);
                 client.SendMessage += message => client.SetCoordinates(message);
                 client.ClientClosedConnection += message => Clients[client.id].Remove(client);
-                if (Clients.TryGetValue(User.Identity.Name, out var webSockets))
+                if (Clients.TryGetValue(userId, out var webSockets))
                 {
                     webSockets.Add(client);
                 }
                 else
                 {
-                    Clients[User.Identity.Name] = new() { client };
+                    Clients[userId] = new() { client };
                 }
                 await client.Listen();
                 Clients[client.id].Remove(client);

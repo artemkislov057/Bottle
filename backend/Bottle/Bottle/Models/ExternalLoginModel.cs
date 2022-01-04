@@ -11,7 +11,6 @@ namespace Bottle.Models
         public string ProviderId { get; set; }
         public string AccessToken { get; set; }
         public bool RememberMe { get; set; }
-        public RegistrationUserModel RegistrationModel { get; set; }
     }
 
     public enum ExternalProvider

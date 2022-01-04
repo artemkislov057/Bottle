@@ -21,7 +21,7 @@ namespace Bottle.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private BottleDbContext db;
+        private readonly BottleDbContext db;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
@@ -40,8 +40,6 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> Logout()
         {
-            //await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            //return Ok();
             await signInManager.SignOutAsync();
             return Ok();
         }
@@ -52,10 +50,12 @@ namespace Bottle.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(403)]
-        public IActionResult GetInformation()
+        public async Task<IActionResult> GetInformationAsync()
         {
-            var user = db.GetUser(User.Identity.Name);
-            return Ok(new Account(user));
+            var a = HttpContext.User;
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            var cd = db.CommercialData.FirstOrDefault(c => c.Id == user.Id);
+            return Ok(new Account(user, cd));
         }
 
         /// <summary>
@@ -65,9 +65,9 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public IActionResult GetAvatar()
+        public async Task<IActionResult> GetAvatarAsync()
         {
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(HttpContext.User);
             if (user.Avatar == null)
                 return NotFound();
             return File(user.Avatar, "image/jpg");
@@ -85,28 +85,6 @@ namespace Bottle.Controllers
         {
             if (ModelState.IsValid)
             {
-                //User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
-                //if (user == null)
-                //{
-                //    user = new User { Nickname = data.Nickname, Email = data.Email, Password = data.Password, Sex = data.Sex };
-                //    if (data.CommercialData == null)
-                //    {
-                //        user.Type = 1;
-                //    }
-                //    else
-                //    {
-                //        user.Type = 2;
-                //        user.CommercialData = new CommercialData(data.CommercialData);
-                //    }
-                //    db.Users.Add(user);
-                //    await db.SaveChangesAsync();
-                //    await Authenticate(user);
-                //    return Created(string.Empty, new Account(user));
-                //}
-                //else
-                //{
-                //    return BadRequest("Аккаунт с такой почтой или никнеймом существует");
-                //}
                 User user = new User { Email = data.Email, UserName = data.Nickname, Sex = data.Sex };
                 if (data.CommercialData == null)
                 {
@@ -120,6 +98,7 @@ namespace Bottle.Controllers
                 var result = await userManager.CreateAsync(user, data.Password);
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, "confirmed");
                     await signInManager.SignInAsync(user, false);
                     return Created(string.Empty, new Account(user));
                 }
@@ -144,15 +123,6 @@ namespace Bottle.Controllers
         {
             if (ModelState.IsValid && !(string.IsNullOrEmpty(data.Nickname) && string.IsNullOrEmpty(data.Email)))
             {
-                //User user = db.Users.FirstOrDefault(u => u.Nickname == data.Nickname || u.Email == data.Email);
-                //if (user != null)
-                //{
-                //    if (user.Password != data.Password)
-                //        return BadRequest("Неправильный пароль");
-                //    await Authenticate(user);
-                //    var cd = db.CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
-                //    return Ok(new Account(user, cd));
-                //}
                 User user;
                 if (data.Nickname != null)
                 {
@@ -167,7 +137,7 @@ namespace Bottle.Controllers
                     var result = await signInManager.PasswordSignInAsync(user.UserName, data.Password, data.RememberMe, false);
                     if (result.Succeeded)
                     {
-                        var cd = db.CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
+                        var cd = db.CommercialData.FirstOrDefault(d => d.Id == user.Id);
                         return Ok(new Account(user, cd));
                     }
                 }
@@ -187,23 +157,17 @@ namespace Bottle.Controllers
         {
             if (ModelState.IsValid)
             {
-                var externalProviderUser = ExternalProviderUser.GetProvider(model.Provider);
-                if (await externalProviderUser.CheckAuthorizeAsync(model.ProviderId, model.AccessToken))
+                var externalProvider = ExternalProviderUser.GetProvider(model.Provider);
+                var externalUser = await externalProvider.CheckAuthorizeAsync(model.ProviderId, model.AccessToken);
+                if (externalUser.IsAuthorize)
                 {
                     var user = db.Users.FirstOrDefault(u => u.Provider != null && u.ProviderId == model.ProviderId);
                     if (user == null)
                     {
-                        user = new User { Email = model.RegistrationModel.Email, UserName = model.RegistrationModel.Nickname, Sex = model.RegistrationModel.Sex , Provider = model.Provider, ProviderId = model.ProviderId };
-                        if (model.RegistrationModel.CommercialData == null)
-                        {
-                            user.Type = 1;
-                        }
-                        else
-                        {
-                            user.Type = 2;
-                            user.CommercialData = new CommercialData(model.RegistrationModel.CommercialData);
-                        }
+                        user = new User { Email = externalUser.Email, UserName = externalUser.Email, Provider = model.Provider, ProviderId = model.ProviderId, Type = 1 };
+
                         var result = await userManager.CreateAsync(user);
+                        await userManager.AddToRoleAsync(user, "not-confirmed");
                         if (result.Succeeded)
                         {
                             await signInManager.SignInAsync(user, model.RememberMe);
@@ -228,7 +192,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult ChangeAvatar(IFormFile file)
+        public async Task<IActionResult> ChangeAvatarAsync(IFormFile file)
         {
             if (file == null)
                 return BadRequest();
@@ -237,7 +201,7 @@ namespace Bottle.Controllers
             {
                 imageData = binaryReader.ReadBytes((int)file.Length);
             }
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(HttpContext.User);
             user.Avatar = imageData;
             db.SaveChanges();
             return Ok();
@@ -250,12 +214,11 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public IActionResult ChangeInformation([FromBody] Account data)
+        public async Task<IActionResult> ChangeInformationAsync([FromBody] Account data)
         {
             if (ModelState.IsValid)
             {
-                var user = db.GetUser(User.Identity.Name);
-                user.UserName = data.Nickname is null ? user.UserName : data.Nickname;
+                var user = await userManager.GetUserAsync(HttpContext.User);
                 user.Sex = data.Sex is null ? user.Sex : data.Sex;
                 if (user.Type == 2)
                 {
@@ -265,7 +228,14 @@ namespace Bottle.Controllers
                     user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
                 }
                 db.SaveChanges();
-                return Ok(new Account(user));
+                var account = new Account(user);
+                if (account.IsConfirmed && (await userManager.GetRolesAsync(user)).Contains("not-confirmed"))
+                {
+                    await userManager.RemoveFromRoleAsync(user, "not-confirmed");
+                    await userManager.AddToRoleAsync(user, "confirmed");
+                    await signInManager.RefreshSignInAsync(user);
+                }
+                return Ok(account);
             }
             return BadRequest();
         }
@@ -278,10 +248,9 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> DeleteUser()
         {
-            User user = db.GetUser(User.Identity.Name);
-            db.Users.Remove(user);
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await db.SaveChangesAsync();
+            User user = await userManager.GetUserAsync(HttpContext.User);
+            await userManager.DeleteAsync(user);
+            await signInManager.SignOutAsync();
             return Ok();
         }
 
@@ -291,19 +260,5 @@ namespace Bottle.Controllers
         {
             return Ok(Enum.GetValues<ExternalProvider>().ToDictionary(v => v));
         }
-
-
-
-
-
-        //private async Task Authenticate(User user)
-        //{
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
-        //    };
-        //    ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-        //    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        //}
     }
 }

@@ -20,18 +20,18 @@ namespace Bottle.Utilities
             }
         }
 
-        public DbSet<CommercialData> CommercialDatas { get; set; }
+        public DbSet<CommercialData> CommercialData { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Models.Database.Bottle> Bottles { get; set; }
-        public DbSet<BottleContent> BottleContents { get; set; }
+        public DbSet<BottleContent> BottleContent { get; set; }
         public DbSet<ContentType> ContentTypes { get; set; }
 
         public User GetUser(string id)
         {
             var user = Users.FirstOrDefault(u => u.Id.ToString() == id);
-            var cd = CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
+            var cd = CommercialData.FirstOrDefault(d => d.Id == user.Id);
             return user;
         }
 

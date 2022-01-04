@@ -33,5 +33,10 @@ namespace Bottle.Models.Database
         {
             return value >= 0 && value <= 5;
         }
+
+        public bool IsConfirmed()
+        {
+            return true;
+        }
     }
 }

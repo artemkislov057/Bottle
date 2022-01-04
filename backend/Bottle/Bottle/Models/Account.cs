@@ -24,6 +24,7 @@ namespace Bottle.Models
             Sex = user.Sex;
             Type = user.Type;
             CommercialData = user.CommercialData is null ? null : new CommercialModel(user.CommercialData);
+            IsConfirmed = user.IsConfirmed();
         }
 
         public Account(User user, CommercialData commercialData) : this(user)
@@ -40,5 +41,6 @@ namespace Bottle.Models
         public string Sex { get; set; }
         public int Type { get; set; }
         public CommercialModel CommercialData { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

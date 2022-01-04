@@ -8,7 +8,7 @@ namespace Bottle.Utilities
 {
     public abstract class ExternalProviderUser
     {
-        public abstract Task<bool> CheckAuthorizeAsync(string providerId, string accessToken);
+        public abstract Task<ExternalUserModel> CheckAuthorizeAsync(string userId, string accessToken);
 
         public static ExternalProviderUser GetProvider(ExternalProvider externalProvider)
         {
