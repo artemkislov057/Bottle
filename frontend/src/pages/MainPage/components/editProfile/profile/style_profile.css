@@ -1,0 +1,146 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: "Roboto";
+    color: #2F3952;
+}
+
+.modal{
+    font-family: "Roboto";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 410px;
+    height: 686px; 
+    background: white;
+    border-radius: 26px;
+    
+}
+
+.modal-content{
+    display: grid;
+    justify-content: center;
+
+}
+
+.photo{
+    width: 100px;
+    height: 100px;
+    border: none;
+    background: url('../image/Ава.svg');
+    margin-top: 35px;
+    margin-bottom: 20px;
+    justify-self: center;
+    
+}
+
+.change-photo input[type="file"]{
+    display: none;
+}
+.change-photo{
+    justify-self: center;
+}
+
+.file-lable{
+    display: block;
+    width: 121px;
+    height: 11px;
+    cursor: pointer;
+    font-family: Roboto;
+    font-size: 10px;
+    line-height: 12px;
+    color: #63CDDA;
+    white-space: nowrap;
+    margin-bottom: 20px;
+    
+}
+
+.rating{
+    width: 150px;
+    height: 150px; 
+    justify-self: center; 
+    display: grid;
+    grid-template-areas:"rating";
+}
+
+#myChart{
+    grid-area: rating;
+}
+
+.circle{
+    width: 138px;
+    height: 138px;
+    /* background-color: #63CDDA; */
+    border-radius: 50%;
+    grid-area: rating;
+    text-align: center;
+    /* margin-left: 55px; */
+    margin-top: 65px;
+    font-family: Roboto;
+    font-size: 25px;
+    line-height: 30px;
+    /* color: #2F3952; */
+    grid-area: rating;
+    justify-self: center;
+    align-self: center;
+
+}
+
+/* .hystmodal__close{
+    top: 240px;
+    right: 152px;
+    background-image: url('../image/вернутьсянакарту.svg');
+    width: 283px;
+    height: 78px;
+    
+}
+
+@media (max-width:767px){
+    .hystmodal__close{
+        
+        width: 283px;
+        height: 78px;
+        background-image: url('../image/вернутьсянакарту.svg');
+    }
+} */
+
+.return-to-map{
+    background-image: url('../image/вернутьсянакарту.svg');
+    height: 85px;
+    width: 289px;
+    margin-top: 90px;
+}
+
+.rating-number {
+    padding-bottom: 100px;
+}
+
+#container {
+    /* width:960px; */
+    margin:0 auto;
+    overflow: hidden;
+  }
+  #left {
+    float:left;
+    /* width:340px; */
+  }
+  #right {
+    float:left;
+    margin-top: 8px;
+    margin-left: 60px;
+    line-height: 22px;
+    /* width:620px; */
+  }
+
+
+.hystmodal__close {
+    top: -320px !important;
+    right: 110px !important;
+    width: 24px !important;
+    height: 24px !important;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' stroke='%23111' stroke-linecap='square' stroke-miterlimit='50' stroke-width='2' d='M22 2L2 22'/%3E%3Cpath fill='none' stroke='%23111' stroke-linecap='square' stroke-miterlimit='50' stroke-width='2' d='M2 2l20 20'/%3E%3C/svg%3E") !important;
+}
