@@ -68,7 +68,7 @@ html, body {
     background-size: 50px 50px;
     background-color: rgba(255, 233, 167, 0.9);
     
-    z-index: 1;    
+    z-index: 1;
 }
 
 .new-bottle {
@@ -103,7 +103,93 @@ html, body {
 }
 
 .AAAAA {
-    z-index: 1000;
+    z-index: 1000;    
 }
 
+@media (max-width: 768px) {
+    .chat {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        border: 1px;
+        border-radius: 20%;
+        left: 20px;
+        bottom: 80px;
+        background: url('../../../dist/img/chaty.svg') 50% 50% no-repeat;
+        background-size: 30px 30px;
+        background-color: rgba(255, 233, 167, 0.9);
 
+        z-index: 1;
+    }
+    .new-bottle {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        border: 1px;
+        border-radius: 20%;
+        left: 20px;  
+        bottom: 20px;
+        background: url('../../../dist/img/Dobavlenie.svg') no-repeat center;
+        background-size: 30px 30px;
+        background-color: rgba(255, 233, 167, 0.9);
+        
+        z-index: 1;    
+    }
+    .profile {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        right: 20px;
+        border: 1px;
+        border-radius: 20%;
+        top: 20px;
+        background-color: rgba(255, 233, 167, 0.9);
+        z-index: 1;     
+    }
+    .profile:active {
+        background-color: rgba(1, 182, 236, 0.9);
+    }
+    .categories{
+        position: fixed;
+        width: 125px;
+        height: 40px; 
+        padding: 10px;
+        border: 1px;
+        border-radius: 20px;
+        right: 80px;
+        top: 20px;
+        background-color: rgba(255, 233, 167, 0.9);
+        z-index: 1;
+    }
+    #search-field {
+        position: fixed;
+        width: 125px;
+        height: 40px; 
+        padding: 10px;
+        border: 1px;
+        border-radius: 20px;
+        left: 20px;
+        top: 20px;
+        background-color: rgba(255, 233, 167, 0.9);
+        z-index: 1;
+    }
+    .leaflet-top.leaflet-left {
+        display: none;
+    }
+
+    .back-to-not-create { 
+        visibility: visible;
+        display: none;    
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        border: 1px;
+        border-radius: 20%;
+        left: 20px;  
+        bottom: 20px;
+        
+        background: url('../../../dist/img/nazad.svg') no-repeat center;
+        background-size: 30px 30px;
+        background-color: rgba(255, 233, 167, 0.9);
+    }
+}

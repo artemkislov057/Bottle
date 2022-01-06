@@ -18,6 +18,7 @@ import './components/editProfile/profile/script_profile.js'
 
 import '../../pages/myComercReg/modalCommercReg'
 
+import '../../pages/myComercReg/modalCommercReg'
 
 export{
     markerDataOnMap,
@@ -61,3 +62,15 @@ async function getCurrentUser() {
         }
     }).then(res => res.json())
 }
+
+
+//прост пока тут
+import pageIcon from '../../../dist/img/marker_siniy.svg'
+
+let headImage = document.querySelector('head');
+let link = document.createElement('link');
+link.rel = 'icon';
+link.type = 'image/svg'
+link.href = pageIcon
+headImage.appendChild(link)
+
