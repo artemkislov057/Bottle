@@ -137,10 +137,10 @@ body {
   }
 
 
-.hystmodal__close {
+/* .hystmodal__close {
     top: -320px !important;
     right: 110px !important;
     width: 24px !important;
     height: 24px !important;
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' stroke='%23111' stroke-linecap='square' stroke-miterlimit='50' stroke-width='2' d='M22 2L2 22'/%3E%3Cpath fill='none' stroke='%23111' stroke-linecap='square' stroke-miterlimit='50' stroke-width='2' d='M2 2l20 20'/%3E%3C/svg%3E") !important;
-}
+} */

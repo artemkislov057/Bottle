@@ -6,7 +6,18 @@ import { getAllBottles } from './components/GetAndUpdateBottle/getAndUpdateBottl
 import { searchAddress } from './components/SearchAddress/searchAddress';
 import "regenerator-runtime/runtime";
 
+
+
+import './components/editProfile/profile/style_profile.css'
+import './components/editProfile/profile/script_profile.js'
+// import './hystModal/hystmodal.min.css'
+// import './hystModal/hystmodal.min.js';
+
+
+//import './components/editProfile/profile/script_profile'
+
 import '../../pages/myComercReg/modalCommercReg'
+
 
 export{
     markerDataOnMap,
