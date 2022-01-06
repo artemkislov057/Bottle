@@ -6,7 +6,8 @@ import "./pages/create_profile/style_prof.css"
 // import "./pages/entrance/script"
 // import "./pages/registration/script_reg";
 import "./hystmodal.min"
-import "./hystmodal.min.css"
+// import "./hystmodal.min.css"
+import '../MainPage/hystModal/hystmodal.min.css'
 import screenmap from "../../../dist/img/screenmap.jpg"
 import logo from "../../../dist/img/logo.svg"
 
