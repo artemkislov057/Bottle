@@ -4,12 +4,16 @@ import { CreationBottlenModal } from './components/BottleCreationModal/BottleCre
 import { bottleFilterOnMap } from './bottleFilter';
 import { getAllBottles } from './components/GetAndUpdateBottle/getAndUpdateBottle';
 import { searchAddress } from './components/SearchAddress/searchAddress';
+import "regenerator-runtime/runtime";
+
+import '../../pages/myComercReg/modalCommercReg'
 
 export{
     markerDataOnMap,
     bottleIdOnMap,
     bottleDataOnMap,
-    mymap
+    mymap,
+    currentUser
 }
 
 let bottleIdOnMap = [];
@@ -34,3 +38,27 @@ new CreationBottlenModal();
 getAllBottles();
 searchAddress();
 bottleFilterOnMap();
+
+let currentUser;
+getCurrentUser().then(res => currentUser = res)
+
+async function getCurrentUser() {
+    return await fetch('https://localhost:44358/api/account', {    
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'            
+        }
+    }).then(res => res.json())
+}
+
+
+//прост пока тут
+import pageIcon from '../../../dist/img/marker_siniy.svg'
+
+let headImage = document.querySelector('head');
+let link = document.createElement('link');
+link.rel = 'icon';
+link.type = 'image/svg'
+link.href = pageIcon
+headImage.appendChild(link)
+

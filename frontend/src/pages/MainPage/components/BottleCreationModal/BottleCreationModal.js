@@ -9,6 +9,7 @@ import { checkNameAdress } from '../../helpers';
 import blueMarker from '../../../../../dist/img/marker_siniy.svg';
 import yellowMarker from '../../../../../dist/img/marker_zhelty.svg';
 import docIcon from '../../../../../dist/img/faylikonka.svg';
+import { currentUser } from '../../MainPage';
 
 export {
     CreatioBottlenModal as CreationBottlenModal
@@ -45,7 +46,7 @@ class CreatioBottlenModal {
 
     _createModalLogic() {
         this.modalWindow.addEventListener('submit', (event) => {
-            event.preventDefault();
+            event.preventDefault();            
 
             this._setVisibilityButtons('hidden');
             this.myModal.close();
@@ -180,6 +181,7 @@ class CreatioBottlenModal {
     _closePopups() {
         this.createModalWindowButton.addEventListener('click', () => {
             mymap.closePopup();
+            console.log(currentUser)
         })
     }
 

@@ -14,27 +14,27 @@ const path = require('path');
 // }
 
 module.exports = {
-    // entry: './index.js',    
-    // entry: {
-    //     // main: path.resolve(__dirname, './index.js'),
-        
-    // },
-    entry: './src/pages/MainPage/MainPage.js',
+    entry: {
+        'MainPage' : './src/pages/MainPage/MainPage',        
+        'testSwipe': "./src/pages/testSwipe/testSwipe"        
+    },    
     mode:'production',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'bundle.js',
+        // filename: 'bundle.js',
+        filename: '[name].js',
         publicPath: '/'
-    },    
-    // devServer: {
-    //     port: 9000,
-    //     historyApiFallback: true,
-    //     hot: true,
-    // },
-    plugins: [
+    },
+    plugins: [       
+        new HTMLWebpackPlugin({            
+            // filename: 'MainPage.html',
+            template: "src/pages/MainPage/MainPage.html",
+            chunks: ['MainPage']
+        }),
         new HTMLWebpackPlugin({
-            // template: "./index.html"
-            template: "./src/pages/MainPage/MainPage.html"
+            filename: 'testSwipe.html',
+            template: "src/pages/testSwipe/testSwipe.html",           
+            chunks: ['testSwipe']
         })
     ],
     module: {
