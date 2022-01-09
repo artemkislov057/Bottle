@@ -16,6 +16,8 @@ namespace Bottle.Models
 
         public Account(User user)
         {
+            if (user == null)
+                return;
             Id = user.Id;
             Nickname = user.Nickname;
             Email = user.Email;
