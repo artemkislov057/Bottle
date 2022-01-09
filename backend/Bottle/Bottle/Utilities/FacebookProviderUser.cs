@@ -1,27 +1,25 @@
-﻿using Bottle.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Bottle.Utilities
 {
-    public class GoogleProviderUser : ExternalProviderUser
+    public class FacebookProviderUser : ExternalProviderUser
     {
-        private string url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
+        private string url = "https://graph.facebook.com/me?access_token=";
 
         public override async Task<bool> CheckAuthorizeAsync(string userId, string accessToken)
         {
             var requestContent = await GetRequestAsync(url + accessToken);
             var contentModel = JsonConvert.DeserializeObject<AuthenticateResult>(requestContent);
-            return userId == contentModel.user_id;
+            return userId == contentModel.id;
         }
 
         private class AuthenticateResult
         {
-            public string user_id { get; set; }
+            public string id { get; set; }
         }
     }
 }

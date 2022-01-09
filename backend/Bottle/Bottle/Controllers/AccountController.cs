@@ -172,7 +172,7 @@ namespace Bottle.Controllers
                         await userManager.AddToRoleAsync(user, "confirmed");
                         if (result.Succeeded)
                         {
-                            await signInManager.SignInAsync(user, false);
+                            await signInManager.SignInAsync(user, model.ExternalLogin.RememberMe);
                             return Created(string.Empty, new Account(user));
                         }
                     }
@@ -257,12 +257,6 @@ namespace Bottle.Controllers
                 }
                 db.SaveChanges();
                 var account = new Account(user);
-                if (account.IsConfirmed && (await userManager.GetRolesAsync(user)).Contains("not-confirmed"))
-                {
-                    await userManager.RemoveFromRoleAsync(user, "not-confirmed");
-                    await userManager.AddToRoleAsync(user, "confirmed");
-                    await signInManager.RefreshSignInAsync(user);
-                }
                 return Ok(account);
             }
             return BadRequest();

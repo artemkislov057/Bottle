@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Bottle.Utilities
@@ -17,13 +18,20 @@ namespace Bottle.Utilities
                 case ExternalProvider.Google:
                     return new GoogleProviderUser();
                 case ExternalProvider.Facebook:
-                    break;
+                    return new FacebookProviderUser();
                 case ExternalProvider.VK:
                     break;
                 case ExternalProvider.Instagram:
                     break;
             }
             throw new NotImplementedException();
+        }
+
+        protected async Task<string> GetRequestAsync(string url)
+        {
+            HttpClient httpClient = new HttpClient();
+            var request = await httpClient.GetAsync(url);
+            return await request.Content.ReadAsStringAsync();
         }
     }
 }
