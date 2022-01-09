@@ -145,6 +145,42 @@ namespace Bottle.Controllers
             return BadRequest("Некорректные данные");
         }
 
+        [HttpPost("external-register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalRegister([FromBody] ExternalRegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var externalProvider = ExternalProviderUser.GetProvider(model.ExternalLogin.Provider);
+                var isAuthorize = await externalProvider.CheckAuthorizeAsync(model.ExternalLogin.ProviderId, model.ExternalLogin.AccessToken);
+                if (isAuthorize)
+                {
+                    var user = db.Users.FirstOrDefault(u => u.Provider == model.ExternalLogin.Provider && u.ProviderId == model.ExternalLogin.ProviderId);
+                    if (user == null)
+                    {
+                        user = new User { Provider = model.ExternalLogin.Provider, ProviderId = model.ExternalLogin.ProviderId, UserName = model.Nickname, Sex = model.Sex };
+                        if (model.CommercialData == null)
+                        {
+                            user.Type = 1;
+                        }
+                        else
+                        {
+                            user.Type = 2;
+                            user.CommercialData = new CommercialData(model.CommercialData);
+                        }
+                        var result = await userManager.CreateAsync(user);
+                        await userManager.AddToRoleAsync(user, "confirmed");
+                        if (result.Succeeded)
+                        {
+                            await signInManager.SignInAsync(user, false);
+                            return Created(string.Empty, new Account(user));
+                        }
+                    }
+                }
+            }
+            return BadRequest();
+        }
+
         /// <summary>
         /// Войти в аккаунт через внешнего провайдера
         /// </summary>
@@ -158,21 +194,13 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var externalProvider = ExternalProviderUser.GetProvider(model.Provider);
-                var externalUser = await externalProvider.CheckAuthorizeAsync(model.ProviderId, model.AccessToken);
-                if (externalUser.IsAuthorize)
+                var isAuthorize = await externalProvider.CheckAuthorizeAsync(model.ProviderId, model.AccessToken);
+                if (isAuthorize)
                 {
                     var user = db.Users.FirstOrDefault(u => u.Provider != null && u.ProviderId == model.ProviderId);
                     if (user == null)
                     {
-                        user = new User { Email = externalUser.Email, UserName = externalUser.Email, Provider = model.Provider, ProviderId = model.ProviderId, Type = 1 };
-
-                        var result = await userManager.CreateAsync(user);
-                        await userManager.AddToRoleAsync(user, "not-confirmed");
-                        if (result.Succeeded)
-                        {
-                            await signInManager.SignInAsync(user, model.RememberMe);
-                            return Created(string.Empty, new Account(user));
-                        }
+                        return NotFound();
                     }
                     else
                     {
