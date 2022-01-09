@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 
 namespace Bottle.Models
 {
-    public class Account
+    public class UserModel
     {
-        public Account()
+        public UserModel()
         {
 
         }
 
-        public Account(User user)
+        public UserModel(User user)
         {
             if (user == null)
                 return;
             Id = user.Id;
             Nickname = user.Nickname;
-            Email = user.Email;
             if (user.RatingCount > 0)
                 Rating = (decimal)user.RatingSum / user.RatingCount;
             Sex = user.Sex;
@@ -28,16 +27,13 @@ namespace Bottle.Models
             CommercialData = user.CommercialData is null ? null : new CommercialModel(user.CommercialData);
         }
 
-        public Account(User user, CommercialData commercialData) : this(user)
+        public UserModel(User user, CommercialData commercialData) : this(user)
         {
             CommercialData = commercialData is null ? null : new CommercialModel(commercialData);
         }
 
         public int Id { get; set; }
         public string Nickname { get; set; }
-
-        [EmailAddress]
-        public string Email { get; set; }
         public decimal Rating { get; set; }
         public string Sex { get; set; }
         public int Type { get; set; }

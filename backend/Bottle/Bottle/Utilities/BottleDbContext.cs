@@ -32,6 +32,8 @@ namespace Bottle.Utilities
         public User GetUser(string id)
         {
             var user = Users.FirstOrDefault(u => u.Id.ToString() == id);
+            if (user == null)
+                return null;
             var cd = CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
             return user;
         }
