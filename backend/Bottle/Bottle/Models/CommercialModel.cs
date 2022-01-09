@@ -17,8 +17,10 @@ namespace Bottle.Models
         public CommercialModel(CommercialData data)
         {
             FullName = data.FullName;
-            Company = data.Company;
             IdentificationNumber = data.IdentificationNumber;
+            ContactPerson = data.ContactPerson;
+            Email = data.Email;
+            PhoneNumber = data.PhoneNumber;
             PSRN = data.PSRN;
         }
 
@@ -26,7 +28,13 @@ namespace Bottle.Models
         public string FullName { get; set; }
 
         [Required]
-        public string Company { get; set; }
+        public string ContactPerson { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string PhoneNumber { get; set; }
 
         [Required]
         public string IdentificationNumber { get; set; }

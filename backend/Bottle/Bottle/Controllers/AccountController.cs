@@ -168,7 +168,6 @@ namespace Bottle.Controllers
                 if (user.Type == 2)
                 {
                     user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
-                    user.CommercialData.Company = data.CommercialData.Company is null ? user.CommercialData.Company : data.CommercialData.Company;
                     user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
                     user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
                 }
