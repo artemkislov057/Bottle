@@ -23,7 +23,10 @@ namespace Bottle.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            return Ok(new Account(db.GetUser(id)));
+            var user = db.GetUser(id);
+            if (user == null)
+                return NotFound();
+            return Ok(new UserModel(user));
         }
 
         [HttpGet("{id}/avatar")]
