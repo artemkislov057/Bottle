@@ -12,7 +12,7 @@ namespace Bottle.Models
 
         }
 
-        public BottleModel(DataBase.Bottle entityBottle, UserModel user)
+        public BottleModel(DataBase.Bottle entityBottle)
         {
             Id = entityBottle.Id;
             Lat = entityBottle.Lat;
@@ -26,7 +26,7 @@ namespace Bottle.Models
             EndTime = entityBottle.EndTime;
             LifeTime = (int)(EndTime - Created).TotalSeconds;
             Active = entityBottle.Active;
-            User = user;
+            UserId = entityBottle.UserId;
         }
 
         public int Id { get; set; }
@@ -41,6 +41,6 @@ namespace Bottle.Models
         public DateTime Created { get; set; }
         public DateTime EndTime { get; set; }
         public bool Active { get; set; }
-        public UserModel User { get; set; }
+        public int UserId { get; set; }
     }
 }

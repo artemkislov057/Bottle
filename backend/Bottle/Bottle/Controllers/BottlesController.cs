@@ -31,10 +31,10 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> GetInformation([FromRoute(Name = "bottle-id")] int bottleId)
         {
-            var bottle = await db.GetBottleModelAsync(bottleId);
+            var bottle = await db.GetBottle(bottleId);
             if (bottle != null)
             {
-                return Ok(bottle);
+                return Ok(new BottleModel(bottle));
             }
             return BadRequest("bottle not found");
         }
@@ -59,7 +59,7 @@ namespace Bottle.Controllers
             db.SaveChanges();
             bottle.DialogId = dialog.Id;
             db.SaveChanges();
-            await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
+            await WebSocketController.OnPickedUdBottle(new BottleModel(bottle));
             await WebSocketController.OnCreatingDialog(bottle.UserId.ToString(), new DialogModel(dialog));
             return Ok(new { dialogId = dialog.Id });
         }
@@ -80,9 +80,8 @@ namespace Bottle.Controllers
                 var bottle = new Models.DataBase.Bottle(data, user);
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
-                var bottleModel = db.GetBottleModel(bottle);
-                await WebSocketController.OnCreatingBottle(bottleModel);
-                return Created(string.Empty, bottleModel);
+                await WebSocketController.OnCreatingBottle(new BottleModel(bottle));
+                return Created(string.Empty, new BottleModel(bottle));
             }
             return BadRequest();
         }
@@ -152,7 +151,7 @@ namespace Bottle.Controllers
             {
                 result = bottles.ToList().Where(b => IsPointInCircle(lat.Value, lng.Value, b.Lat, b.Lng, radius.Value));
             }
-            return Ok(result.ToList().Select(b => db.GetBottleModel(b)));
+            return Ok(result.Select(b => new BottleModel(b)));
         }
 
         /// <summary>
@@ -164,7 +163,7 @@ namespace Bottle.Controllers
         public async Task<IActionResult> GetMyBottles()
         {
             var bottles = (await db.GetBottles()).Where(b => b.UserId.ToString() == User.Identity.Name);
-            return Ok(bottles.ToList().Select(b => db.GetBottleModel(b)));
+            return Ok(bottles.Select(b => new BottleModel(b)));
         }
 
         /// <summary>
@@ -180,7 +179,7 @@ namespace Bottle.Controllers
             var bottle = db.Bottles.FirstOrDefault(b => b.Id == bottleId);
             if (bottle != null && bottle.Active && bottle.EndTime <= DateTime.UtcNow)
             {
-                await WebSocketController.OnTimeoutBottle(db.GetBottleModel(bottle));
+                await WebSocketController.OnTimeoutBottle(new(bottle));
                 db.Bottles.Remove(bottle);
                 db.SaveChanges();
                 return Ok();

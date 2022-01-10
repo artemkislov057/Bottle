@@ -48,7 +48,7 @@ namespace Bottle.Utilities
                 return null;
             if (result.Active && result.EndTime <= DateTime.UtcNow)
             {
-                await WebSocketController.OnTimeoutBottle(GetBottleModel(result));
+                await WebSocketController.OnTimeoutBottle(new(result));
                 Bottles.Remove(result);
                 SaveChanges();
                 return null;
@@ -56,31 +56,10 @@ namespace Bottle.Utilities
             return result;
         }
 
-        public async Task<BottleModel> GetBottleModelAsync(int id)
-        {
-            var dbBottle = await GetBottle(id);
-            return GetBottleModel(dbBottle);
-        }
-
-        public BottleModel GetBottleModel(Models.DataBase.Bottle bottle)
-        {
-            if (bottle == null)
-                return null;
-            var user = GetUser(bottle.UserId.ToString());
-            var rating = GetUserRating(user.Id.ToString());
-            return new BottleModel(bottle, new UserModel(user, rating));
-        }
-
-        public BottleModel GetBottleModel(int id)
-        {
-            var task = GetBottleModelAsync(id);
-            return task.Result;
-        }
-
         public async Task<DbSet<Models.DataBase.Bottle>> GetBottles()
         {
             var timeoutBottles = Bottles.Where(b => b.Active && b.EndTime <= DateTime.UtcNow);
-            await WebSocketController.OnTimeoutBottles(timeoutBottles.ToList().Select(b => GetBottleModel(b.Id)));
+            await WebSocketController.OnTimeoutBottles(timeoutBottles.Select(b => new Models.BottleModel(b)));
             Bottles.RemoveRange(timeoutBottles);
             SaveChanges();
             return Bottles;
