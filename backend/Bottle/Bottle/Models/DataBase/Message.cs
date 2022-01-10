@@ -1,4 +1,4 @@
-﻿namespace Bottle.Models.Database
+﻿namespace Bottle.Models.DataBase
 {
     public class Message
     {

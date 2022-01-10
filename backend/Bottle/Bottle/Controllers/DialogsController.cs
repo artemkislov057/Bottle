@@ -1,5 +1,5 @@
 ﻿using Bottle.Models;
-using Bottle.Models.Database;
+using Bottle.Models.DataBase;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -118,7 +118,7 @@ namespace Bottle.Controllers
         public IActionResult Rate([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] int rate)
         {
             var dialog = db.GetDialog(dialogId);
-            if (!dialog.Active && Models.Database.User.IsValidRating(rate))
+            if (!dialog.Active && Models.DataBase.User.IsValidRating(rate))
             {
                 var requestUser = db.GetUser(User.Identity.Name);
                 if (requestUser.Id == dialog.RecipientId && dialog.BottleRate is null)
