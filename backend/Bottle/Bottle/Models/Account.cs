@@ -1,4 +1,4 @@
-﻿using Bottle.Models.Database;
+﻿using Bottle.Models.DataBase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,21 +14,20 @@ namespace Bottle.Models
 
         }
 
-        public Account(User user)
+        public Account(User user, Rating rating)
         {
             if (user == null)
                 return;
             Id = user.Id;
             Nickname = user.Nickname;
             Email = user.Email;
-            if (user.RatingCount > 0)
-                Rating = (decimal)user.RatingSum / user.RatingCount;
+            Rating = rating;
             Sex = user.Sex;
             Type = user.Type;
             CommercialData = user.CommercialData is null ? null : new CommercialModel(user.CommercialData);
         }
 
-        public Account(User user, CommercialData commercialData) : this(user)
+        public Account(User user, CommercialData commercialData, Rating rating) : this(user, rating)
         {
             CommercialData = commercialData is null ? null : new CommercialModel(commercialData);
         }
@@ -38,7 +37,7 @@ namespace Bottle.Models
 
         [EmailAddress]
         public string Email { get; set; }
-        public decimal Rating { get; set; }
+        public Rating Rating { get; set; }
         public string Sex { get; set; }
         public int Type { get; set; }
         public CommercialModel CommercialData { get; set; }

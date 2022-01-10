@@ -26,7 +26,7 @@ namespace Bottle.Controllers
             var user = db.GetUser(id);
             if (user == null)
                 return NotFound();
-            return Ok(new UserModel(user));
+            return Ok(new UserModel(user, db.GetUserRating(id)));
         }
 
         [HttpGet("{id}/avatar")]
