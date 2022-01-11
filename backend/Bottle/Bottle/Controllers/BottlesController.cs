@@ -1,5 +1,5 @@
 ﻿using Bottle.Models;
-using Bottle.Models.Database;
+using Bottle.Models.DataBase;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +77,7 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var user = db.GetUser(User.Identity.Name);
-                var bottle = new Models.Database.Bottle(data, user);
+                var bottle = new Models.DataBase.Bottle(data, user);
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
                 await WebSocketController.OnCreatingBottle(new BottleModel(bottle));
@@ -142,7 +142,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> GetBottles(string category = null, double? radius = null, decimal? lat = null, decimal? lng = null)
         {
-            IEnumerable<Models.Database.Bottle> result = null;
+            IEnumerable<Models.DataBase.Bottle> result = null;
             var bottles = (await db.GetBottles()).Where(b => b.Active);
             if (category != null)
                 bottles = bottles.Where(b => b.Category == category);

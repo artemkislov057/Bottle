@@ -1,5 +1,5 @@
 ﻿using Bottle.Models;
-using Bottle.Models.Database;
+using Bottle.Models.DataBase;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -46,7 +46,7 @@ namespace Bottle.Controllers
         public IActionResult GetInformation()
         {
             var user = db.GetUser(User.Identity.Name);
-            return Ok(new Account(user));
+            return Ok(new Account(user, db.GetUserRating(User.Identity.Name)));
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Bottle.Controllers
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
                     await Authenticate(user);
-                    return Created(string.Empty, new Account(user));
+                    return Created(string.Empty, new Account(user, Rating.Zero));
                 }
                 else
                 {
@@ -122,7 +122,7 @@ namespace Bottle.Controllers
                         return BadRequest("Неправильный пароль");
                     await Authenticate(user);
                     var cd = db.CommercialDatas.FirstOrDefault(d => d.Id == user.Id);
-                    return Ok(new Account(user, cd));
+                    return Ok(new Account(user, cd, db.GetUserRating(user.Id.ToString())));
                 }
             }
             return BadRequest("Некорректные данные");
@@ -168,12 +168,11 @@ namespace Bottle.Controllers
                 if (user.Type == 2)
                 {
                     user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
-                    user.CommercialData.Company = data.CommercialData.Company is null ? user.CommercialData.Company : data.CommercialData.Company;
                     user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
                     user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
                 }
                 db.SaveChanges();
-                return Ok(new Account(user));
+                return Ok(new Account(user, db.GetUserRating(user.Id.ToString())));
             }
             return BadRequest();
         }
