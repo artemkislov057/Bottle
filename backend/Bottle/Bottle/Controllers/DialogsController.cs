@@ -118,7 +118,7 @@ namespace Bottle.Controllers
         public IActionResult Rate([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] int rate)
         {
             var dialog = db.GetDialog(dialogId);
-            if (!dialog.Active && Models.DataBase.User.IsValidRating(rate))
+            if (dialog != null && !dialog.Active && Models.DataBase.User.IsValidRating(rate))
             {
                 var requestUser = db.GetUser(User.Identity.Name);
                 if (requestUser.Id == dialog.RecipientId && dialog.BottleRate is null)
