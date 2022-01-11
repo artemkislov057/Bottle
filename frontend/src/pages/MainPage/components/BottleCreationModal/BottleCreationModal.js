@@ -1,5 +1,7 @@
-import '../../../../../hystmodal.min.css';
-import '../../../../../hystmodal.min';
+// import '../../../../../hystmodal.min.css';
+// import '../../../../../hystmodal.min';
+import '../../../../connections/hystModal/hystmodal.min.css'
+import '/hystmodal.min'
 import './BottleCreationModal.css';
 import { Bottle } from '../Bottle/Bottle';
 import { mymap } from '../../MainPage';
@@ -117,7 +119,7 @@ class CreatioBottlenModal {
                             .then(res => {
         
                                 if(!bottleIdOnMap.includes(res.id)) {
-                                    new Bottle(res.id, currentCateg, e.latlng, newIcon, name, adress, this.modalH.value, this.modalDescription.value);
+                                    new Bottle(res.id, currentCateg, e.latlng, newIcon, name, adress, this.modalH.value, this.modalDescription.value, currentUser.id);
                                     bottleIdOnMap.push(res.id);
                                     bottleDataOnMap.push(res);
                                 }
@@ -158,22 +160,30 @@ class CreatioBottlenModal {
     _create_quest_div_popup(name, adress) {
         let quest_div = document.createElement('div');
         quest_div.classList = 'quest-window';
-    
+        
+        let pDiv = document.createElement('div');
+        pDiv.classList.add('div-quest-text');
         let quest_p = document.createElement('p');
         quest_p.classList = 'quest-text';
         quest_p.textContent = `Хотите тут создать бутылочку? (${checkNameAdress(name, adress)})`;
-    
+        pDiv.append(quest_p)
+        
+        let divButtons = document.createElement('div');
+        divButtons.classList.add('quset-window-buttons');
+
         let quest_yes_button = document.createElement('button');
         quest_yes_button.classList = 'quest-yes-button';
-        quest_yes_button.textContent = "Да";
+        // quest_yes_button.textContent = "Да";
     
         let quest_no_button = document.createElement('button');
         quest_no_button.classList = 'quest-no-button';
-        quest_no_button.textContent = "Нет";
+        // quest_no_button.textContent = "Нет";
+
+        divButtons.append(quest_yes_button);
+        divButtons.append(quest_no_button);
     
-        quest_div.appendChild(quest_p);
-        quest_div.appendChild(quest_yes_button);
-        quest_div.appendChild(quest_no_button);
+        quest_div.appendChild(pDiv);
+        quest_div.appendChild(divButtons);
     
         return quest_div;    
     }

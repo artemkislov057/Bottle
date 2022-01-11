@@ -4,21 +4,10 @@ import { CreationBottlenModal } from './components/BottleCreationModal/BottleCre
 import { bottleFilterOnMap } from './bottleFilter';
 import { getAllBottles } from './components/GetAndUpdateBottle/getAndUpdateBottle';
 import { searchAddress } from './components/SearchAddress/searchAddress';
+import { createAndUpdateProfile } from './components/editProfile/profile/script_profile.js';
+import { updateLocateMap } from './components/updateLocateForSearchBottle';
+
 import "regenerator-runtime/runtime";
-
-
-
-import './components/editProfile/profile/style_profile.css'
-import './components/editProfile/profile/script_profile.js'
-// import './hystModal/hystmodal.min.css'
-// import './hystModal/hystmodal.min.js';
-
-
-//import './components/editProfile/profile/script_profile'
-
-import '../../pages/myComercReg/modalCommercReg'
-
-import '../../pages/myComercReg/modalCommercReg'
 
 export{
     markerDataOnMap,
@@ -50,6 +39,8 @@ new CreationBottlenModal();
 getAllBottles();
 searchAddress();
 bottleFilterOnMap();
+createAndUpdateProfile();
+updateLocateMap();
 
 let currentUser;
 getCurrentUser().then(res => currentUser = res)
@@ -63,6 +54,9 @@ async function getCurrentUser() {
     }).then(res => res.json())
 }
 
+document.querySelector('.chat').addEventListener('click', () => {
+    document.location ='./ChatPage.html';
+})
 
 //прост пока тут
 import pageIcon from '../../../dist/img/marker_siniy.svg'
@@ -73,4 +67,3 @@ link.rel = 'icon';
 link.type = 'image/svg'
 link.href = pageIcon
 headImage.appendChild(link)
-

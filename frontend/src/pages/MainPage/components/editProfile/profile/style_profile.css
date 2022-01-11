@@ -8,33 +8,30 @@ body {
     color: #2F3952;
 }
 
+.hystmodal__window.editProfile {
+    width: 400px;
+    height: 680px;
+}
+
 .modal{
-    font-family: "Roboto";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 410px;
-    height: 686px; 
+    font-family: "Roboto";       
     background: white;
-    border-radius: 26px;
-    
+    border-radius: 26px;        
 }
 
 .modal-content{
     display: grid;
-    justify-content: center;
-
+    justify-content: center;    
 }
 
 .photo{
     width: 100px;
     height: 100px;
-    border: none;
     background: url('../image/Ава.svg');
     margin-top: 35px;
     margin-bottom: 20px;
     justify-self: center;
+    border-radius: 20%;
     
 }
 
@@ -47,16 +44,15 @@ body {
 
 .file-lable{
     display: block;
-    width: 121px;
-    height: 11px;
+    /* width: 120px; */
+    height: 10px;
     cursor: pointer;
     font-family: Roboto;
-    font-size: 10px;
+    font-size: 16px;
     line-height: 12px;
     color: #63CDDA;
     white-space: nowrap;
     margin-bottom: 20px;
-    
 }
 
 .rating{
@@ -90,24 +86,6 @@ body {
 
 }
 
-/* .hystmodal__close{
-    top: 240px;
-    right: 152px;
-    background-image: url('../image/вернутьсянакарту.svg');
-    width: 283px;
-    height: 78px;
-    
-}
-
-@media (max-width:767px){
-    .hystmodal__close{
-        
-        width: 283px;
-        height: 78px;
-        background-image: url('../image/вернутьсянакарту.svg');
-    }
-} */
-
 .return-to-map{
     background-image: url('../image/вернутьсянакарту.svg');
     height: 85px;
@@ -123,24 +101,23 @@ body {
     /* width:960px; */
     margin:0 auto;
     overflow: hidden;
-  }
-  #left {
+}
+#left {
     float:left;
     /* width:340px; */
-  }
-  #right {
+}
+#right {
     float:left;
     margin-top: 8px;
     margin-left: 60px;
     line-height: 22px;
-    /* width:620px; */
-  }
+}
 
+@media (max-width: 768px) {
+    .hystmodal__window.editProfile {
+        width: 330px;
+        height: 500px;
+    }
+    
+}
 
-/* .hystmodal__close {
-    top: -320px !important;
-    right: 110px !important;
-    width: 24px !important;
-    height: 24px !important;
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' stroke='%23111' stroke-linecap='square' stroke-miterlimit='50' stroke-width='2' d='M22 2L2 22'/%3E%3Cpath fill='none' stroke='%23111' stroke-linecap='square' stroke-miterlimit='50' stroke-width='2' d='M2 2l20 20'/%3E%3C/svg%3E") !important;
-} */

@@ -52,6 +52,10 @@
     justify-content: space-around;    
 }
 
+.modal-com-reg-data-field-h2 {
+    
+}
+
 .modal-com-reg-infoCompany-middle-line {    
     display: flex;
     border: 1px solid #FFE9A7;

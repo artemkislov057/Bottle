@@ -8,6 +8,13 @@ ws.onopen = function() {
     }))    
 }
 
+let currentLatLngDist = {
+    lat:56.85,//
+    lng: 60.6,
+    radius: 100//
+}
+
 export {
-    ws
+    ws,
+    currentLatLngDist
 }

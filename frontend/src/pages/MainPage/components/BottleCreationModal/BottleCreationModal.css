@@ -114,6 +114,12 @@
     font-size: 20px;
 }
 
+.modal-window-exit-button:hover {
+    background-color: whitesmoke;
+    border: 2px solid;
+    border-color: #2F3952;
+}
+
 .modal-window label {    
     display: block;
     margin-bottom: 5px;
@@ -243,6 +249,35 @@
         border: 0;
         margin-left: 5%;
     }
+}
 
-    
+.quest-window {
+    display: flex;
+    flex-direction: column;
+}
+
+.div-quest-text {
+    font-size: 16px;
+    font-weight: bold;    
+}
+
+.quset-window-buttons {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.quest-yes-button,
+.quest-no-button {
+    width: 60px;
+    height: 60px;
+    border: none;
+}
+
+.quest-yes-button {
+    background: url('../../../../../dist/img/yes.svg') no-repeat center;
+    background-size: 60px 60px;
+}
+.quest-no-button {
+    background: url('../../../../../dist/img/no.svg') no-repeat center;
+    background-size: 60px 60px;
 }

@@ -8,20 +8,16 @@ body {
     color: #2F3952;
 }
 
+.hystmodal__window.entranceModal {
+    width: 650px;
+    height: 390px; 
+    border-radius: 20px;
+}
 
-
-
-.modal-entr{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 647px;
-    height: 387px; 
+.modal-entr{       
     background: #FFFFFF;
-    border-radius: 30px;
-    transition: all 0.8s ease 0s;
-   
+    transition: all 0.8s ease 0s;   
+    border-radius: 20px;
 }
 
 .modal-header{

@@ -8,19 +8,15 @@ body {
     color: #2F3952;
 }
 
-
+.hystmodal__window.createProfileModal {
+    width: 370px;
+    height: 585px; 
+    border-radius: 20px;
+}
 
 .modal-create{
-
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 369px;
-    height: 585px; 
+    border-radius: 20px;
     background: #FFFFFF;
-    border-radius: 30px;
-    
 }
 
 .modal-header{
@@ -30,8 +26,6 @@ body {
     justify-content:center;
 
 }
-
-
 
 .modal-title-create{
     font-size: 36px;
@@ -61,7 +55,6 @@ body {
     border-radius: 91px;
 
 }
-
 
 .gender-container{
     display: grid;
@@ -112,6 +105,7 @@ body {
 .footer{
     margin-top: 19px;
 }
+
 .footer input[type="submit"]{
     width: 213px;
     height: 61px;
@@ -127,7 +121,7 @@ body {
 }
 
 .validation-prof {
-    margin-left: 40px;
-    margin-top: 10px;
+    margin-top: 20px;
     color: crimson;
+    text-align: center;
 }

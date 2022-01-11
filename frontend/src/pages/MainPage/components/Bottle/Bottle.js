@@ -2,13 +2,14 @@ import './Bottle.css';
 import { checkNameAdress } from '../../helpers'
 import { markerDataOnMap, mymap } from '../../MainPage';
 import { CreationBottlenModal } from '../BottleCreationModal/BottleCreationModal'
+import { currentUser } from '../../MainPage';
 
 export{
     Bottle
 }
 
 class Bottle {    
-    constructor(id,category, latlng, icon, name, adress, title, description, focusOnBottle=true) {//время жизни 
+    constructor(id,category, latlng, icon, name, adress, title, description, ownerId, focusOnBottle=true) {//время жизни 
         this.id = id;
         this.category = category;
         this.latlng = latlng;
@@ -17,6 +18,8 @@ class Bottle {
         this.adress = adress;
 
         this.userImageList = CreationBottlenModal.getUserImageList();
+
+        this.ownerId = ownerId;
 
         this.div = this._createDiv(name, adress, title, description);
 
@@ -48,9 +51,7 @@ class Bottle {
         listDiv.classList = 'modal-window-user-image-list-popup';
         div.appendChild(listDiv);
 
-        let btn = document.createElement('button');
-        btn.classList = 'marker-info-button';
-        div.appendChild(btn);
+        
         
 
         h.textContent = title;
@@ -67,18 +68,37 @@ class Bottle {
         });
         
         listDiv.appendChild(data);
-        btn.textContent = 'К диалогу';
 
-        btn.addEventListener('click', () => {
-            fetch(`https://localhost:44358/api/bottles/${this.id}/pick-up`, {//запретить подбирать бутылку самому себе
-                method: 'POST',
-                credentials: 'include',
-                body: this.id,
-                headers: { 'Content-Type': 'application/json' }
-            }).then(res => res.json())
-                .then(res => console.log(res))
+        fetch('https://localhost:44358/api/account', {    
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'            
+        }
+        }).then(res => res.json()).then(res => {
+            let currentUserId = res.id;
+            if(currentUserId != this.ownerId) {
+                let btn = document.createElement('button');
+                btn.classList = 'marker-info-button';
+                div.appendChild(btn);
+                btn.textContent = 'К диалогу';
+        
+                btn.addEventListener('click', () => {
+                    fetch(`https://localhost:44358/api/bottles/${this.id}/pick-up`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: this.id,
+                        headers: { 'Content-Type': 'application/json' }
+                    }).then(res => res.json())
+                    .then(res => {
+                        console.log(res.dialogId);
+                        localStorage.setItem('openDialog', res.dialogId);
+                        document.location ='./ChatPage.html';
+                    })
+                    // document.location ='./ChatPage.html';
+                })
+            }
         })
-    
+        
         return div;
     }
 
