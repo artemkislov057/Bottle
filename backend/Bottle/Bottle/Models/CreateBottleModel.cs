@@ -13,6 +13,7 @@ namespace Bottle.Models
         public string Address { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int ContentItemsCount { get; set; }
         public string Category { get; set; }
         public long LifeTime { get; set; }
     }

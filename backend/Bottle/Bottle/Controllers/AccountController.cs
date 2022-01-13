@@ -61,7 +61,7 @@ namespace Bottle.Controllers
             var user = db.GetUser(User.Identity.Name);
             if (user.Avatar == null)
                 return NotFound();
-            return File(user.Avatar, "image/jpg");
+            return File(user.Avatar, user.AvatarContentType);
         }
 
         /// <summary>
@@ -147,6 +147,7 @@ namespace Bottle.Controllers
             }
             var user = db.GetUser(User.Identity.Name);
             user.Avatar = imageData;
+            user.AvatarContentType = file.ContentType;
             db.SaveChanges();
             return Ok();
         }
