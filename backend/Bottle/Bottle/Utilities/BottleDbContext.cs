@@ -1,5 +1,5 @@
 ﻿using Bottle.Controllers;
-using Bottle.Models.Database;
+using Bottle.Models.DataBase;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,7 +24,7 @@ namespace Bottle.Utilities
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
-        public DbSet<Models.Database.Bottle> Bottles { get; set; }
+        public DbSet<Models.DataBase.Bottle> Bottles { get; set; }
         public DbSet<BottleContent> BottleContent { get; set; }
         public DbSet<ContentType> ContentTypes { get; set; }
 
@@ -35,7 +35,7 @@ namespace Bottle.Utilities
             return user;
         }
 
-        public async Task<Models.Database.Bottle> GetBottle(int id)
+        public async Task<Models.DataBase.Bottle> GetBottle(int id)
         {
             var result = Bottles.FirstOrDefault(b => b.Id == id);
             if (result == null)
@@ -50,7 +50,7 @@ namespace Bottle.Utilities
             return result;
         }
 
-        public async Task<DbSet<Models.Database.Bottle>> GetBottles()
+        public async Task<DbSet<Models.DataBase.Bottle>> GetBottles()
         {
             var timeoutBottles = Bottles.Where(b => b.Active && b.EndTime <= DateTime.UtcNow);
             await WebSocketController.OnTimeoutBottles(timeoutBottles.Select(b => new Models.BottleModel(b)));

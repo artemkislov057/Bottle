@@ -1,4 +1,4 @@
-using Bottle.Models.Database;
+using Bottle.Models.DataBase;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

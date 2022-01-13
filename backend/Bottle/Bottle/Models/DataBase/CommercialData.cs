@@ -1,7 +1,7 @@
-﻿using Bottle.Models.Database;
+﻿using Bottle.Models.DataBase;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bottle.Models.Database
+namespace Bottle.Models.DataBase
 {
     public class CommercialData
     {

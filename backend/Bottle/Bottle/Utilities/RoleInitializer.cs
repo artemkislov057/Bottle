@@ -1,4 +1,4 @@
-﻿using Bottle.Models.Database;
+﻿using Bottle.Models.DataBase;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

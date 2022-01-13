@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bottle.Models.Database
+namespace Bottle.Models.DataBase
 {
     public class User : IdentityUser
     {

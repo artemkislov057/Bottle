@@ -1,5 +1,5 @@
 using Bottle.Models;
-using Bottle.Models.Database;
+using Bottle.Models.DataBase;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;

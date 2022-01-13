@@ -12,7 +12,7 @@ namespace Bottle.Models
 
         }
 
-        public BottleModel(Database.Bottle entityBottle)
+        public BottleModel(DataBase.Bottle entityBottle)
         {
             Id = entityBottle.Id;
             Lat = entityBottle.Lat;
