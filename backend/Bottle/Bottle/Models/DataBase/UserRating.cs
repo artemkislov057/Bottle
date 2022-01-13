@@ -9,6 +9,6 @@ namespace Bottle.Models.DataBase
         public System.DateTime DateTime { get; set; }
         public int Value { get; set; }
         public User User { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

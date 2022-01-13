@@ -124,7 +124,7 @@ namespace Bottle.Controllers
                 data = binaryReader.ReadBytes((int)file.Length);
             }
             var bottle = await db.GetBottleAsync(bottleId);
-            var user = db.GetUser(User.Identity.Name);
+            var user = await userManager.GetUserAsync(User);
             if (bottle == null || bottle.UserId != user.Id || bottle.IsContentLoaded)
             {
                 return BadRequest();

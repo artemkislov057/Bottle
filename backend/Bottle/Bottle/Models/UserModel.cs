@@ -19,7 +19,7 @@ namespace Bottle.Models
             if (user == null)
                 return;
             Id = user.Id;
-            Nickname = user.Nickname;
+            Nickname = user.UserName;
             Rating = rating;
             Sex = user.Sex;
             Type = user.Type;

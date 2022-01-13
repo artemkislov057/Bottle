@@ -127,12 +127,12 @@ namespace Bottle.Controllers
                 var requestUser = await userManager.GetUserAsync(HttpContext.User);
                 if (requestUser.Id == dialog.RecipientId && dialog.BottleRate is null)
                 {
-                    db.SetUserRate(dialog.BottleOwnerId.ToString(), rate);
+                    db.SetUserRate(dialog.BottleOwnerId, rate);
                     dialog.BottleRate = rate;
                 }
                 else if (requestUser.Id == dialog.BottleOwnerId && dialog.RecipientRate is null)
                 {
-                    db.SetUserRate(dialog.RecipientId.ToString(), rate);
+                    db.SetUserRate(dialog.RecipientId, rate);
                     dialog.RecipientRate = rate;
                 }
                 else

@@ -124,7 +124,7 @@ namespace Bottle.Utilities
 
         private Dictionary<int, int> GetUserRatingDictionary(string id)
         {
-            var userRating = UserRating.Where(r => r.UserId.ToString() == id);
+            var userRating = UserRating.Where(r => r.UserId == id);
             var possibleValues = new[] { 1, 2, 3, 4, 5 };
             var result = new Dictionary<int, int>();
             foreach (var e in possibleValues)

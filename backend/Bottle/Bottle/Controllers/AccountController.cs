@@ -54,7 +54,7 @@ namespace Bottle.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
             var cd = db.CommercialData.FirstOrDefault(c => c.Id == user.Id);
-            return Ok(new Account(user, db.GetUserRating(User.Identity.Name)));
+            return Ok(new Account(user, db.GetUserRating(user.Id)));
         }
 
         /// <summary>
