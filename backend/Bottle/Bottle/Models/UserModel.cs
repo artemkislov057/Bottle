@@ -31,7 +31,7 @@ namespace Bottle.Models
             CommercialData = commercialData is null ? null : new CommercialModel(commercialData);
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Nickname { get; set; }
         public Rating Rating { get; set; }
         public string Sex { get; set; }
