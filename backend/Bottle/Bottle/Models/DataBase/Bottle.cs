@@ -10,7 +10,7 @@ namespace Bottle.Models.DataBase
 
         public Bottle()
         {
-            
+
         }
 
         public Bottle(CreateBottleModel createBottleModel, User user) : this()
@@ -21,6 +21,8 @@ namespace Bottle.Models.DataBase
             Address = createBottleModel.Address;
             Title = createBottleModel.Title;
             Description = createBottleModel.Description;
+            ContentItemsCount = createBottleModel.ContentItemsCount;
+            IsContentLoaded = ContentItemsCount == 0;
             Category = createBottleModel.Category;
             Created = DateTime.UtcNow;
             EndTime = Created + TimeSpan.FromSeconds(createBottleModel.LifeTime);
@@ -39,6 +41,8 @@ namespace Bottle.Models.DataBase
         public string Address { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int ContentItemsCount { get; set; }
+        public bool IsContentLoaded { get; set; }
         public string Category { get; set; }
         public DateTime Created { get; set; }
         public DateTime EndTime { get; set; }
@@ -49,6 +53,6 @@ namespace Bottle.Models.DataBase
 
         public int? DialogId { get; set; }
         public Dialog Dialog { get; set; }
-        public List<BottleContent> BottleContents { get; set; }
+        public List<BottleContent> BottleContent { get; set; }
     }
 }

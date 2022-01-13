@@ -21,6 +21,8 @@ namespace Bottle.Models
             Address = entityBottle.Address;
             Title = entityBottle.Title;
             Description = entityBottle.Description;
+            ContentItemsCount = entityBottle.ContentItemsCount;
+            IsContentLoaded = entityBottle.IsContentLoaded;
             Category = entityBottle.Category;
             Created = entityBottle.Created;
             EndTime = entityBottle.EndTime;
@@ -36,6 +38,9 @@ namespace Bottle.Models
         public string Address { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int ContentItemsCount { get; set; }
+        public bool IsContentLoaded { get; set; }
+        public int[] ContentIds { get; set; }
         public string Category { get; set; }
         public long LifeTime { get; set; }
         public DateTime Created { get; set; }

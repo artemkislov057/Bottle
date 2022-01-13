@@ -11,6 +11,7 @@ namespace Bottle.Models.DataBase
         public List<UserRating> UserRating { get; set; }
         public string Email { get; set; }
         public byte[] Avatar { get; set; }
+        public string AvatarContentType { get; set; }
         public string Sex { get; set; }
         public int Type { get; set; }
 

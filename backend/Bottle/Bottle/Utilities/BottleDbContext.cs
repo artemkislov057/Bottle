@@ -29,8 +29,7 @@ namespace Bottle.Utilities
         public DbSet<Message> Messages { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Models.DataBase.Bottle> Bottles { get; set; }
-        public DbSet<BottleContent> BottleContents { get; set; }
-        public DbSet<ContentType> ContentTypes { get; set; }
+        public DbSet<BottleContent> BottleContent { get; set; }
 
         public User GetUser(string id)
         {
@@ -41,14 +40,14 @@ namespace Bottle.Utilities
             return user;
         }
 
-        public async Task<Models.DataBase.Bottle> GetBottle(int id)
+        public async Task<Models.DataBase.Bottle> GetBottleAsync(int id)
         {
             var result = Bottles.FirstOrDefault(b => b.Id == id);
             if (result == null)
                 return null;
             if (result.Active && result.EndTime <= DateTime.UtcNow)
             {
-                await WebSocketController.OnTimeoutBottle(new(result));
+                await WebSocketController.OnTimeoutBottle(new BottleModel(result));
                 Bottles.Remove(result);
                 SaveChanges();
                 return null;
@@ -59,7 +58,7 @@ namespace Bottle.Utilities
         public async Task<DbSet<Models.DataBase.Bottle>> GetBottles()
         {
             var timeoutBottles = Bottles.Where(b => b.Active && b.EndTime <= DateTime.UtcNow);
-            await WebSocketController.OnTimeoutBottles(timeoutBottles.Select(b => new Models.BottleModel(b)));
+            await WebSocketController.OnTimeoutBottles(timeoutBottles.Select(b => new BottleModel(b)));
             Bottles.RemoveRange(timeoutBottles);
             SaveChanges();
             return Bottles;
@@ -104,6 +103,25 @@ namespace Bottle.Utilities
             if (count == 0)
                 return Rating.Zero;
             return new Rating { Dict = dict, Value = (decimal)sum / count };
+        }
+
+        public async Task<BottleModel> GetBottleModelAsync(int bottleId)
+        {
+            var bottle = await GetBottleAsync(bottleId);
+            return GetBottleModel(bottle);
+        }
+
+        public BottleModel GetBottleModel(Models.DataBase.Bottle bottle)
+        {
+            if (bottle == null)
+                return null;
+            var bottleContent = BottleContent.Where(bc => bc.BottleId == bottle.Id)
+                                             .Select(bc => bc.Id)
+                                             .ToArray();
+            var result = new BottleModel(bottle);
+            if (bottleContent.Length > 0)
+                result.ContentIds = bottleContent;
+            return result;
         }
 
         private Dictionary<int, int> GetUserRatingDictionary(string id)
