@@ -3,10 +3,12 @@ using Bottle.Models.DataBase;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,12 +37,8 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> GetInformation([FromRoute(Name = "bottle-id")] int bottleId)
         {
-            var bottle = await db.GetBottle(bottleId);
-            if (bottle != null)
-            {
-                return Ok(new BottleModel(bottle));
-            }
-            return BadRequest("bottle not found");
+            var bottle = await db.GetBottleModelAsync(bottleId);
+            return bottle == null ? BadRequest("bottle not found") : Ok(bottle);
         }
 
         /// <summary>
@@ -53,7 +51,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
-            var bottle = await db.GetBottle(bottleId);
+            var bottle = await db.GetBottleAsync(bottleId);
             var user = await userManager.GetUserAsync(HttpContext.User);
             if (bottle == null || !bottle.Active || bottle.User == user)
                 return BadRequest();
@@ -63,7 +61,7 @@ namespace Bottle.Controllers
             db.SaveChanges();
             bottle.DialogId = dialog.Id;
             db.SaveChanges();
-            await WebSocketController.OnPickedUdBottle(new BottleModel(bottle));
+            await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
             await WebSocketController.OnCreatingDialog(bottle.UserId.ToString(), new DialogModel(dialog));
             return Ok(new { dialogId = dialog.Id });
         }
@@ -84,10 +82,77 @@ namespace Bottle.Controllers
                 var bottle = new Models.DataBase.Bottle(data, user);
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
-                await WebSocketController.OnCreatingBottle(new BottleModel(bottle));
+                if (bottle.IsContentLoaded)
+                    await WebSocketController.OnCreatingBottle(new BottleModel(bottle));
                 return Created(string.Empty, new BottleModel(bottle));
             }
             return BadRequest();
+        }
+
+        ///// <summary>
+        ///// Выбросить свою бутылочку обратно
+        ///// </summary>
+        ///// <remarks>
+        ///// Если кто-то поднял вашу бутылочку
+        ///// </remarks>
+        ///// <param name="bottleId">ID бутылочки</param>
+        //[HttpPost("{bottle-id}/throw")]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(400)]
+        //[ProducesResponseType(403)]
+        //public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
+        //{
+        //    var bottle = db.GetBottle(bottleId);
+        //    var user = db.GetUser(User.Identity.Name);
+        //    if (bottle == null || bottle.Active || bottle.UserId != user.Id)
+        //        return BadRequest();
+        //    bottle.Active = true;
+        //    db.SaveChanges();
+        //    return Ok(new BottleModel(bottle));
+        //}
+
+        [HttpPost("{bottle-id}/content")]
+        public async Task<IActionResult> LoadContentAsync(IFormFile file, [FromRoute(Name = "bottle-id")] int bottleId)
+        {
+            if (file == null)
+            {
+                return BadRequest();
+            }
+            byte[] data = null;
+            using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+            {
+                data = binaryReader.ReadBytes((int)file.Length);
+            }
+            var bottle = await db.GetBottleAsync(bottleId);
+            var user = db.GetUser(User.Identity.Name);
+            if (bottle == null || bottle.UserId != user.Id || bottle.IsContentLoaded)
+            {
+                return BadRequest();
+            }
+            var bottleContent = new BottleContent
+            {
+                BinaryValue = data,
+                BottleId = bottle.Id,
+                ContentType = file.ContentType
+            };
+            var contentCount = db.BottleContent.Count(bc => bc.BottleId == bottle.Id);
+            if (contentCount >= bottle.ContentItemsCount - 1)
+            {
+                bottle.IsContentLoaded = true;
+                await WebSocketController.OnCreatingBottle(db.GetBottleModel(bottle));
+            }
+            db.BottleContent.Add(bottleContent);
+            db.SaveChanges();
+            return Ok();
+        }
+
+        [HttpGet("{bottle-id}/content/{content-id}")]
+        public IActionResult GetContent([FromRoute(Name = "bottle-id")] int bottleId, [FromRoute(Name = "content-id")] int contentId)
+        {
+            var content = db.BottleContent.FirstOrDefault(bc => bc.BottleId == bottleId && bc.Id == contentId);
+            if (content == null)
+                return BadRequest();
+            return File(content.BinaryValue, content.ContentType);
         }
 
         /// <summary>
@@ -100,7 +165,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> Delete([FromRoute(Name = "bottle-id")] int bottleId)
         {
-            var bottle = await db.GetBottle(bottleId);
+            var bottle = await db.GetBottleAsync(bottleId);
             var user = await userManager.GetUserAsync(HttpContext.User);
             if (bottle != null && bottle.Active && bottle.UserId == user.Id)
             {
@@ -125,7 +190,7 @@ namespace Bottle.Controllers
         public async Task<IActionResult> GetBottles(string category = null, double? radius = null, decimal? lat = null, decimal? lng = null)
         {
             IEnumerable<Models.DataBase.Bottle> result = null;
-            var bottles = (await db.GetBottles()).Where(b => b.Active);
+            var bottles = (await db.GetBottles()).Where(b => b.Active && b.IsContentLoaded);
             if (category != null)
                 bottles = bottles.Where(b => b.Category == category);
             result = bottles;
@@ -133,7 +198,7 @@ namespace Bottle.Controllers
             {
                 result = bottles.ToList().Where(b => IsPointInCircle(lat.Value, lng.Value, b.Lat, b.Lng, radius.Value));
             }
-            return Ok(result.Select(b => new BottleModel(b)));
+            return Ok(result.ToList().Select(b => db.GetBottleModel(b)));
         }
 
         /// <summary>
@@ -146,7 +211,7 @@ namespace Bottle.Controllers
         {
             var userId = userManager.GetUserId(HttpContext.User);
             var bottles = (await db.GetBottles()).Where(b => b.UserId == userId);
-            return Ok(bottles.Select(b => new BottleModel(b)));
+            return Ok(bottles.ToList().Select(b => new BottleModel(b)));
         }
 
         /// <summary>
@@ -162,7 +227,7 @@ namespace Bottle.Controllers
             var bottle = db.Bottles.FirstOrDefault(b => b.Id == bottleId);
             if (bottle != null && bottle.Active && bottle.EndTime <= DateTime.UtcNow)
             {
-                await WebSocketController.OnTimeoutBottle(new(bottle));
+                await WebSocketController.OnTimeoutBottle(new BottleModel(bottle));
                 db.Bottles.Remove(bottle);
                 db.SaveChanges();
                 return Ok();

@@ -122,7 +122,7 @@ namespace Bottle.Controllers
         public async Task<IActionResult> RateAsync([FromRoute(Name = "dialog-id")] int dialogId, [FromBody] int rate)
         {
             var dialog = db.GetDialog(dialogId);
-            if (!dialog.Active && Models.DataBase.User.IsValidRating(rate))
+            if (dialog != null && !dialog.Active && Models.DataBase.User.IsValidRating(rate))
             {
                 var requestUser = await userManager.GetUserAsync(HttpContext.User);
                 if (requestUser.Id == dialog.RecipientId && dialog.BottleRate is null)

@@ -52,10 +52,9 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> GetInformationAsync()
         {
-            var a = HttpContext.User;
             var user = await userManager.GetUserAsync(HttpContext.User);
             var cd = db.CommercialData.FirstOrDefault(c => c.Id == user.Id);
-            return Ok(new Account(user, cd));
+            return Ok(new Account(user, db.GetUserRating(User.Identity.Name)));
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace Bottle.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
             if (user.Avatar == null)
                 return NotFound();
-            return File(user.Avatar, "image/jpg");
+            return File(user.Avatar, user.AvatarContentType);
         }
 
         /// <summary>
@@ -100,7 +99,7 @@ namespace Bottle.Controllers
                 {
                     await userManager.AddToRoleAsync(user, "confirmed");
                     await signInManager.SignInAsync(user, false);
-                    return Created(string.Empty, new Account(user));
+                    return Created(string.Empty, new Account(user, Rating.Zero));
                 }
                 else
                 {
@@ -138,7 +137,7 @@ namespace Bottle.Controllers
                     if (result.Succeeded)
                     {
                         var cd = db.CommercialData.FirstOrDefault(d => d.Id == user.Id);
-                        return Ok(new Account(user, cd));
+                        return Ok(new Account(user, cd, db.GetUserRating(user.Id)));
                     }
                 }
             }
@@ -173,7 +172,7 @@ namespace Bottle.Controllers
                         if (result.Succeeded)
                         {
                             await signInManager.SignInAsync(user, model.ExternalLogin.RememberMe);
-                            return Created(string.Empty, new Account(user));
+                            return Created(string.Empty, new Account(user, Rating.Zero));
                         }
                     }
                 }
@@ -205,7 +204,7 @@ namespace Bottle.Controllers
                     else
                     {
                         await signInManager.SignInAsync(user, model.RememberMe);
-                        return Ok(new Account(user));
+                        return Ok(new Account(user, db.GetUserRating(user.Id)));
                     }
                 }
             }
@@ -231,6 +230,7 @@ namespace Bottle.Controllers
             }
             var user = await userManager.GetUserAsync(HttpContext.User);
             user.Avatar = imageData;
+            user.AvatarContentType = file.ContentType;
             db.SaveChanges();
             return Ok();
         }
@@ -251,12 +251,11 @@ namespace Bottle.Controllers
                 if (user.Type == 2)
                 {
                     user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
-                    user.CommercialData.Company = data.CommercialData.Company is null ? user.CommercialData.Company : data.CommercialData.Company;
                     user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
                     user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
                 }
                 db.SaveChanges();
-                var account = new Account(user);
+                var account = new Account(user, user.CommercialData, db.GetUserRating(user.Id));
                 return Ok(account);
             }
             return BadRequest();
@@ -273,6 +272,7 @@ namespace Bottle.Controllers
                 {
                     return Ok();
                 }
+                return Ok(new Account(user, db.GetUserRating(user.Id.ToString())));
             }
             return BadRequest();
         }

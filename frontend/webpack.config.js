@@ -1,40 +1,34 @@
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const path = require('path');
 
-
-// module.exports = {
-//     entry: {
-//         main: path.resolve(__dirname, './index.js'),
-//     },
-//     mode:'production',
-//     output: {
-//         path: path.resolve(__dirname, './dist'),
-//         filename: 'index.bundle.js',
-//     } 
-// }
-
 module.exports = {
-    // entry: './index.js',    
-    // entry: {
-    //     // main: path.resolve(__dirname, './index.js'),
-        
-    // },
-    entry: './src/pages/MainPage/MainPage.js',
+    entry: {
+        FirstPage: './src/pages/FirstPage/FirstPage.js',
+        MainPage: "./src/pages/MainPage/MainPage.js",
+        ChatPage: './src/pages/Chat/chat.js'
+    },    
     mode:'production',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'bundle.js',
+        // filename: 'bundle.js',
+        filename: '[name].js',
         publicPath: '/'
-    },    
-    // devServer: {
-    //     port: 9000,
-    //     historyApiFallback: true,
-    //     hot: true,
-    // },
-    plugins: [
+    },   
+    plugins: [       
         new HTMLWebpackPlugin({
-            // template: "./index.html"
-            template: "./src/pages/MainPage/MainPage.html"
+            // template: "./index.html",
+            template: "src/pages/FirstPage/FirstPage.html",
+            chunks: ['FirstPage']
+        }),
+        new HTMLWebpackPlugin({
+            filename: 'MainPage.html',
+            template: "src/pages/MainPage/MainPage.html",   
+            chunks: ['MainPage']
+        }),
+        new HTMLWebpackPlugin({
+            filename: 'ChatPage.html',
+            template: 'src/pages/Chat/ChatPage.html',
+            chunks: ['ChatPage']
         })
     ],
     module: {

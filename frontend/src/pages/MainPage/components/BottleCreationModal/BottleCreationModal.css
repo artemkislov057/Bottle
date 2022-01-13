@@ -5,10 +5,10 @@
 
 .modal-window {
     padding: 15px 30px 10px 30px;
-    height: 700px;
+    /* height: 700px; */
     display: flex;
     flex-direction: column; 
-    gap: 20px;
+    /* gap: 20px; */
 }
 
 .modal-window-description {
@@ -29,6 +29,7 @@
     font-style: normal;
     font-weight: normal;
     text-align: start;
+    margin-bottom: 20px;
 }
 
 .modal-window .modal-h {
@@ -49,7 +50,8 @@
 
 .modal-window-categories,
 .modal-window-h {
-    width: 50%;    
+    width: 50%;
+    margin-bottom: 10px;
 }
 
 .modal-col1 {
@@ -112,9 +114,15 @@
     font-size: 20px;
 }
 
+.modal-window-exit-button:hover {
+    background-color: whitesmoke;
+    border: 2px solid;
+    border-color: #2F3952;
+}
+
 .modal-window label {    
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     color:#2F3952;
     font-size: 24px;
     font-family: Roboto;
@@ -171,4 +179,105 @@
 .modal-window-user-image-list-popup span{
     height: 100px;
     
+}
+
+@media (max-width: 768px) {
+    .hystmodal__window{
+        width: auto;
+        border-radius: 20px;
+    }
+
+    .modal-window {
+        padding: 15px 30px 10px 30px;
+        height: auto;
+        display: flex;
+        flex-direction: column; 
+        gap: 20px;
+    }
+
+    .modal-window .modal-description {    
+        height: 100px;
+        border-radius: 20px;
+        border: 2px solid #2F3952;
+        padding: 15px;
+        resize: none;
+        font-size: 20px;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        text-align: start;
+        margin-bottom: 20px;
+    }
+
+    .modal-window label {    
+        display: block;
+        margin-bottom: 5px;
+        color:#2F3952;
+        font-size: 24px;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        text-align: center;
+        text-align: left;
+    }
+
+    .modal-window-categories,
+    .modal-window-h {
+        width: 50%;
+        margin-bottom: 10px;
+    }
+    
+    .modal-window-exit-button {
+        width: 170px;
+        height: 50px;
+        background-color: #2F3952;
+        color: #63CDDA;
+        border: 1px;
+        border-radius: 40px;
+        padding: 10px;
+        font-size: 20px;
+    }
+
+    .modal-user-label-image {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-basis: 55px;    
+        height: 35px;
+        background: url('../../../../../dist/img/dobavlenie_foto.svg') 50% 50% no-repeat;
+        background-size: 55px 35px;
+        border: 0;
+        margin-left: 5%;
+    }
+}
+
+.quest-window {
+    display: flex;
+    flex-direction: column;
+}
+
+.div-quest-text {
+    font-size: 16px;
+    font-weight: bold;    
+}
+
+.quset-window-buttons {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.quest-yes-button,
+.quest-no-button {
+    width: 60px;
+    height: 60px;
+    border: none;
+}
+
+.quest-yes-button {
+    background: url('../../../../../dist/img/yes.svg') no-repeat center;
+    background-size: 60px 60px;
+}
+.quest-no-button {
+    background: url('../../../../../dist/img/no.svg') no-repeat center;
+    background-size: 60px 60px;
 }
