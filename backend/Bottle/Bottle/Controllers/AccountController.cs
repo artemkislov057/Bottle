@@ -262,6 +262,21 @@ namespace Bottle.Controllers
             return BadRequest();
         }
 
+        [HttpPost("password")]
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordModel model)
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user.Provider == null)
+            {
+                var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+            }
+            return BadRequest();
+        }
+
         /// <summary>
         /// Удалить пользователя
         /// </summary>
