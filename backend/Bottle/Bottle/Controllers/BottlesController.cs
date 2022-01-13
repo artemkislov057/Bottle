@@ -135,6 +135,7 @@ namespace Bottle.Controllers
             if (contentCount >= bottle.ContentItemsCount - 1)
             {
                 bottle.IsContentLoaded = true;
+                await WebSocketController.OnCreatingBottle(db.GetBottleModel(bottle));
             }
             db.BottleContent.Add(bottleContent);
             db.SaveChanges();
