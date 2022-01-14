@@ -28,6 +28,8 @@ namespace Bottle.Models
             EndTime = entityBottle.EndTime;
             LifeTime = (int)(EndTime - Created).TotalSeconds;
             Active = entityBottle.Active;
+            PickingUp = entityBottle.PickingUp;
+            MaxPickingUp = entityBottle.MaxPickingUp;
             UserId = entityBottle.UserId;
         }
 
@@ -46,6 +48,8 @@ namespace Bottle.Models
         public DateTime Created { get; set; }
         public DateTime EndTime { get; set; }
         public bool Active { get; set; }
+        public int MaxPickingUp { get; set; }
+        public int PickingUp { get; set; }
         public string UserId { get; set; }
     }
 }
