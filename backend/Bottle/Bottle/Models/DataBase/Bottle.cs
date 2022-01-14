@@ -27,8 +27,8 @@ namespace Bottle.Models.DataBase
             Created = DateTime.UtcNow;
             EndTime = Created + TimeSpan.FromSeconds(createBottleModel.LifeTime);
             Active = true;
-            MaxPickingUp = createBottleModel.MaxPickingUp;
             PickingUp = 0;
+            MaxPickingUp = 1;
             User = user;
         }
 

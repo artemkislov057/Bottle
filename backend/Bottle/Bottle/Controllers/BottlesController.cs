@@ -84,6 +84,10 @@ namespace Bottle.Controllers
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 var bottle = new Models.DataBase.Bottle(data, user);
+                if (user.Type == 2)
+                {
+                    bottle.MaxPickingUp = data.MaxPickingUp;
+                }
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
                 if (bottle.IsContentLoaded)
