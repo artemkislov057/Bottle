@@ -53,10 +53,14 @@ namespace Bottle.Controllers
         {
             var bottle = await db.GetBottleAsync(bottleId);
             var user = await userManager.GetUserAsync(HttpContext.User);
+            if (bottle == null || !bottle.Active || bottle.User == user)
+                return BadRequest();
             var hasDialogWithUser = db.Dialogs.Where(d => d.BottleId == bottle.Id)
                                               .Any(d => d.RecipientId == user.Id);
-            if (bottle == null || !bottle.Active || bottle.User == user || hasDialogWithUser)
+            if (hasDialogWithUser)
+            {
                 return BadRequest();
+            }
             bottle.PickingUp++;
             if (bottle.PickingUp >= bottle.MaxPickingUp)
             {
