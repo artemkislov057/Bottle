@@ -99,13 +99,6 @@ namespace Bottle.Controllers
             if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
             {
                 dialog.Active = false;
-                //var bottle = db.Bottles.FirstOrDefault(b => b.Id == dialog.BottleId);
-                //var bottleDialogsCount = db.Dialogs.Count(d => d.BottleId == bottle.Id);
-                //if (!bottle.Active && bottleDialogsCount == 1)
-                //{
-                //    db.Bottles.Remove(bottle);
-                //}
-                //dialog.BottleId = null;
                 db.SaveChanges();
                 var recipientId = user.Id == dialog.RecipientId ? dialog.BottleOwnerId : dialog.RecipientId;
                 await WebSocketController.OnClosedDialog(recipientId.ToString(), new DialogModel(dialog, db.GetLastMessage(dialog)));
