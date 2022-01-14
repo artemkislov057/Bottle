@@ -46,8 +46,15 @@ namespace Bottle.Utilities
             if (result.Active && result.EndTime <= DateTime.UtcNow)
             {
                 await WebSocketController.OnTimeoutBottle(new BottleModel(result));
-                Bottles.Remove(result);
-                SaveChanges();
+                if (Dialogs.Any(d => d.BottleId == result.Id))
+                {
+                    result.Active = false;
+                }
+                else
+                {
+                    Bottles.Remove(result);
+                    SaveChanges();
+                }
                 return null;
             }
             return result;
@@ -57,7 +64,12 @@ namespace Bottle.Utilities
         {
             var timeoutBottles = Bottles.Where(b => b.Active && b.EndTime <= DateTime.UtcNow);
             await WebSocketController.OnTimeoutBottles(timeoutBottles.Select(b => new BottleModel(b)));
-            Bottles.RemoveRange(timeoutBottles);
+            foreach(var bottle in timeoutBottles)
+            {
+                bottle.Active = false;
+            }
+            var bottlesWithoutDialogs = timeoutBottles.Where(b => !Dialogs.Any(d => d.BottleId == b.Id));
+            Bottles.RemoveRange(bottlesWithoutDialogs);
             SaveChanges();
             return Bottles;
         }
