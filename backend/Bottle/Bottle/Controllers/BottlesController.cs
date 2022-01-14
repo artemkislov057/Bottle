@@ -53,15 +53,19 @@ namespace Bottle.Controllers
         {
             var bottle = await db.GetBottleAsync(bottleId);
             var user = await userManager.GetUserAsync(HttpContext.User);
-            if (bottle == null || !bottle.Active || bottle.User == user)
+            var hasDialogWithUser = db.Dialogs.Where(d => d.BottleId == bottle.Id)
+                                              .Any(d => d.RecipientId == user.Id);
+            if (bottle == null || !bottle.Active || bottle.User == user || hasDialogWithUser)
                 return BadRequest();
-            bottle.Active = false;
+            bottle.PickingUp++;
+            if (bottle.PickingUp >= bottle.MaxPickingUp)
+            {
+                bottle.Active = false;
+                await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
+            }
             var dialog = new Dialog { BottleId = bottle.Id, BottleOwnerId = bottle.UserId, RecipientId = user.Id };
             db.Dialogs.Add(dialog);
             db.SaveChanges();
-            bottle.DialogId = dialog.Id;
-            db.SaveChanges();
-            await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
             await WebSocketController.OnCreatingDialog(bottle.UserId.ToString(), new DialogModel(dialog));
             return Ok(new { dialogId = dialog.Id });
         }

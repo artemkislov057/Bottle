@@ -27,6 +27,8 @@ namespace Bottle.Models.DataBase
             Created = DateTime.UtcNow;
             EndTime = Created + TimeSpan.FromSeconds(createBottleModel.LifeTime);
             Active = true;
+            MaxPickingUp = createBottleModel.MaxPickingUp;
+            PickingUp = 0;
             User = user;
         }
 
@@ -47,12 +49,13 @@ namespace Bottle.Models.DataBase
         public DateTime Created { get; set; }
         public DateTime EndTime { get; set; }
         public bool Active { get; set; }
+        public int MaxPickingUp { get; set; }
+        public int PickingUp { get; set; }
 
         public string UserId { get; set; }
         public User User { get; set; }
 
-        public int? DialogId { get; set; }
-        public Dialog Dialog { get; set; }
+        public List<Dialog> Dialogs { get; set; }
         public List<BottleContent> BottleContent { get; set; }
     }
 }
