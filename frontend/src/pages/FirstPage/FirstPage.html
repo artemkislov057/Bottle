@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="218319517979-7fkg19tu770s7f8ub9r57h21409up31n.apps.googleusercontent.com">
+    <script src='https://apis.google.com/js/platform.js'></script>
     <title>Title</title>
 </head>
 <body>
@@ -45,7 +47,9 @@
                       </div> 
                        <div class="modal-body">
                             <div class="containerSet-reg">
-                                <button class="social-title">Google</button>
+                                <div class='social-title' style='overflow:hidden'>
+                                    <div class="g-signin2" id='google-reg' data-onsuccess="onSignIn" data-width="234px" data-height="78px">Google</div>
+                                </div>
                                 <button class="social-title">Facebook</button>
                             </div>
                             <div class="containerSep">
@@ -82,7 +86,9 @@
                       </div> 
                        <div class="modal-body">
                             <div class="containerSet-entr">
-                                <button class="social-title">Google</button>
+                                <div class='social-title' style='overflow:hidden'>
+                                    <div class="g-signin2" id='google-ent' data-onsuccess="onSignIn" data-width="234px" data-height="78px">Google</div>
+                                </div>
                                 <button class="social-title">Facebook</button>
                             </div>
                             <div class="containerSep">
@@ -199,13 +205,14 @@
                                 <input type="password" class="modal-com-reg-repeat-pass-inField" id="modal-com-reg-inRepPass" required>
                             </div>
                             <div class="modal-com-reg-button-area">
-                                <button type="submit" class="modal-com-reg-button">Регистрация</button>
+                                <button type="submit"  class="modal-com-reg-button" data-hystmodal="#createProfileModal">Регистрация</button>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
         </div> 
-    </div>    
+    </div>   
+     
 </body>
 </html>
