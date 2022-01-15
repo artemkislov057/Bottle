@@ -128,7 +128,12 @@ function getProfileData() {
   }).then(res => res.json())
     .then(res => {
     currentNickName.textContent = res.nickname;
-    currentEmail.textContent = res.email;
+    if (res.email != null) {
+      currentEmail.textContent = res.email;
+    } else {
+      currentEmail.remove();
+      document.getElementById('title-email').remove();
+    }
   })
 }
 
