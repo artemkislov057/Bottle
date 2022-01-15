@@ -1,12 +1,12 @@
-import "./stylesheet.css"
-import "./pages/registration/style_reg.css"
-import "./pages/entrance/style.css"
-import "./pages/create_profile/style_prof.css"
-import '../../connections/hystModal/hystmodal.min'
-import '../../connections/hystModal/hystmodal.min.css'
-import { createCommModal } from './pages/registration/comercReg/modalCommercReg'
-import screenmap from "../../../dist/img/screenmap.jpg"
-import logo from "../../../dist/img/logo.svg"
+import "./stylesheet.css";
+import "./pages/registration/style_reg.css";
+import "./pages/entrance/style.css";
+import "./pages/create_profile/style_prof.css";
+import '../../connections/hystModal/hystmodal.min';
+import '../../connections/hystModal/hystmodal.min.css';
+import { createCommModal } from './pages/registration/comercReg/modalCommercReg';
+import screenmap from "../../../dist/img/screenmap.jpg";
+import logo from "../../../dist/img/logo.svg";
 import defaultAvatar from '../../../dist/img/defaultAvatarNormalPNG.png';
 // import { corsImport } from "webpack-external-import";
 
@@ -17,7 +17,7 @@ const createProfileModal = new HystModal({
     //настройки, см. API
 });
 
-createCommModal()
+createCommModal();
 
 const nickname = document.getElementById('nickname');
 const email = document.getElementById('reg-email');
@@ -31,11 +31,11 @@ const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@
 let customAvatarButton = document.querySelector('.file-lable-input');
 let avatar;
 
-fetch(defaultAvatar).then(res => res.blob().then(x => avatar = x))
+fetch(defaultAvatar).then(res => res.blob().then(x => avatar = x));
 
 customAvatarButton.addEventListener('change', (e) => {
     avatar = e.target.files[0];
-})
+});
 
 document.querySelector('.main-content_pic').innerHTML = `<img src=${screenmap} alt="screenmap" class="main-content-picture" />`;
 document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="логотип" class="logo">`;
@@ -84,8 +84,8 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
             email: email.value || emailCompany.value,
             sex: gender,
             commercialData: getCommercialData()
-        }
-        console.log(request)
+        };
+        console.log(request);
         console.log('click');
         fetch('https://localhost:44358/api/account', {
             method: 'POST',        
@@ -99,11 +99,11 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
             if(!res.ok) {
                 res.text().then(text => {
                     document.querySelector('.validation-prof').textContent = text;
-                })
+                });
             }
             else {
                 let data = new FormData();
-                data.append('file', avatar)
+                data.append('file', avatar);
                 fetch('https://localhost:44358/api/account/avatar', {
                     method: 'POST',
                     body: data,
@@ -112,7 +112,7 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
                     document.querySelector('.hystmodal__close').click();
                     document.location='./MainPage.html';
                     return res.json();
-                })
+                });
             }    
         })
         .then(res => console.log(res));        
@@ -146,7 +146,7 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
             if(!res.ok) {
                 res.text().then(text => {
                     document.querySelector('.validation-entr').textContent = text;
-                })
+                });
             }
             else {
                 document.querySelector('.hystmodal__close').click();
@@ -155,8 +155,8 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
             } 
         })
         .then(res => {
-            console.log(res)
-        })
+            console.log(res);
+        });
     });
 })();
 
@@ -176,14 +176,19 @@ function getCommercialData(){
         phoneNumber: phoneCompany.value,
         identificationNumber: innCompany.value,
         psrn: ogrnCompany.value
-    }
+    };
     console.log(result);
-    return result;
+    if (result.fullName && result.contactPerson && result.email &&
+        result.phoneNumber && result.identificationNumber && result.psrn) {
+        return result;
+    } else {
+        return null;
+    }
 }
 
 
 (function googleRegistration(){
-    const google = document.getElementById('google-reg')
+    const google = document.getElementById('google-reg');
     const request = {};
     let email;
     let avatar;
@@ -193,21 +198,21 @@ function getCommercialData(){
             const profile = user.getBasicProfile();
             fetch('https://localhost:44358/api/account/external-providers')
                 .then(r => r.json())
-                .then(data => data['Google'])
+                .then(data => data.Google)
                 .then(id => {
-                    request['externalLogin'] = {
+                    request.externalLogin = {
                             provider: id,
                             providerId: profile.getId(),
                             accessToken: user.vc.access_token,
                             rememberMe: true
                         };
                     email = profile.getEmail();
-                    avatar = profile.getImageUrl()
-                    request['nickname'] = profile.getEmail().split('@')[0];
-                    request['sex'] = 'ne bilo';
+                    avatar = profile.getImageUrl();
+                    request.nickname = profile.getEmail().split('@')[0];
+                    request.sex = 'ne bilo';
                     console.log(request);
                     register(profile, request);
-                })
+                });
 
         });
     }
@@ -236,11 +241,11 @@ function getCommercialData(){
 
 
 (function googleEntrance(){
-    const google = document.getElementById('google-ent')
+    const google = document.getElementById('google-ent');
 
     google.addEventListener('click', () => {
         sign();
-    })
+    });
 
     function sign() {
         const auth2 = gapi.auth2.getAuthInstance();
@@ -248,14 +253,14 @@ function getCommercialData(){
             const profile = user.getBasicProfile();
             fetch('https://localhost:44358/api/account/external-providers')
                 .then(r => r.json())
-                .then(data => data['Google'])
+                .then(data => data.Google)
                 .then(id => {
                     console.log(id);
                     executeEntrance(user, id);
-                })
-        })
+                });
+        });
     }
-
+    
     function executeEntrance(user, id) {
         fetch('https://localhost:44358/api/account/external-login', {
             method: 'POST',        
@@ -274,20 +279,20 @@ function getCommercialData(){
                 // setAvatar();
                 document.location='./MainPage.html';
             }
-        })
+        });
     }
 
-    function setAvatar(){
+    // function setAvatar(){
 
-    }
+    // }
             
 })();
 
-import pageIcon from '../../../dist/img/marker_siniy.svg'
+import pageIcon from '../../../dist/img/marker_siniy.svg';
 
 let headImage = document.querySelector('head');
 let link = document.createElement('link');
 link.rel = 'icon';
-link.type = 'image/svg'
-link.href = pageIcon
-headImage.appendChild(link)
+link.type = 'image/svg';
+link.href = pageIcon;
+headImage.appendChild(link);
