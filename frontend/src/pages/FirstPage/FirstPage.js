@@ -8,6 +8,9 @@ import { createCommModal } from './pages/registration/comercReg/modalCommercReg'
 import screenmap from "../../../dist/img/screenmap.jpg"
 import logo from "../../../dist/img/logo.svg"
 import defaultAvatar from '../../../dist/img/defaultAvatarNormalPNG.png';
+// import { corsImport } from "webpack-external-import";
+
+// corsImport('https://apis.google.com/js/platform.js').then();
 
 const createProfileModal = new HystModal({
     linkAttributeName: "data-hystmodal",
@@ -139,6 +142,7 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
             }
         })
         .then(res => {
+            console.log(res.json);
             if(!res.ok) {
                 res.text().then(text => {
                     document.querySelector('.validation-entr').textContent = text;
@@ -154,7 +158,11 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
             console.log(res)
         })
     });
-})();    const nameCompany = document.querySelector('.modal-com-reg-infoCompany-input-name');
+})();
+
+
+function getCommercialData(){
+    const nameCompany = document.querySelector('.modal-com-reg-infoCompany-input-name');
     const personCompany = document.querySelector('.modal-com-reg-infoCompany-input-person');
     const emailCompany = document.querySelector('.modal-com-reg-infoCompany-input-email');
     const phoneCompany = document.querySelector('.modal-com-reg-infoCompany-input-phone');
@@ -172,4 +180,106 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
     console.log(result);
     return result;
 }
+
+
+(function googleRegistration(){
+    const google = document.getElementById('google-reg')
+    const request = {};
+    let email;
+    let avatar;
+    function sign() {
+        const auth2 = gapi.auth2.getAuthInstance();
+        auth2.signIn().then(function (user) {
+            const profile = user.getBasicProfile();
+            fetch('https://localhost:44358/api/account/external-providers')
+                .then(r => r.json())
+                .then(data => data['Google'])
+                .then(id => {
+                    request['externalLogin'] = {
+                            provider: id,
+                            providerId: profile.getId(),
+                            accessToken: user.vc.access_token,
+                            rememberMe: true
+                        };
+                    email = profile.getEmail();
+                    avatar = profile.getImageUrl()
+                    request['nickname'] = profile.getEmail().split('@')[0];
+                    request['sex'] = 'ne bilo';
+                    console.log(request);
+                    register(profile, request);
+                })
+
+        });
+    }
+
+    google.addEventListener('click', () => {
+        sign();
+    });
+
+
+    function register(profile, request) {
+        fetch('https://localhost:44358/api/account/external-register', {
+            method: 'POST',        
+            body: JSON.stringify(request),
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(r => r.json())
+        .then(d => console.log(d))
+        .then(() => {
+        
+        })
+        .then(() => document.location='./MainPage.html');       
+    }
+})();
+
+
+(function googleEntrance(){
+    const google = document.getElementById('google-ent')
+
+    google.addEventListener('click', () => {
+        sign();
+    })
+
+    function sign() {
+        const auth2 = gapi.auth2.getAuthInstance();
+        auth2.signIn().then(function (user) {
+            const profile = user.getBasicProfile();
+            fetch('https://localhost:44358/api/account/external-providers')
+                .then(r => r.json())
+                .then(data => data['Google'])
+                .then(id => {
+                    console.log(id);
+                    executeEntrance(user, id);
+                })
+        })
+    }
+
+    function executeEntrance(user, id) {
+        fetch('https://localhost:44358/api/account/external-login', {
+            method: 'POST',        
+            body: JSON.stringify({
+                provider: id,
+                providerId: user.getBasicProfile().getId(),
+                accessToken: user.vc.access_token,
+                rememberMe: true
+            }),
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(r => {
+            if (r.ok) {
+                // setAvatar();
+                document.location='./MainPage.html';
+            }
+        })
+    }
+
+    function setAvatar(){
+
+    }
+            
+})();
 
