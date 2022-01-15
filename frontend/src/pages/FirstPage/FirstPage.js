@@ -20,6 +20,10 @@ const nickname = document.getElementById('nickname');
 const email = document.getElementById('reg-email');
 const password = document.getElementById('reg-password');
 const secondPassword = document.getElementById('reg-password-two');
+
+const emailCompany = document.querySelector('.modal-com-reg-login-inField');
+const passwordCompany = document.querySelector('.modal-com-reg-pass-inField');
+
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 let customAvatarButton = document.querySelector('.file-lable-input');
 let avatar;
@@ -71,12 +75,12 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
         document.querySelector('.validation-prof').textContent = '';
     });
     document.getElementById('create-prof-submit').addEventListener('click', () => {
-        const request = {
+        const request = { 
             nickname: nickname.value,
-            password: password.value,
-            email: email.value,
+            password: password.value || passwordCompany.value,
+            email: email.value || emailCompany.value,
             sex: gender,
-            commercialData: null
+            commercialData: getCommercialData()
         }
         console.log(request)
         console.log('click');
@@ -150,4 +154,22 @@ document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="лого
             console.log(res)
         })
     });
-})();
+})();    const nameCompany = document.querySelector('.modal-com-reg-infoCompany-input-name');
+    const personCompany = document.querySelector('.modal-com-reg-infoCompany-input-person');
+    const emailCompany = document.querySelector('.modal-com-reg-infoCompany-input-email');
+    const phoneCompany = document.querySelector('.modal-com-reg-infoCompany-input-phone');
+    const innCompany = document.querySelector('.modal-com-reg-infoCompany-input-inn');
+    const ogrnCompany = document.querySelector('.modal-com-reg-infoCompany-input-ogrn');
+
+    const result = {
+        fullName: nameCompany.value,
+        contactPerson: personCompany.value,
+        email: emailCompany.value,
+        phoneNumber: phoneCompany.value,
+        identificationNumber: innCompany.value,
+        psrn: ogrnCompany.value
+    }
+    console.log(result);
+    return result;
+}
+
