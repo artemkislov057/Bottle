@@ -283,3 +283,11 @@ function getCommercialData(){
             
 })();
 
+import pageIcon from '../../../dist/img/marker_siniy.svg'
+
+let headImage = document.querySelector('head');
+let link = document.createElement('link');
+link.rel = 'icon';
+link.type = 'image/svg'
+link.href = pageIcon
+headImage.appendChild(link)
