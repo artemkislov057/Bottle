@@ -234,6 +234,7 @@ namespace Bottle.Controllers
             if (file == null)
             {
                 user.Avatar = null;
+                user.AvatarContentType = null;
                 user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                 db.SaveChanges();
                 return Ok();
