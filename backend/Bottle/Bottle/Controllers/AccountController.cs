@@ -175,6 +175,7 @@ namespace Bottle.Controllers
                             user.Type = 2;
                             user.CommercialData = new CommercialData(model.CommercialData);
                         }
+                        user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                         var result = await userManager.CreateAsync(user);
                         await userManager.AddToRoleAsync(user, "confirmed");
                         if (result.Succeeded)
