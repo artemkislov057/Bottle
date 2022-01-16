@@ -74,7 +74,7 @@ namespace Bottle.Controllers
             {
                 var resourceManager = new ResourceManager(typeof(Resources));
                 var picture = resourceManager.GetObject("avatar" + user.AvatarId);
-                return File((byte[])picture, "image/jpeg");
+                return File((byte[])picture, "image/png");
             }
             return File(user.Avatar, user.AvatarContentType);
         }
