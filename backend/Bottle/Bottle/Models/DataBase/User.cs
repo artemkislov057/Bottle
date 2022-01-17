@@ -9,6 +9,7 @@ namespace Bottle.Models.DataBase
         public int RatingSum { get; set; }
         public int RatingCount { get; set; }
         public byte[] Avatar { get; set; }
+        public int AvatarId { get; set; }
         public string AvatarContentType { get; set; }
         public string Sex { get; set; }
         public int Type { get; set; }

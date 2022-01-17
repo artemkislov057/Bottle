@@ -1,5 +1,6 @@
 ﻿using Bottle.Models;
 using Bottle.Models.DataBase;
+using Bottle.Properties;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -24,6 +26,7 @@ namespace Bottle.Controllers
         private readonly BottleDbContext db;
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private static readonly Random random = new Random();
 
         public AccountController(BottleDbContext dbContext, UserManager<User> userManager, SignInManager<User> signInManager)
         {
@@ -68,7 +71,11 @@ namespace Bottle.Controllers
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
             if (user.Avatar == null)
-                return NotFound();
+            {
+                var resourceManager = new ResourceManager(typeof(Resources));
+                var picture = resourceManager.GetObject("avatar" + user.AvatarId);
+                return File((byte[])picture, "image/png");
+            }
             return File(user.Avatar, user.AvatarContentType);
         }
 
@@ -94,6 +101,7 @@ namespace Bottle.Controllers
                     user.Type = 2;
                     user.CommercialData = new CommercialData(data.CommercialData);
                 }
+                user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                 var result = await userManager.CreateAsync(user, data.Password);
                 if (result.Succeeded)
                 {
@@ -167,6 +175,7 @@ namespace Bottle.Controllers
                             user.Type = 2;
                             user.CommercialData = new CommercialData(model.CommercialData);
                         }
+                        user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                         var result = await userManager.CreateAsync(user);
                         await userManager.AddToRoleAsync(user, "confirmed");
                         if (result.Succeeded)
@@ -221,14 +230,21 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> ChangeAvatarAsync(IFormFile file)
         {
+            var user = await userManager.GetUserAsync(HttpContext.User);
             if (file == null)
-                return BadRequest();
+            {
+                user.Avatar = null;
+                user.AvatarContentType = null;
+                user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
+                db.SaveChanges();
+                return Ok();
+            }
             byte[] imageData = null;
             using (var binaryReader = new BinaryReader(file.OpenReadStream()))
             {
                 imageData = binaryReader.ReadBytes((int)file.Length);
             }
-            var user = await userManager.GetUserAsync(HttpContext.User);
+            user.AvatarId = 0;
             user.Avatar = imageData;
             user.AvatarContentType = file.ContentType;
             db.SaveChanges();
