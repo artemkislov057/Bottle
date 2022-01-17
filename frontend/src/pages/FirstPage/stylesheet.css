@@ -48,7 +48,7 @@ header {
     border-radius: 25px;
     text-decoration: none;
     font-size: 25px;
-    font-family: Roboto, serif;
+    font-family: Arial, serif;
     border: 1px solid #63CDDA;
     color: black;
 }
@@ -61,7 +61,7 @@ header {
     text-decoration: none;
     font-size: 25px;
     border: 1px;
-    font-family: 'Roboto', serif;
+    font-family: 'Arial', serif;
     color: black;
 }
 
@@ -118,13 +118,13 @@ main {
 
 .h1 {
     font-size: 25pt;
-    font-family: Roboto, serif;
+    font-family: Arial, serif;
     font-weight: bold;
 }
 
 .h2 {
     font-size: 20pt;
-    font-family: Roboto, serif;
+    font-family: Arial, serif;
 }
 
 .content-start-button {
@@ -142,7 +142,7 @@ main {
     text-decoration: none;
     font-size: 30pt;
     border: 1px;
-    font-family: 'Roboto', serif;
+    font-family: 'Arial', serif;
     color: black;
 }
 
