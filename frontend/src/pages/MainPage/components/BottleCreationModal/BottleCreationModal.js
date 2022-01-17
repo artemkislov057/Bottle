@@ -29,6 +29,8 @@ class CreatioBottlenModal {
         this.modalH = document.querySelector('.modal-h');
         this.modalCategories = document.querySelector('.modal-categories');
         this.modalDescription = document.querySelector('.modal-description');
+        this.lifeTime = document.querySelector('.modal-time');
+        this.pickedCount = document.querySelector('.modal-pick-count');
         this.createModalWindowButton = document.querySelector('.new-bottle');
         this.profileButton = document.querySelector('.profile');
         this.chatButton = document.querySelector('.chat');
@@ -97,8 +99,11 @@ class CreatioBottlenModal {
                         });
         
                         let currentCateg = this.modalCategories.options[this.modalCategories.selectedIndex].textContent;
+                        let currentLifeTime = this.lifeTime.value * 3600;
+                        let currentPickCount = this.pickedCount.value;
                         
-                        fetch('https://localhost:44358/api/bottles', {
+                        if(!currentUser.commercialData) {
+                            fetch('https://localhost:44358/api/bottles', {
                             method: 'POST',
                             body: JSON.stringify({
                                 lat: e.latlng.lat,
@@ -108,7 +113,7 @@ class CreatioBottlenModal {
                                 address: adress,
                                 description: this.modalDescription.value,
                                 category: currentCateg,
-                                lifeTime: 10000//    
+                                lifeTime: currentLifeTime
                             }),
                             credentials: 'include',
                             headers: {
@@ -129,6 +134,42 @@ class CreatioBottlenModal {
                                 this._setDefaultValues();
                                 this._setVisibilityButtons('visible');
                             })
+                        } else {
+                            fetch('https://localhost:44358/api/bottles', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                lat: e.latlng.lat,
+                                lng: e.latlng.lng,
+                                title: this.modalH.value,                
+                                geoObjectName: name,
+                                address: adress,
+                                description: this.modalDescription.value,
+                                category: currentCateg,
+                                lifeTime: currentLifeTime,
+                                maxPickingUp: currentPickCount
+                            }),
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json'            
+                            }
+                        })
+                            .then(res => res.json())
+                            .then(res => {
+        
+                                if(!bottleIdOnMap.includes(res.id)) {
+                                    new Bottle(res.id, currentCateg, e.latlng, newIcon, name, adress, this.modalH.value, this.modalDescription.value, currentUser.id);
+                                    bottleIdOnMap.push(res.id);
+                                    bottleDataOnMap.push(res);
+                                }
+
+                                onceClickOnMapFlag = false;
+                                
+                                this._setDefaultValues();
+                                this._setVisibilityButtons('visible');
+                            })
+                        }
+
+                        
                     })
         
                     questNoButton.addEventListener('click', () => {
@@ -192,6 +233,13 @@ class CreatioBottlenModal {
         this.createModalWindowButton.addEventListener('click', () => {
             mymap.closePopup();
             console.log(currentUser)
+            if(!currentUser.commercialData) {
+                document.querySelector('.modal-time').max = 24;
+                document.querySelector('.modal-pick-count-area').style.display = 'none';
+            } else {
+                document.querySelector('.modal-time').max = 48;
+                document.querySelector('.modal-pick-count-area').style.display = 'default';
+            }
         })
     }
 

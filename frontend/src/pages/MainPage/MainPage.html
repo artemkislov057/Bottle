@@ -22,7 +22,9 @@
             <option selected>Все места</option>
             <option>Тусовки</option>
             <option>Продажи</option>
-            <option>...</option>
+            <option>Знакомства</option>
+            <option>Спорт</option>
+            <option>Прочее</option>
         </select>
     </div>
     <form class="search-form">
@@ -40,17 +42,27 @@
                         <div class="modal-window-categories">
                             <label for="modal-categories" class="modal-window-categories-name">Категории</label>
                             <select class="modal-categories" id="modal-categories" name="categories" required>
-                                <option selected="selected" disabled="disabled">Категории...</option>
                                 <!-- <option selected></option> -->
+                                <option selected disabled></option>
                                 <option>Тусовки</option>
                                 <option>Продажи</option>
-                                <option>...</option>
+                                <option>Знакомства</option>
+                                <option>Спорт</option>
+                                <option>Прочее</option>
                             </select>
                         </div>
                         <div class="modal-window-h">
                             <label for="modal-h" class="modal-window-h-name">Заголовок:</label>
                             <input type="text" class="modal-h" id="modal-h" placeholder="Заголовок..." required>
-                        </div>                        
+                        </div>
+                        <div class="modal-time-area">
+                            <label for="modal-time" class="modal-window-h-name">Время действия бутылочки:</label>
+                            <input type="number" min="1" max="24" class="modal-time" id="modal-time" value="1"> ч.
+                        </div>
+                        <div class="modal-pick-count-area">
+                            <label for="modal-pick-count" class="modal-window-h-name" >Максимальное количество поднятий бутылочки:</label>
+                            <input type="number" min="1" class="modal-pick-count" id="modal-pick-count" value="1">
+                        </div>                       
                     </div>
                     
                     <div class="modal-window-description">
@@ -106,7 +118,8 @@
                                 <a href="#" data-hystmodal="#">Изменить пароль</a>
                             </div> 
                           </div>
-                          <div class='return-to-map'></div>    
+                          <!-- <div class='return-to-map'></div>     -->
+                          <button class='profile-logout'>Выйти</button>
                     </div>
                 </div>
             </div>

@@ -5,7 +5,7 @@ import Chart from 'chart.js/auto';
 
 export function createAndUpdateProfile() {
   profileInfo();
-  initProfile();
+  initProfileAvatar();
   getProfileData();
   updateAvatar();  
 }
@@ -86,19 +86,19 @@ function profileInfo() {
     })
   })
 
-  
-  //
-// setInterval(() => {
-//     chart.config.data.datasets[0].data[(Math.random()*4).toFixed(0)] = Math.random() * 100;
-//     chart.update()  
-//   }, 1000);
-
-  document.querySelector('.return-to-map').addEventListener('click', () => {
-      myModal.close()
+  document.querySelector('.profile-logout').addEventListener('click', () => {
+      
+      fetch('https://localhost:44358/api/account/logout', {
+        method: 'POST',
+        credentials: 'include',      
+      }).then(res => {
+        myModal.close();
+        document.location = './index.html';
+      })
     })
 }
 
-function initProfile() {
+function initProfileAvatar() {
   fetch('https://localhost:44358/api/account/avatar', {
       credentials: 'include',      
     }).then(res => res.blob().then(blobData => {

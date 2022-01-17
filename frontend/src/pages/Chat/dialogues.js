@@ -22,7 +22,7 @@ async function getDialogues() {
         await getCurrentUserId().then(async res => {
             let currentUserId = res.id;  
             for(let dialogData of dialogsData) {
-                if(!dialogData.active) continue;
+                // if(!dialogData.active) continue;//
 
                 let idPartner;//id собеседника
                 if(currentUserId == dialogData.bottleOwnerId) {
@@ -30,6 +30,7 @@ async function getDialogues() {
                 } else {
                     idPartner = dialogData.bottleOwnerId;
                 }
+                // console.log('current id', currentUserId, ' partner id ', idPartner)
                 await fetch(`https://localhost:44358/api/user/${idPartner}`, {   
                     credentials: 'include',
                     headers: {
@@ -38,7 +39,7 @@ async function getDialogues() {
                 }).then(res => res.json())
                 .then(res => {
                     let namePartner = res.nickname;//
-                    ShowDialog(namePartner, idPartner, dialogData)
+                    ShowDialog(namePartner, idPartner, dialogData, dialogData.active)
                 })
             }
         });
@@ -53,19 +54,24 @@ async function getCurrentUserId() {
 }
 
 
-function ShowDialog (namePartner, idPartner, dialogData) {
+function ShowDialog (namePartner, idPartner, dialogData, active) {
     let li = document.createElement('li');
     li.className = 'li-list-dialog'
     const oneDialogueBlock = document.createElement('button');
-    oneDialogueBlock.className = "dialogue-block";
+    oneDialogueBlock.classList.add("dialogue-block");
+    if(!active) {
+        oneDialogueBlock.classList.add("disabled-dialog");
+    }
     // oneDialogueBlock.innerText = NamePartner;
     oneDialogueBlock.type = 'button';
     oneDialogueBlock.data = {
         chatId: dialogData.id,
-        partnerId: idPartner
+        partnerId: idPartner,
+        active: active
     } 
     oneDialogueBlock.onclick = function(){
-        GetOneDialogue(namePartner, idPartner);
+        GetOneDialogue(namePartner, idPartner, active, dialogData.id);
+        console.log(dialogData)
     }
 
     let infoFileds = document.createElement('div');
@@ -73,13 +79,18 @@ function ShowDialog (namePartner, idPartner, dialogData) {
 
     let pName = document.createElement('p');
     pName.className = 'dialog-button-name';
+    pName.textContent = namePartner;
 
     let plastMess = document.createElement('p');
     plastMess.className = 'dialog-button-last-mess';
 
-    pName.textContent = namePartner;
-    if(dialogData.lastMessage)
-        plastMess.textContent = dialogData.lastMessage.value;
+    if(dialogData.lastMessage) {
+        if(dialogData.lastMessage.value.length > 10) {
+            plastMess.textContent = `${dialogData.lastMessage.value.substring(0, 10)}...`;    
+        } else {
+            plastMess.textContent = dialogData.lastMessage.value;
+        }    
+    }
 
     infoFileds.append(pName);
     infoFileds.append(plastMess);
@@ -120,7 +131,7 @@ async function getAvatar(id) {
     }).then(res => res.blob())
 }
 
-function GetOneDialogue(name, idPartner) {
+function GetOneDialogue(name, idPartner, active, chatId) {//отображение инфы на верхней панели
     topPanelContainer.innerHTML = "";
     messageContainer.innerHTML = "";
 
@@ -152,4 +163,17 @@ function GetOneDialogue(name, idPartner) {
     topPanelInfo.append(openedDialogue)    
     // topPanelContainer.append(openedDialogue);
     topPanelContainer.append(topPanelInfo);
+
+    if(!active) {
+        let ratePartnerArea = document.createElement('div'); 
+        ratePartnerArea.classList.add('rate-partner-area');
+        let ratePartnerButton = document.createElement('button');
+        ratePartnerButton.classList.add('rate-partner-button');
+        ratePartnerButton.textContent = 'Оценить собеседника';
+        ratePartnerButton.data = {
+            chatId: chatId
+        }
+        ratePartnerArea.append(ratePartnerButton);
+        topPanelContainer.append(ratePartnerArea);
+    }
 }

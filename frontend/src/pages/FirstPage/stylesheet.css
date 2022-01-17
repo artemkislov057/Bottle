@@ -99,7 +99,8 @@ main {
 }
 
 .main-content-picture{
-    height: 77.2vh;
+    /* height: 77.2vh; */
+    width: 900px;
     align-items: center;
     border-radius: 10px;
 }

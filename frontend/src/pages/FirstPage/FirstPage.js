@@ -6,6 +6,7 @@ import '../../connections/hystModal/hystmodal.min';
 import '../../connections/hystModal/hystmodal.min.css';
 import { createCommModal } from './pages/registration/comercReg/modalCommercReg';
 import screenmap from "../../../dist/img/screenmap.jpg";
+import newScreen from '../../../dist/img/screenmapNew.jpg'
 import logo from "../../../dist/img/logo.svg";
 import defaultAvatar from '../../../dist/img/defaultAvatarNormalPNG.png';
 // import { corsImport } from "webpack-external-import";
@@ -37,7 +38,7 @@ customAvatarButton.addEventListener('change', (e) => {
     avatar = e.target.files[0];
 });
 
-document.querySelector('.main-content_pic').innerHTML = `<img src=${screenmap} alt="screenmap" class="main-content-picture" />`;
+document.querySelector('.main-content_pic').innerHTML = `<img src=${newScreen} alt="screenmap" class="main-content-picture" />`;
 document.querySelector('.page-logo').innerHTML = `<img src=${logo} alt="логотип" class="logo">`;
 (function registerModal() {
     document.querySelector('.button-register').addEventListener('click', () => {
