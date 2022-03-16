@@ -1,0 +1,46 @@
+.profile-button-mainPage,
+.filter-select-mainPage, 
+.search-field-mainPage, 
+.chat-button-mainPage,
+.create-bottle-button-mainPage {
+    position: fixed;
+    z-index: 1;    
+}
+
+.profile-button-mainPage,
+.chat-button-mainPage,
+.create-bottle-button-mainPage {
+    width: 70px;
+    height: 70px;
+}
+
+.filter-select-mainPage, 
+.search-field-mainPage {
+    width: 200px;
+    height: 30px;
+}
+
+.profile-button-mainPage {
+    top: 20px;
+    right: 40px;
+}
+
+.filter-select-mainPage {
+    top: 20px;
+    right: 140px;
+}
+
+.search-field-mainPage {
+    top: 20px;
+    left: 40px;
+}
+
+.chat-button-mainPage {
+    bottom: 120px;
+    left: 40px;
+}
+
+.create-bottle-button-mainPage {
+    bottom: 40px;
+    left: 40px;
+}
