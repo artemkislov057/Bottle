@@ -4,7 +4,7 @@
 .chat-button-mainPage,
 .create-bottle-button-mainPage {
     position: fixed;
-    z-index: 1;    
+    z-index: 400;    
 }
 
 .profile-button-mainPage,
@@ -26,12 +26,18 @@
 }
 
 .filter-select-mainPage {
-    top: 20px;
-    right: 140px;
+    top: 30px;
+    left: 410px;
+    height: 50px;
+    border-radius: 10px;
+    border: 0;
+    padding: 0 10px 0 10px;
+    background-color: #212121;
+    color: #D5DCDF99;
 }
 
 .search-field-mainPage {
-    top: 20px;
+    top: 30px;
     left: 40px;
 }
 
@@ -41,6 +47,44 @@
 }
 
 .create-bottle-button-mainPage {
-    bottom: 40px;
-    left: 40px;
+    top: 30px;
+    left: 630px;
+    height: 50px;
+    width: 50px;
+    border-radius: 10px;
+    border: 0;
+    background: linear-gradient(137.6deg, #766AC8 6.67%, #B77EFF 104.65%);
+    color: #D5DCDF;
+    font-size: 30px;
+}
+
+.interfaceButton-search-field-with-otherButton {
+    display: flex;
+    padding: 0 10px 0 10px;
+    width: 350px;
+    height: 50px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #212121;
+    position: fixed;
+    z-index: 400;
+    left: 20px;
+    top: 30px;
+    border-radius: 10px;
+}
+
+.open-other-container-button,
+.search-address-container-button,
+.interfaceButton-search-container-form-input {
+    height: 30px;
+}
+
+.interfaceButton-search-container-form-input {
+    width: 250px;
+    height: 40px;
+    border-radius: 7px;
+    border: 0;
+    padding: 0 10px 0 10px;
+    background-color: rgba(213, 220, 223, 0.15);
+    color: #D5DCDF99;
 }

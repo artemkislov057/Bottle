@@ -6,7 +6,7 @@ import { MainPage } from './components/pages/MainPage/mainPage';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries:{
-      retry: 2
+      
     }
   }
 })

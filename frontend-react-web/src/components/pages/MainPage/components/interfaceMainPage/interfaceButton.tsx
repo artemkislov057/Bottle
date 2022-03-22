@@ -1,16 +1,19 @@
 import React from "react";
+import { SearchAddressControl } from "../searchAddress/searchAddress";
 import './interfaceButton.css';
 
 export const InterfaceButtonMainPage:React.FC = React.memo(() => {
     return <>
-        <button className="profile-button-mainPage">Profile</button>
         <select className="filter-select-mainPage">
             <option>Все</option>
             <option>Тусовки</option>
             <option>Продажи</option>
         </select>
-        <input type={"search"} className="search-field-mainPage"></input>
-        <button className="chat-button-mainPage">Chat</button>
-        <button className="create-bottle-button-mainPage">Create bottle</button>
+        <div className="interfaceButton-search-field-with-otherButton">
+            <button className="open-other-container-button">---</button>
+            <SearchAddressControl />
+            <button className="search-address-container-button">Search</button>
+        </div>
+        <button className="create-bottle-button-mainPage">+</button>
     </>
 })

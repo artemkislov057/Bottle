@@ -5,7 +5,8 @@ import './mainPage.css';
 
 export const MainPage:React.FC = React.memo(() => {
     return <>
-    <MapMainPage></MapMainPage>
-    <InterfaceButtonMainPage></InterfaceButtonMainPage>
+    <MapMainPage>
+        <InterfaceButtonMainPage />
+    </MapMainPage>
     </>
 })
