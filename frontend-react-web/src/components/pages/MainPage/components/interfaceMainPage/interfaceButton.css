@@ -80,11 +80,23 @@
 }
 
 .interfaceButton-search-container-form-input {
-    width: 250px;
+    width: 280px;
     height: 40px;
     border-radius: 7px;
     border: 0;
     padding: 0 10px 0 10px;
     background-color: rgba(213, 220, 223, 0.15);
     color: #D5DCDF99;
+}
+
+.open-other-container-button {
+    width: 30px;
+    background: url('otherIcon.svg') 50% 50% no-repeat;
+    border: 0;
+}
+
+.search-address-container-button {
+    width: 30px;
+    border: 0;
+    background: url('searchButton.svg') 50% 50% no-repeat;
 }

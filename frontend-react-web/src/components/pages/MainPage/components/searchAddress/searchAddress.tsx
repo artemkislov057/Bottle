@@ -40,7 +40,7 @@ export const SearchAddressControl:React.FC = React.memo(() => {
   //style={{position:"fixed", zIndex:999, left:'10px', top:'50px'}}
 
   return <div className="interfaceButton-search-container" >
-    <form className="interfaceButton-search-container-form" onSubmit={e => onSubmitSearch(e, address)}>
+    <form id="interfaceButton-search-container-form" className="interfaceButton-search-container-form" onSubmit={e => onSubmitSearch(e, address)}>
       <input 
         className="interfaceButton-search-container-form-input" 
         type="search" 

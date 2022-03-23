@@ -1,0 +1,100 @@
+.left-bar-map {
+    position: fixed;    
+    width: 400px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    z-index: 400;
+
+    background-color: #212121;
+}
+
+.left-bar-map-header {   
+    flex: none;
+    height: 120px;
+    display: flex;
+    justify-content: space-around;
+    
+    align-items: center;
+    background: rgba(213, 220, 223, 0.2);
+}
+
+.left-bar-map-header-info {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+    align-items: center;
+    color: #CDCDCD;
+    font-size: 20px;
+}
+
+.left-bar-map-header-info-avatar {   
+    
+}
+
+.left-bar-map-header-info-rename-button {
+    display: flex;
+    font-size: 13px;
+    align-items: center;
+    gap: 5px;
+    color: #D5DCDF80;
+}
+
+.rename-button-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.left-bar-map-header-rating {
+    background-color: brown;
+    margin: 0 20px 0 20px;
+}
+
+
+.left-bar-map-body {    
+    flex: 2;
+}
+
+.left-bar-map-body-items {
+    display: flex;
+    flex-direction: column;
+    
+    gap: 5px;
+    padding: 0;
+    margin: 15px 10px 0 10px;
+}
+
+.left-bar-map-body-item {
+    display: flex;
+    list-style: none;
+    border: 0;
+    border-radius: 7px;
+    padding: 5px 10px 5px 10px;
+    align-items: center;
+    color: #CDCDCD;
+    height: 60px;
+    font-size: 16px;
+
+}
+
+.left-bar-map-body-items :hover {
+    background-color: #454647;
+}
+
+.left-bar-map-body-item-icon {
+    margin-top: 5px;
+    width: 60px;
+    height: 60px;    
+}
+
+.left-bar-map-body-item-title {
+    flex: 2;
+}
+
+
+.left-bar-map-footer {
+    flex: none;
+    height: 40px;
+    display: flex;
+    margin-left: 10px;
+}
