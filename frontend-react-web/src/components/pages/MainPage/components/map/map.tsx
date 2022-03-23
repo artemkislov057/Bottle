@@ -7,7 +7,6 @@ import {MapContainer, TileLayer, Marker, ZoomControl, LayersControl, useMap} fro
 import marker from '../../../../../marker_siniy.svg';
 import { AddMarkersOnMap } from "./markersControl";
 import { GeoJSON } from "react-leaflet";
-import { SearchAddressControl } from "../searchAddress/searchAddress";
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
 
@@ -22,7 +21,8 @@ export const MapMainPage:React.FC = React.memo((props) => {
             accessToken='pk.eyJ1IjoiZGltYXNpa2J1cmRpbiIsImEiOiJja3VyNm5vNzEwb2N1Mm5xdnVmY2F2NmZkIn0.m48LWgVP-vrcXmP0r-oiBQ'
         />
         <ZoomControl position="bottomright"></ZoomControl>
-        <AddMarkersOnMap></AddMarkersOnMap>        
-        {props.children}
+        <AddMarkersOnMap ></AddMarkersOnMap>
+        {/* {props.children} */}
     </MapContainer>
+    
 })

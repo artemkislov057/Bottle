@@ -1,25 +1,33 @@
 import React, { useState } from "react";
-import { SearchAddressControl } from "../searchAddress/searchAddress";
 import './interfaceButton.css';
 import { LeftBar } from "./components/leftBar/leftBar";
+import { HelpSearchContainer } from "./components/helpSearchContainer/helpSearchContainer";
 
-export const InterfaceButtonMainPage:React.FC = React.memo(() => {
-    const [leftbarState, setLeftBar] = useState(<></>)//
+type TProps = {
+    addres: string,
+    setAddress: Function
+}
+
+export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
+    const [leftbarState, setLeftBar] = useState(<></>)
     function onClickOpenLeftBar() {
-        setLeftBar(<LeftBar setStateLeftBar={setLeftBar}/>)
+        setLeftBar(<LeftBar setStateLeftBar={setLeftBar} />)
     }
 
     return <>
+        {props.children}
         <select className="filter-select-mainPage">
-            <option>Все</option>
+            <option className="aaaa">Все</option>
             <option>Тусовки</option>
             <option>Продажи</option>
         </select>
         <div className="interfaceButton-search-field-with-otherButton">
             <button className="open-other-container-button" onClick={onClickOpenLeftBar}></button>
-            <SearchAddressControl />
+            {/* <SearchAddressControl /> */}
+            <HelpSearchContainer />
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
         </div>
+       
         <button className="create-bottle-button-mainPage">+</button>
         {leftbarState}
     </>

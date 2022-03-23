@@ -12,7 +12,12 @@ import L from 'leaflet';
 
 const key = 'pk.eyJ1IjoiZGltYXNpa2J1cmRpbiIsImEiOiJja3VyNm5vNzEwb2N1Mm5xdnVmY2F2NmZkIn0.m48LWgVP-vrcXmP0r-oiBQ';
 
-export const SearchAddressControl:React.FC = React.memo(() => {
+type TProps = {
+  address: string,
+  setAddress: Function
+}
+
+export const SearchAddressControl:React.FC = React.memo((props) => {
   let map = useMap();
   const [address, setAddress] = useState('') 
 
@@ -24,31 +29,30 @@ export const SearchAddressControl:React.FC = React.memo(() => {
     setAddress('');
   }
 
-  function onSubmitSearch(e : React.FormEvent<HTMLFormElement>, value : string) {
-    e.preventDefault();
-    if(value === '') return;
-    setAddress('');
-    let provider = new OpenStreetMapProvider();
-    provider.search({query:value}).then(res => {
-      let data = res[0];
-      console.log(data);
-      let latLng = new L.LatLng(data.y, data.x);
-      map.setView(latLng);
-      map.addLayer(L.marker(latLng));      
-    })    
-  }
+  // function onSubmitSearch(e : React.FormEvent<HTMLFormElement>, value : string) {
+  //   e.preventDefault();
+  //   if(value === '') return;
+  //   setAddress('');
+  //   let provider = new OpenStreetMapProvider();
+  //   provider.search({query:value}).then(res => {
+  //     let data = res[0];
+  //     console.log(data);
+  //     let latLng = new L.LatLng(data.y, data.x);
+  //     map.setView(latLng);
+  //     map.addLayer(L.marker(latLng));      
+  //   })    
+  // }
   //style={{position:"fixed", zIndex:999, left:'10px', top:'50px'}}
 
   return <div className="interfaceButton-search-container" >
-    <form id="interfaceButton-search-container-form" className="interfaceButton-search-container-form" onSubmit={e => onSubmitSearch(e, address)}>
+    {/* <form id="interfaceButton-search-container-form" className="interfaceButton-search-container-form" onSubmit={e => onSubmitSearch(e, address)}>
       <input 
         className="interfaceButton-search-container-form-input" 
         type="search" 
         value={address} 
         onChange={x => setAddress(x.target.value)} 
         placeholder='Поиск по адресам и местам'/>
-      {/* <button className="interfaceButton-search-container-form-button" type="submit">Search</button> */}
-    </form>    
+    </form>     */}
     <SearchControl address={address} onClick={onClickOptionAddres}/>
   </div>;
 })
