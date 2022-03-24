@@ -1,0 +1,157 @@
+.right-bar-map {
+    position: fixed;
+    right: 0;
+    width: 500px;
+    height: 100%;
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+    color: #D5DCDF;
+    
+    background-color: #212121;
+}
+
+.right-bar-map label{
+    font-size: 17px;
+}
+
+.right-bar-map-header {
+    flex: none;
+    height: 80px;
+    display: flex;
+    align-items: center;    
+    background-color: #454647;
+    padding: 0 20px 0 20px;
+}
+
+.right-bar-map-create-title {
+    color: #FFFFFF;
+}
+
+.right-bar-map-back-map-button {
+    height: 30px;
+    width: 30px;
+    background: url('backToMap.svg') 50% 50% no-repeat;
+    border: none;
+}
+
+.right-bar-map-create-title {
+   width: 100%;
+   text-align: center;   
+}
+
+.right-bar-map-body {    
+    flex: 2;
+    display: flex;
+    flex-direction: column;    
+    padding: 20px;
+    gap: 15px;
+}
+
+.right-bar-map-name-bottle-container,
+.right-bar-map-category-container,
+.right-bar-map-description-container,
+.right-bar-map-setting-timeLife,
+.right-bar-map-setting-pick-count,
+.right-bar-map-photos-container {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.right-bar-map-name-bottle-input,
+.right-bar-map-category-select,
+.right-bar-map-description-textArea,
+.right-bar-map-setting-TL-hour-input,
+.right-bar-map-setting-TL-minut-input,
+.right-bar-map-setting-pick-count-input {
+    border-radius: 5px;
+    border: none;
+    padding: 10px 10px 10px 10px;
+    color: #D5DCDFB2;
+    background-color: #373839;
+    font-size: 14px;
+    
+}
+
+.right-bar-map-name-bottle-input,
+.right-bar-map-category-select,
+.right-bar-map-setting-TL-hour-input,
+.right-bar-map-setting-TL-minut-input,
+.right-bar-map-setting-pick-count-input {
+    padding: 0 10px 0 10px;
+    height: 35px;
+}
+
+.right-bar-map-category-select {
+    width: 70%;
+}
+
+.right-bar-map-description-textArea {
+    resize: none;
+    height: 250px;
+    font-size: 16px;
+}
+
+.right-bar-map-setting-container {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.right-bar-map-setting-TL {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.right-bar-map-setting-pick-count {
+    /* width: 250px; */
+}
+
+.right-bar-map-setting-pick-count-input {
+
+} 
+
+.right-bar-map-photos-add-buttons-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.right-bar-map-add-photos-help-title {
+    background-color: coral;
+    display: block;
+    width: 120px;
+    height: 80px;
+    background: url('addPhotos.svg') 50% 50% no-repeat;
+    background-size: 120px 80px;
+}
+
+.right-bar-map-add-photos-input {
+    display: none;
+}
+
+.right-bar-map-footer {
+    flex: none;
+    height: 60px;
+    display: flex;
+    padding: 20px;
+    justify-content: end;
+}
+
+.right-bar-map-photos-title {
+    color: #D5DCDF99;
+}
+
+.right-bar-map-footer-on-map-button {
+    height: 40px;
+    width: 150px;
+    align-self: center;
+    border-radius: 10px;
+    border: none;
+    color: #D5DCDFCC;
+    background-color: #766AC8;
+    box-shadow: 0px 4.26846px 4.26846px rgba(0, 0, 0, 0.25);
+}
+

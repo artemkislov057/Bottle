@@ -34,7 +34,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
             setSearchMarker(
                 <Marker position={latLngForSearch}>
 
-                </Marker>);
+                </Marker>);            
         }        
     }, [latLngForSearch])
 

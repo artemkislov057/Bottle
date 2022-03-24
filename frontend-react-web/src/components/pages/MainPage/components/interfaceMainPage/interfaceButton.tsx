@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import './interfaceButton.css';
 import { LeftBar } from "./components/leftBar/leftBar";
+import { RightBar } from "./components/rightBar/rightBar";
 import { HelpSearchContainer } from "./components/helpSearchContainer/helpSearchContainer";
 
 type TProps = {
@@ -9,9 +10,15 @@ type TProps = {
 }
 
 export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
-    const [leftbarState, setLeftBar] = useState(<></>)
+    const [leftbarState, setLeftBar] = useState(<></>);
+    const [rightbarState, setRightBar] = useState(<></>);
+
     function onClickOpenLeftBar() {
         setLeftBar(<LeftBar setStateLeftBar={setLeftBar} />)
+    }
+
+    function onClickOpenRightBar() {
+        setRightBar(<RightBar setStateRightBar={setRightBar} />);
     }
 
     return <>
@@ -26,9 +33,10 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
             {/* <SearchAddressControl /> */}
             <HelpSearchContainer />
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
-        </div>
-       
-        <button className="create-bottle-button-mainPage">+</button>
+        </div>       
+        <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button>
+
         {leftbarState}
+        {rightbarState}
     </>
 })
