@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SearchControl } from "./searchControl";
 import L from 'leaflet';
 import { ContextForSearch } from "components/pages/MainPage/contextForSearch";
@@ -7,6 +7,7 @@ import { OpenStreetMapProvider } from "leaflet-geosearch";
 
 export const HelpSearchContainer:React.FC = React.memo((props) => {
     const [address, setAddress] = useState('');
+    const [addressForApi, setAddresForApi] = useState('');
 
     const [, setLatLng] = useContext(ContextForSearch);    
 
@@ -29,8 +30,15 @@ export const HelpSearchContainer:React.FC = React.memo((props) => {
         console.log(data);
         let latLng = new L.LatLng(data.y, data.x);            
         setLatLng(latLng);
-        })    
+        });
     }
+
+    useEffect(() => {
+        let delay = setTimeout(() => {
+            setAddresForApi(address);
+        }, 900);
+        return () => clearTimeout(delay);
+    }, [address])
 
     return <>
         <div className="interfaceButton-search-container" >
@@ -42,7 +50,7 @@ export const HelpSearchContainer:React.FC = React.memo((props) => {
                 onChange={x => setAddress(x.target.value)} 
                 placeholder='Поиск по адресам и местам'/>
             </form>
-            <SearchControl address={address} onClick={onClickOptionAddres}/>
+            <SearchControl address={addressForApi} onClick={onClickOptionAddres}/>
         </div>
     </>
 })

@@ -22,12 +22,13 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
     }
 
     return <>
-        {props.children}
-        <select className="filter-select-mainPage">
+        {props.children}        
+        <select className="filter-select-mainPage">            
             <option className="aaaa">Все</option>
             <option>Тусовки</option>
             <option>Продажи</option>
-        </select>
+        </select>        
+        
         <div className="interfaceButton-search-field-with-otherButton">
             <button className="open-other-container-button" onClick={onClickOpenLeftBar}></button>
             {/* <SearchAddressControl /> */}
