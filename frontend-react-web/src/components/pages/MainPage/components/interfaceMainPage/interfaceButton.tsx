@@ -14,7 +14,7 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
     const [rightbarState, setRightBar] = useState(<></>);
 
     function onClickOpenLeftBar() {
-        setLeftBar(<LeftBar setStateLeftBar={setLeftBar} />)
+        setLeftBar(<LeftBar setStateLeftBar={setLeftBar} onClickCreateButton={onClickOpenRightBar}/>)
     }
 
     function onClickOpenRightBar() {
