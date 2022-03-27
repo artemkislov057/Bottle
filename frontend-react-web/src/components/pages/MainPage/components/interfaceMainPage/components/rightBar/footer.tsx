@@ -1,7 +1,12 @@
 import React from "react";
 
-export const RightBarFooter:React.FC = React.memo(() => {
+type TProps = {
+    onClick: Function,
+    title: string
+}
+
+export const RightBarFooter:React.FC<TProps> = React.memo((props) => {
     return <div className="right-bar-map-footer">
-        <button className="right-bar-map-footer-on-map-button">Выбрать адрес</button>
+        <button className="right-bar-map-footer-on-map-button">{props.title}</button>
     </div>
 })

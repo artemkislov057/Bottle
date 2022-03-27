@@ -1,8 +1,12 @@
 import React from "react";
 
-export const UserRating:React.FC = React.memo(() => {
+type TProps = {
+    rating: number
+}
+
+export const UserRating:React.FC<TProps> = React.memo((props) => {
     //пока что так
     return <div className="left-bar-map-header-rating">
-        <div>4.5</div>
+        {props.rating}
     </div>
 })

@@ -1,0 +1,92 @@
+.right-bar-profile-map {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 100%;
+    right: 0;
+    z-index: 400;
+    background-color: #212121;
+    color: #D5DCDF;
+    
+}
+
+.right-bar-profile-map-body {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    padding: 30px;
+    gap: 25px;
+}
+
+.profile-map-body-avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-map-body-avatar {
+    width: 170px;
+}
+
+.profile-map-body-change-avatar-cont {
+    display: flex;
+    gap: 10px;
+    color: #D5DCDF66;
+}
+
+.profile-map-body-change-avatar-icon {
+    width: 13px;    
+}
+
+.profile-map-body-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px
+}
+
+.profile-map-body-rating-stars {
+    display: flex;
+    gap: 5px;
+}
+
+.rating-star {
+    width: 30px;
+    height: 30px;
+    background: url('./ratingStar.svg') 50% 50% no-repeat;
+    background-size: 30px 30px;
+}
+
+.rating-star.half {
+    background: url('./halfRatingStart.svg') 50% 50% no-repeat;
+    background-size: 30px 30px;
+}
+
+
+.profile-map-body-user-info-container {
+    display: flex;
+    height: 150px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.user-info-container-label-input {
+    display: flex;
+    justify-content: space-between;    
+}
+
+.user-info-container-label {
+    font-size: 18px;
+}
+
+.user-info-container-input {
+    width: 300px;
+    padding: 0 10px 0 10px;
+    height: 35px;
+    border-radius: 5px;
+    border: none;
+    color: #D5DCDF40;
+    background-color: #373839;
+}

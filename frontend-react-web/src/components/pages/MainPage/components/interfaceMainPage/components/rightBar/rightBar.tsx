@@ -14,8 +14,8 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
         props.setStateRightBar(<></>);
     }
     return <div className="right-bar-map">
-        <RightBarHeader onClick={onClickBackToMapButton} />
+        <RightBarHeader onClick={onClickBackToMapButton} title='Создать записку'/>
         <RightBarBody />
-        <RightBarFooter />
+        <RightBarFooter title="Выбрать адрес" onClick={onClickBackToMapButton}/>
     </div>
 })

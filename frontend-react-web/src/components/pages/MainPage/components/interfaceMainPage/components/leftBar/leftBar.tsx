@@ -15,7 +15,8 @@ import copy from './copyR.svg';
 
 type TProps = {
     setStateLeftBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
-    onClickCreateButton: Function
+    onClickCreateButton: Function,
+    onClickProfileInfo: Function
 }
 
 export const LeftBar : React.FC<TProps> = React.memo((props) => {
@@ -28,10 +29,15 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
         onClickOnMapButton();
     }
 
+    function onClickProfileInfo() {
+        props.onClickProfileInfo();
+        onClickOnMapButton()
+    }
+
     return <div className="left-bar-map">
-        <div className="left-bar-map-header">
-            <InfoUser avatarUrl={defaultAvatar} nameUser="Пользователь"/>
-            <UserRating />
+        <div className="left-bar-map-header" >
+            <InfoUser avatarUrl={defaultAvatar} nameUser="Пользователь" onClick={onClickProfileInfo}/>
+            <UserRating rating={4.5}/>
         </div>
         <div className="left-bar-map-body">
             <ul className="left-bar-map-body-items">
