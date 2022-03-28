@@ -1,0 +1,73 @@
+.right-bar-map-my-bottles {    
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    right: 0;
+    width: 500px;
+    height: 100%;
+    z-index: 400;
+    color: #D5DCDF;
+    background-color: #212121;
+}
+
+.right-bar-map-my-bottles-items {
+    display: flex;
+    flex-direction: column;
+    padding: 40px 0 40px 0;
+    gap: 10px
+}
+
+.right-bar-map-my-bottles-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    align-items: center;
+    padding: 5px 20px 5px 20px;
+    background-color: #D5DCDF0D;
+}
+
+.right-bar-map-my-bottles-item-icon {
+    width: 70px;
+    height: 70px;
+    margin-top: 10px;
+}
+
+.right-bar-map-my-bottles-item-information-title-container {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 20px;
+    /* background-color: aqua; */
+}
+
+.right-bar-map-my-bottles-item-information-title {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.right-bar-map-my-bottles-item-information-change {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.right-bar-map-my-bottles-item-information-changeIcon {
+    width: 10px;
+    height: 10px;
+}
+
+.right-bar-map-my-bottles-item-information-changeText {
+    font-size: 12px;
+    color: #D5DCDF66;
+}
+
+.right-bar-map-my-bottles-item-information-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.right-bar-map-my-bottles-item-information-descritpion {
+    font-size: 14px;
+    color: #D5DCDF99;
+}

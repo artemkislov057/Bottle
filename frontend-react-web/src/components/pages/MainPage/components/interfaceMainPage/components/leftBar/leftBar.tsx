@@ -16,7 +16,8 @@ import copy from './copyR.svg';
 type TProps = {
     setStateLeftBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
     onClickCreateButton: Function,
-    onClickProfileInfo: Function
+    onClickProfileInfo: Function,
+    onClickMyBottles: Function
 }
 
 export const LeftBar : React.FC<TProps> = React.memo((props) => {
@@ -34,6 +35,11 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
         onClickOnMapButton()
     }
 
+    function onClickMyBottles() {
+        props.onClickMyBottles();
+        onClickOnMapButton();
+    }
+
     return <div className="left-bar-map">
         <div className="left-bar-map-header" >
             <InfoUser avatarUrl={defaultAvatar} nameUser="Пользователь" onClick={onClickProfileInfo}/>
@@ -44,7 +50,7 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
                 <LeftBarItem urlIconItem={onMapIcon} title='На карту' onClick={onClickOnMapButton} />
                 <LeftBarItem urlIconItem={chatIcon} title='Диалоги тет а тет' onClick={onClickOnMapButton} />
                 <LeftBarItem urlIconItem={createIcon} title='Создать записку' onClick={onClickCreateBottleButton} />
-                <LeftBarItem urlIconItem={myBottlesIcon} title='Мои записки' onClick={onClickOnMapButton} />
+                <LeftBarItem urlIconItem={myBottlesIcon} title='Мои записки' onClick={onClickMyBottles} />
                 <LeftBarItem urlIconItem={commercIcon} title='Коммерческий аккаунт' onClick={onClickOnMapButton} />                
             </ul>
         </div>
