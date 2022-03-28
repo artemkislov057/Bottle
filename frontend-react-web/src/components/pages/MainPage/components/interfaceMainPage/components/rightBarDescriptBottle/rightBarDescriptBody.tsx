@@ -1,34 +1,26 @@
 import React from "react";
 import { PopupBodyInfo } from "./popupBodyInfo";
+import { BodyTitle } from "./popupBodyTitle";
+import { BodyDescription } from "./popupBodyDescription";
 import categoryIcon from './categoryIconTusovki.svg';
 
 type TProps = {
+    titleName: string,
     address: string,
-    timLife: number,//
+    timeLife: number,//
     countPick: number,
     description: string,
     content: string[]
 }
 
-export const RightBarDescrBody:React.FC = React.memo((props) => {
+export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
     return <div className="right-bar-map-popup-body">
-        <div className="right-bar-map-popup-body-title">
-            <img className="categoty-icon" src={categoryIcon} alt="category icon" />
-            <div className="right-bar-map-popup-body-title-name">Ищу компанию, чтобы чтобы чтобы чтобы чтобы</div>
-        </div>
+        <BodyTitle icon={categoryIcon} titleName={props.titleName}/>        
         <div className="right-bar-map-popup-body-info">
-            <PopupBodyInfo className="addres" title="Адрес:" value='ул. Мира 32'/>
-            <PopupBodyInfo className="timeLeft" title="До конца мероприятия:" value={50}/>
-            <PopupBodyInfo className="pickCount" title="Осталось мест:" value={2} />            
+            <PopupBodyInfo className="addres" title="Адрес:" value={props.address}/>
+            <PopupBodyInfo className="timeLeft" title="До конца мероприятия:" value={props.timeLife}/>
+            <PopupBodyInfo className="pickCount" title="Осталось мест:" value={props.countPick} />            
         </div>
-        <div className="right-bar-map-popup-body-description">
-            <div className="right-bar-map-popup-body-description-text">
-                Описание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описание
-            </div>
-            <div className="right-bar-map-popup-body-description-content">
-                <img className="right-bar-map-popup-body-description-content-photo" src={categoryIcon} alt="фотография" />
-                <img className="right-bar-map-popup-body-description-content-photo" src={categoryIcon} alt="фотография" />
-            </div>
-        </div>
+        <BodyDescription description={props.description} content={props.content} />        
     </div>
 })

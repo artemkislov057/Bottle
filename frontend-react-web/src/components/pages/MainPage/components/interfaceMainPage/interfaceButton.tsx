@@ -56,7 +56,7 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
             <HelpSearchContainer />
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
         </div>       
-        <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button>
+        <button className="create-bottle-button-mainPage" onClick={onClickOpenPopup}>+</button>
 
         {leftbarState}
         {rightbarState}
