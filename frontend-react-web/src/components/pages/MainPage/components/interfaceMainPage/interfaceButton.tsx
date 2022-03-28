@@ -5,6 +5,8 @@ import { RightBar } from "./components/rightBar/rightBar";
 import { HelpSearchContainer } from "./components/helpSearchContainer/helpSearchContainer";
 import { RightBarProfile } from "./components/rightBarProfile/rightBarProfile";
 
+import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBarDescriptBottle";
+
 type TProps = {
     addres: string,
     setAddress: Function
@@ -14,6 +16,8 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
     const [leftbarState, setLeftBar] = useState(<></>);
     const [rightbarState, setRightBar] = useState(<></>);
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
+
+    const [rightBarPopup, setRightBarPopup] = useState(<></>);
 
     function onClickOpenLeftBar() {
         setLeftBar(<LeftBar 
@@ -31,6 +35,11 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
         setRightBarProfile(<RightBarProfile 
             setStateRightProfileBar={setRightBarProfile}
             openLeftBar={onClickOpenLeftBar}/>)
+    }
+
+    //временно
+    function onClickOpenPopup() {
+        setRightBarPopup(<RightBarDescrBottle />)
     }
 
     return <>
@@ -52,5 +61,6 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
         {leftbarState}
         {rightbarState}
         {rightbarProfileState}
+        {rightBarPopup}
     </>
 })

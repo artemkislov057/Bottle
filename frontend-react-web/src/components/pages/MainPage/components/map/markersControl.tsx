@@ -26,22 +26,23 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     //     setCoord([...coord, e.latlng])
     // })
 
-    let map = useMap();    
+    let map = useMap();
     useEffect(() => {
         if(latLngForSearch.lat !== 0 && latLngForSearch.lng !== 0) {
             // setCoord([...coord, latLngForSearch])
             map.setView(latLngForSearch);
             setSearchMarker(
                 <Marker position={latLngForSearch}>
-
+                    <Popup>aaa</Popup>
                 </Marker>);            
-        }        
+        }
+        // return () => setSearchMarker(<></>);
     }, [latLngForSearch])
 
     //icon={L.icon({iconUrl: marker, iconSize:[50,50]})}
     return <React.Fragment>
         {coord.map((coor) =>
-            <Marker key={coor.toString()} position={coor} >
+            <Marker eventHandlers={{click: (e) => console.log(e)}} key={coor.toString()} position={coor} >
                 <Popup>{coor.toString()}</Popup>
             </Marker>
         )}
