@@ -17,7 +17,8 @@ type TProps = {
     setStateLeftBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
     onClickCreateButton: Function,
     onClickProfileInfo: Function,
-    onClickMyBottles: Function
+    onClickMyBottles: Function,
+    onClickChat: Function
 }
 
 export const LeftBar : React.FC<TProps> = React.memo((props) => {
@@ -48,7 +49,7 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
         <div className="left-bar-map-body">
             <ul className="left-bar-map-body-items">
                 <LeftBarItem urlIconItem={onMapIcon} title='На карту' onClick={onClickOnMapButton} />
-                <LeftBarItem urlIconItem={chatIcon} title='Диалоги тет а тет' onClick={onClickOnMapButton} />
+                <LeftBarItem urlIconItem={chatIcon} title='Диалоги тет а тет' onClick={props.onClickChat} />
                 <LeftBarItem urlIconItem={createIcon} title='Создать записку' onClick={onClickCreateBottleButton} />
                 <LeftBarItem urlIconItem={myBottlesIcon} title='Мои записки' onClick={onClickMyBottles} />
                 <LeftBarItem urlIconItem={commercIcon} title='Коммерческий аккаунт' onClick={onClickOnMapButton} />                

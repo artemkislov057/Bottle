@@ -9,11 +9,13 @@ import { RightBarMyBottles } from "./components/rightBarMyBottles/rightBarMyBott
 import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBarDescriptBottle";
 
 type TProps = {
-    addres: string,
-    setAddress: Function
+    // addres: string,
+    // setAddress: Function,
+    backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
+    openChat: Function
 }
 
-export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
+export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [leftbarState, setLeftBar] = useState(<></>);
     const [rightbarState, setRightBar] = useState(<></>);
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
@@ -22,15 +24,18 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
 
     function onClickOpenLeftBar() {
+        setBackgroundGray()
         setLeftBar(<LeftBar 
             setStateLeftBar={setLeftBar} 
             onClickCreateButton={onClickOpenRightBar}
             onClickProfileInfo={onClickProfileInfofromLeft}
             onClickMyBottles={onClickMyBottles}
+            onClickChat={props.openChat}
         />)
     }
 
     function onClickOpenRightBar() {
+        setBackgroundGray()
         setRightBar(<RightBar setStateRightBar={setRightBar} />);
     }
 
@@ -44,6 +49,10 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
         setRightBarMyBottles(<RightBarMyBottles 
             setRightBarMyBottles={setRightBarMyBottles}
             openLeftBar={onClickOpenLeftBar}/>)
+    }
+
+    function setBackgroundGray() {
+        props.backgroundState(<div className="background-gray"></div>);
     }
 
     //временно
@@ -65,7 +74,7 @@ export const InterfaceButtonMainPage:React.FC = React.memo((props) => {
             <HelpSearchContainer />
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
         </div>       
-        <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button>
+        <button className="create-bottle-button-mainPage" onClick={onClickOpenPopup}>+</button>
 
         {leftbarState}
         {rightbarState}

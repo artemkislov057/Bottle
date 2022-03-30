@@ -1,0 +1,202 @@
+.chat-page-right-side {
+    flex: 2;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.chat-page-right-header {
+    flex: none;
+    display: flex;
+    height: 80px;
+    justify-content: space-between;
+    padding: 0 40px 0 10px;
+    background-color: #212121;
+}
+
+.chat-page-right-header-info {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    
+}
+
+.chat-page-right-header-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+}
+
+.chat-page-right-header-name {
+    font-size: 19px;
+    font-weight: bold;
+    color: #CDCDCD;
+}
+
+.chat-page-right-header-exitButton-container {
+    flex: 4;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.chat-page-right-header-exitButton {
+    height: 45px;
+    width: 150px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    color: #D5DCDFCC;
+    background: #766AC8;
+}
+
+.chat-page-right-message-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 2;
+    background-color: #0F0F0F;
+    /* padding: 0 300px; */
+    overflow: hidden;
+}
+
+.chat-page-message-container,
+.chat-page-message-toolBar-area,
+.chat-page-message-container-scroll {
+    width: 100%;    
+}
+
+.chat-page-message-container-scroll {
+    flex: 7;
+    /* padding: 0 10px; */
+    overflow-y: auto;
+}
+
+.chat-page-message-container-scroll::-webkit-scrollbar {    
+    background-color: #0F0F0F;
+    width: 7px;
+}
+
+.chat-page-message-container-scroll::-webkit-scrollbar-thumb {
+    background-color: #D5DCDF33;
+    border-radius: 8px;    
+}
+
+.chat-page-message-container-HELP {
+    display: flex;
+}
+
+.chat-page-message-container {        
+    margin: 0 300px;
+
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-bottom: 10px;    
+}
+
+.chat-page-message-container-message {
+    min-width: 150px;    
+    max-width: 500px;
+    word-wrap: break-word;
+    
+    display: flex;
+    flex-direction: column;
+    padding: 15px 10px 0px 10px;
+    border-radius: 10px;
+    color: #FFFFFF;
+    font-size: 15px;
+    box-shadow: -4px 6px 10px rgba(69, 70, 71, 0.15);
+}
+
+.chat-page-message-container-message-time {
+    align-self: flex-end;
+    position: relative;
+    bottom: 10px;
+    color: #D5DCDF80;
+    font-size: 13px;
+}
+
+.chat-page-message-container-message.self {
+    align-self: flex-end;
+    background: linear-gradient(97.13deg, #766AC8 0.74%, #B57EFE 101.77%);
+    
+}
+
+.chat-page-message-container-message.partner {
+    align-self: flex-start;
+    background: linear-gradient(268.61deg, #454647 0.52%, #252626 100.55%);
+}
+
+.chat-page-message-toolBar-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+}
+
+.chat-page-message-toolBar {
+    margin: 0 300px 10px 300px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 10px;
+    width: 100%;
+    padding: 5px 10px;
+    /* margin-bottom: 10px; */
+    
+    background-color: #212121;
+}
+
+.chat-page-message-toolBar-data-container {
+    display: flex;
+    
+}
+
+.chat-page-message-toolBar-data-helpLabel {
+    width: 25px;
+    height: 25px;
+    background: url('addContentIcon.svg') 50% 50% no-repeat;
+    background-size: 25px 25px;
+    cursor: pointer;
+}
+
+.chat-page-message-toolBar-data-button {
+    display: none;
+}
+
+.chat-page-message-toolBar-form {
+    display: flex;
+    flex: 1;
+}
+
+.chat-page-message-toolBar-input {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    padding: 0 10px;
+    color: #FFFFFF;
+    background-color: #454647;
+
+    font-size: 15px;
+}
+
+.chat-page-message-toolBar-send-button {
+    width: 25px;
+    height: 25px;
+    border: none;
+    
+
+    background: url('sendMessageIcon.svg') 50% 50% no-repeat;
+    background-size: 25px 25px;
+}
+
