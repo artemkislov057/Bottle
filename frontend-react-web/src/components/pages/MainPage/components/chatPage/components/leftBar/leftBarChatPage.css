@@ -48,11 +48,11 @@
 }
 
 .chat-page-left-header-other-button {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     border: none;
     background: url('otherIcon.svg') 50% 50% no-repeat;
-    background-size: 25px 25px;
+    background-size: 20px 20px;
     
 
 }
@@ -93,10 +93,10 @@
 }
 
 .left-header-search-button {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     background: url('searchButton.svg') 50% 50% no-repeat;
-    background-size: 25px 25px;
+    background-size: 20px 20px;
     border: none;
 }
 

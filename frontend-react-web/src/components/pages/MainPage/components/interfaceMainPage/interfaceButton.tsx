@@ -24,11 +24,14 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
     const [rightBarPopup, setRightBarPopup] = useState(<></>);   
 
+    const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup]
+
     useEffect(() => {
         props.openLeftMainBar.current = onClickOpenLeftBar
     }, [])
 
-    function onClickOpenLeftBar() {        
+    function onClickOpenLeftBar() {
+        closeOtherBars(setLeftBar);
         setBackgroundGray();
         setLeftBar(<LeftBar 
             setStateLeftBar={setLeftBar} 
@@ -41,17 +44,20 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     function onClickOpenRightBar() {
+        closeOtherBars(setRightBar);
         setBackgroundGray();
         setRightBar(<RightBar setStateRightBar={setRightBar} />);            
     }
 
     function onClickProfileInfofromLeft() {
+        closeOtherBars(setRightBarProfile);
         setRightBarProfile(<RightBarProfile 
             setStateRightProfileBar={setRightBarProfile}
             openLeftBar={onClickOpenLeftBar}/>)
     }
 
     function onClickMyBottles() {
+        closeOtherBars(setRightBarMyBottles);
         setRightBarMyBottles(<RightBarMyBottles 
             setRightBarMyBottles={setRightBarMyBottles}
             openLeftBar={onClickOpenLeftBar}/>)
@@ -64,6 +70,14 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     //временно
     function onClickOpenPopup() {
         setRightBarPopup(<RightBarDescrBottle />)
+    }
+
+    function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>>) {
+        for(let e of leftRightBars) {
+            if(e !== currentBar) {
+                e(<></>);
+            }
+        }
     }
 
     return <>
