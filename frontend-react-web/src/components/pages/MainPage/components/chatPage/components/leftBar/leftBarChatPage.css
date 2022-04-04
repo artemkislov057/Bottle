@@ -10,6 +10,8 @@
 
     background-color: #212121;
 
+    z-index: inherit;
+
 }
 
 @media (min-width: 992px) and (max-width: 1299px) {
@@ -36,6 +38,7 @@
     gap: 20px;
     padding: 0 20px 0 20px;
     background-color: #212121;
+
 }
 
 .chat-page-left-header-other-container {

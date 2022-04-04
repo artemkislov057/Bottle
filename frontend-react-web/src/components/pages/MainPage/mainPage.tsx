@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MapMainPage } from "./components/map/map";
 import { InterfaceButtonMainPage } from "./components/interfaceMainPage/interfaceButton";
 import { ChatPage } from "./components/chatPage/chatPage";
@@ -11,22 +11,41 @@ import { ContextForSearch } from "./contextForSearch";
 export const MainPage:React.FC = React.memo(() => {
     const [latLngForSearch, setLatLng] = useState(new L.LatLng(0,0));
     const [backgroundGray, setBackgroundGray] = useState(<></>);
-    const [interfaceMainPageContainer, setInterfaceMainPage] = useState(
-        <InterfaceButtonMainPage backgroundState={setBackgroundGray} openChat={openChatPage}>                
-            <MapMainPage />                 
-        </InterfaceButtonMainPage>
-    )
+    
+    const openLeftMainBar = useRef();
+    
     const [chatPageContainer, setChatPageContainer] = useState(<></>);
 
-    function openChatPage() {
-        setInterfaceMainPage(<></>);
-        setChatPageContainer(<ChatPage onClickOnMap={openMainPage} />);
-    }
+    const [interfaceMainPageContainer, setInterfaceMainPage] = useState(
+        <InterfaceButtonMainPage 
+                backgroundState={setBackgroundGray}
+                openChat={openChatPage}
+                openMap={openMainPage}
+                openLeftMainBar={openLeftMainBar} >
+            <MapMainPage />
+        </InterfaceButtonMainPage>
+    )    
 
+    function openChatPage() {
+        setInterfaceMainPage(
+            <InterfaceButtonMainPage 
+                backgroundState={setBackgroundGray} 
+                openChat={openChatPage} 
+                openMap={openMainPage}
+                openLeftMainBar={openLeftMainBar} >
+            </InterfaceButtonMainPage>
+        );
+        setChatPageContainer(<ChatPage openMainLeftBar={openLeftMainBar} />);
+    }  
+      
     function openMainPage() {
         setChatPageContainer(<></>);
         setInterfaceMainPage(
-            <InterfaceButtonMainPage backgroundState={setBackgroundGray} openChat={openChatPage}>                
+            <InterfaceButtonMainPage 
+                    backgroundState={setBackgroundGray} 
+                    openChat={openChatPage} 
+                    openMap={openMainPage}
+                    openLeftMainBar={openLeftMainBar} >
                 <MapMainPage />                 
             </InterfaceButtonMainPage>
         )

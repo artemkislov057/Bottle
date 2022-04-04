@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './interfaceButton.css';
 import { LeftBar } from "./components/leftBar/leftBar";
 import { RightBar } from "./components/rightBar/rightBar";
@@ -12,7 +12,9 @@ type TProps = {
     // addres: string,
     // setAddress: Function,
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
-    openChat: Function
+    openChat: Function,
+    openMap: Function,
+    openLeftMainBar: React.MutableRefObject<() => void>
 }
 
 export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
@@ -20,23 +22,27 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightbarState, setRightBar] = useState(<></>);
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
+    const [rightBarPopup, setRightBarPopup] = useState(<></>);   
 
-    const [rightBarPopup, setRightBarPopup] = useState(<></>);
+    useEffect(() => {
+        props.openLeftMainBar.current = onClickOpenLeftBar
+    }, [])
 
-    function onClickOpenLeftBar() {
-        setBackgroundGray()
+    function onClickOpenLeftBar() {        
+        setBackgroundGray();
         setLeftBar(<LeftBar 
             setStateLeftBar={setLeftBar} 
             onClickCreateButton={onClickOpenRightBar}
             onClickProfileInfo={onClickProfileInfofromLeft}
             onClickMyBottles={onClickMyBottles}
             onClickChat={props.openChat}
+            onClickMap={props.openMap}
         />)
     }
 
     function onClickOpenRightBar() {
-        setBackgroundGray()
-        setRightBar(<RightBar setStateRightBar={setRightBar} />);
+        setBackgroundGray();
+        setRightBar(<RightBar setStateRightBar={setRightBar} />);            
     }
 
     function onClickProfileInfofromLeft() {
