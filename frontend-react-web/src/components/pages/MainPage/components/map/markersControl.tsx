@@ -11,9 +11,7 @@ import { OpenStreetMapProvider } from "leaflet-geosearch";
 
 type TProps = {
     address: string,
-    latLng: L.LatLng
-    // x: number,
-    // y: number
+    latLng: L.LatLng    
 }
 
 type FuckTs = {
@@ -22,24 +20,18 @@ type FuckTs = {
 }
 
 export const AddMarkersOnMap:React.FC = React.memo((props) => {
-    const coordinats: LatLng[] = [];
-    const coor: LatLng = null;
     let temp : FuckTs = {
         latLng: new LatLng(0,0),
         data: {}
-
     }
-    // const [coord, setCoord] = useState(coordinats);//просто маркеры при нажатии
     const [coord, setCoord] = useState([temp]);//просто маркеры при нажатии
+
     const [latLngForSearch] = useContext(ContextForSearch);//координаты при поиске
     const [searchResultMarker, setSearchMarker] = useState(<></>);//маркер при поиске
-    const {data, setData, openDescriptionBar} = useContext(ContextForCreateBottleMarker);    
 
-    const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]);
-    // useMapEvent('click', (e) => {
-    //     setCoord([...coord, e.latlng])
-    // })
-    
+    const {data, setData, openDescriptionBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
+    const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]); //созданные бутылки
+        
     // useMapEvent('click', (e) => {
     //     if(coord.length < 2) {
     //         console.log('first')
@@ -51,7 +43,8 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     // })
 
     let map = useMap();
-    useEffect(() => {
+
+    useEffect(() => { // ставит маркер при поиске по адресу
         if(latLngForSearch.lat !== 0 && latLngForSearch.lng !== 0) {
             // setCoord([...coord, latLngForSearch])
             map.setView(latLngForSearch);
@@ -63,64 +56,46 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         // return () => setSearchMarker(<></>);
     }, [latLngForSearch])
 
-    useEffect(() => {
+    useEffect(() => { // создание бутылки
         if(data.titleName !== '') {
-            let b = map.on('click', (e : LeafletMouseEvent) => {
+            map.on('click', async (e : LeafletMouseEvent) => {
                 let provider = new OpenStreetMapProvider();
 
                 let pos = e.latlng;
-                provider.search({query:`${pos.lat}, ${pos.lng}`}).then(res => {
-                    // <this> send request on api
-                    // setData({...data, address: res[0].label});
-                    setCurrentBottles([...currentBottles, {coordinates:pos, data: {...data, address:res[0].label}}])                    
-                    console.log(res[0].label);
-                    map.removeEventListener('click');                    
-                });
+                let addressPlace = await provider.search({query:`${pos.lat}, ${pos.lng}`});
+                setCurrentBottles([...currentBottles, {coordinates:pos, data: {...data, address:addressPlace[0].label}}])                    
+                console.log(addressPlace[0].label);
+
+                map.removeEventListener('click');
+
+                fetch('https://localhost:44358/api/bottles', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        lat: pos.lat,
+                        lng: pos.lng,
+                        title: data.titleName,                
+                        geoObjectName: null,
+                        address: addressPlace[0].label,
+                        description: data.description,
+                        category: 'Продажи',
+                        lifeTime: data.timeLife,
+                        maxPickingUp: data.countPick,
+                        contentItemsCount: data.content?.length || 0,
+                    }),
+                    credentials: 'include',
+                    headers: {
+                        'Content-type': 'application/json'
+                    }
+                })
             })            
         }
     }, [data])
-
-    // useEffect(() => {
-        
-    // }, [data])
-
-
-    let tempData1 = {
-        titleName:'Oh fuck, is test',
-        address:'блюffff',
-        content:[''],
-        countPick:2,
-        description:'Описание описание описание',
-        timeLife:10
-    }
-
-    let tempData2 = {
-        titleName:'Oh fuck, is test number 2',
-        address:'мира 32',
-        content:[marker],
-        countPick:2,
-        description:'Описание описание описание',
-        timeLife:10
-    }
-
+    
     //icon={L.icon({iconUrl: marker, iconSize:[50,50]})}
-    return <React.Fragment>
-        {/* {coord.map((coor) =>
-            <Marker eventHandlers={{click: (e) => null}} key={coor.toString()} position={coor} >
-                <Popup>{coor.toString()}</Popup>
-            </Marker>
-        )} */}
-        {coord.map((coor, index) => 
-            <Marker eventHandlers={{click: (e) => 
-                //@ts-ignore
-                openDescriptionBar(coor.data)}} key={coor.latLng.toString()} 
-                    position={coor.latLng} >
-                {/* <Popup>{coor.latLng.toString()}</Popup> */}
-            </Marker>
-        )}        
+    return <React.Fragment>                   
         {searchResultMarker}
         {currentBottles.map(marker => 
             <Marker key={marker.coordinates.toString()} position={marker.coordinates} eventHandlers={{click: () => openDescriptionBar(marker.data)}} />
-            )}
+        )}
     </React.Fragment>
 })
