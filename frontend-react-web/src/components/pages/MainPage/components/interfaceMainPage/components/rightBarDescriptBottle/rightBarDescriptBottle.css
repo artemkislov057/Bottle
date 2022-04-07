@@ -69,8 +69,21 @@
 }
 
 .right-bar-map-popup-body-description-text {
+    max-height: 300px;    
+    padding: 5px 5px;
     word-wrap: break-word;
-    flex: 2;    
+    flex: 2;
+    overflow-y: auto;
+}
+
+.right-bar-map-popup-body-description-text::-webkit-scrollbar {    
+    background-color: #373839;
+    width: 6px;    
+}
+
+.right-bar-map-popup-body-description-text::-webkit-scrollbar-thumb {
+    background-color: #212121;
+    border-radius: 8px;    
 }
 
 .right-bar-map-popup-body-description-content {
