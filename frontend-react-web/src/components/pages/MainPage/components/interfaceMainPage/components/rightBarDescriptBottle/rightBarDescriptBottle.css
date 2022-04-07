@@ -69,6 +69,7 @@
 }
 
 .right-bar-map-popup-body-description-text {
+    word-wrap: break-word;
     flex: 2;    
 }
 

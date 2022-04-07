@@ -5,6 +5,9 @@ import { RightBar } from "./components/rightBar/rightBar";
 import { HelpSearchContainer } from "./components/helpSearchContainer/helpSearchContainer";
 import { RightBarProfile } from "./components/rightBarProfile/rightBarProfile";
 import { RightBarMyBottles } from "./components/rightBarMyBottles/rightBarMyBottles";
+import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
+
+import { DataBottleDescType } from "../../DataBottleDescriptType";
 
 import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBarDescriptBottle";
 
@@ -22,7 +25,17 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightbarState, setRightBar] = useState(<></>);
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
-    const [rightBarPopup, setRightBarPopup] = useState(<></>);   
+    const [rightBarPopup, setRightBarPopup] = useState(<></>);
+
+    let initObj : DataBottleDescType = {
+        titleName:'',
+        address:'',
+        content:[''],
+        countPick:0,
+        description:'',
+        timeLife:0
+    }
+    const [dataBottleDescription, setDataBottleDesc] = useState(initObj);
 
     const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup]
 
@@ -67,9 +80,25 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         props.backgroundState(<div className="background-gray"></div>);
     }
 
+    let tempData = {
+        titleName:'Oh fuck, is test',
+        address:'блю',
+        content:[''],
+        countPick:2,
+        description:'Описание описание описание',
+        timeLife:10
+    }
+
+    
     //временно
-    function onClickOpenPopup() {
-        setRightBarPopup(<RightBarDescrBottle />)
+    function onClickOpenPopup(data: DataBottleDescType) {
+        setRightBarPopup(<RightBarDescrBottle 
+                setSelfState={setRightBarPopup}
+                data={ 
+                    data
+                }
+                
+            />)
     }
 
     function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>>) {
@@ -80,8 +109,11 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         }
     }
 
+
     return <>
-        {props.children}        
+        {/* <ContextForCreateBottleMarker.Provider value={onClickOpenPopup}>
+            
+        </ContextForCreateBottleMarker.Provider> */}
         <select className="filter-select-mainPage">            
             <option className="aaaa">Все</option>
             <option>Тусовки</option>
@@ -94,10 +126,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             <HelpSearchContainer />
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
         </div>       
-        <button className="create-bottle-button-mainPage" onClick={onClickOpenPopup}>+</button>
+        <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button>
 
         {leftbarState}
-        {rightbarState}
+        <ContextForCreateBottleMarker.Provider value={{openDescriptionBar: onClickOpenPopup, data: dataBottleDescription, setData: setDataBottleDesc }}>
+            {rightbarState}
+            {props.children} {/*map*/}
+        </ContextForCreateBottleMarker.Provider>
         {rightbarProfileState}
         {rightBarMyBottles}
         {rightBarPopup}

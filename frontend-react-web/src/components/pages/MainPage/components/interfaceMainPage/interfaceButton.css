@@ -87,6 +87,7 @@
     padding: 0 10px 0 10px;
     background-color: rgba(213, 220, 223, 0.15);
     color: #D5DCDF99;
+    outline: none;
 }
 
 .open-other-container-button {

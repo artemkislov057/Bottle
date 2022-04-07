@@ -26,10 +26,10 @@ export const HelpSearchContainer:React.FC = React.memo((props) => {
         setAddress('');
         let provider = new OpenStreetMapProvider();
         provider.search({query:value}).then(res => {
-        let data = res[0];
-        console.log(data);
-        let latLng = new L.LatLng(data.y, data.x);            
-        setLatLng(latLng);
+            let data = res[0];
+            console.log(data);
+            let latLng = new L.LatLng(data.y, data.x);            
+            setLatLng(latLng);
         });
     }
 
