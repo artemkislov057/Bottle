@@ -20,7 +20,7 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
     let initObj : DataBottleDescType = {
         titleName:'',
         address:'',
-        content:[''],
+        content:null,
         countPick:0,
         description:'',
         timeLife:0//seconds

@@ -30,9 +30,9 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     let initObj : DataBottleDescType = {
         titleName:'',
         address:'',
-        content:[''],
+        content: null,
         countPick:0,
-        description:'',
+        description: null,
         timeLife:0
     }
     const [dataBottleDescription, setDataBottleDesc] = useState(initObj);
@@ -96,8 +96,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 setSelfState={setRightBarPopup}
                 data={ 
                     data
-                }
-                
+                }                
             />)
     }
 
