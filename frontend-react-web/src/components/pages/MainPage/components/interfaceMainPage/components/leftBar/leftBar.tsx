@@ -23,7 +23,7 @@ type TProps = {
     closeChat?: Function
 }
 
-export const LeftBar : React.FC<TProps> = React.memo((props) => {
+export const LeftBar : React.FC<TProps> = React.memo((props) => {    
     function closeLeftBar() {
         props.setStateLeftBar(<></>);
     }

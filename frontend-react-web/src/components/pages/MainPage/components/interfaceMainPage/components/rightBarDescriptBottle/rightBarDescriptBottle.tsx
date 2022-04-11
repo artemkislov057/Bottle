@@ -26,12 +26,15 @@ export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
     return <div className="right-bar-map-popup-bottle">
         <RightBarHeader title="Записка" onClick={onClickBackToMap} />
         <RightBarDescrBody
-            titleName={props.data.titleName}
-            address={props.data.address}
-            countPick={props.data.countPick}
-            timeLife={props.data.timeLife}
-            description={props.data.description}
-            content={props.data.content}
+            data={{
+                address: props.data.address,
+                content:props.data.content,
+                countPick: props.data.countPick,
+                description: props.data.description,
+                timeLife: props.data.timeLife,
+                titleName:props.data.titleName
+            
+            }}            
         />
         <RightBarFooter title="Откликнуться" onClick={temp} />
     </div>

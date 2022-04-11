@@ -5,5 +5,5 @@ export type DataBottleDescType = {
     timeLife: number,
     countPick: number,
     description: string,
-    content: string[]    
+    content: string[] | number[]
 }

@@ -29,7 +29,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     const [latLngForSearch] = useContext(ContextForSearch);//координаты при поиске
     const [searchResultMarker, setSearchMarker] = useState(<></>);//маркер при поиске
 
-    const {data, setData, openDescriptionBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
+    const {data, bottlesOnMap, setData, openDescriptionBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
     const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]); //созданные бутылки
         
     // useMapEvent('click', (e) => {
@@ -77,7 +77,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                         geoObjectName: null,
                         address: addressPlace[0].label,
                         description: data.description,
-                        category: 'Продажи',
+                        category: 'Продажи',//
                         lifeTime: data.timeLife,
                         maxPickingUp: data.countPick,
                         contentItemsCount: data.content?.length || 0,
@@ -90,12 +90,31 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
             })            
         }
     }, [data])
+
+    useEffect(() => {
+        // for(let e of bottlesOnMap) {
+            
+        //     if(e.data.titleName === '') {                
+        //         continue
+        //     }
+        //     if(!currentBottles.includes(e)) {
+        //         setCurrentBottles([...currentBottles, e])
+        //     }
+        // }
+        // setCurrentBottles([...currentBottles, ...bottlesOnMap])
+        setCurrentBottles(bottlesOnMap)
+        // console.log('fuck', bottlesOnMap)
+        return () => setCurrentBottles([{coordinates: new LatLng(null, null), data: data}])
+        
+    }, [bottlesOnMap])
     
     //icon={L.icon({iconUrl: marker, iconSize:[50,50]})}
     return <React.Fragment>                   
         {searchResultMarker}
-        {currentBottles.map(marker => 
-            <Marker key={marker.coordinates.toString()} position={marker.coordinates} eventHandlers={{click: () => openDescriptionBar(marker.data)}} />
+        {currentBottles.map(marker => {            
+            if(marker.data.titleName !== '')
+                return <Marker key={marker.coordinates.toString()} position={marker.coordinates} eventHandlers={{click: (e) => {openDescriptionBar(marker.data)} } } />
+            }
         )}
     </React.Fragment>
 })

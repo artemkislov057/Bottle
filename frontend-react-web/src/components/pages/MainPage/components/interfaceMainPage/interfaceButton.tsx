@@ -6,10 +6,12 @@ import { HelpSearchContainer } from "./components/helpSearchContainer/helpSearch
 import { RightBarProfile } from "./components/rightBarProfile/rightBarProfile";
 import { RightBarMyBottles } from "./components/rightBarMyBottles/rightBarMyBottles";
 import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
+import { BottlesRequestArrayType } from "../../BottlesRequestArrayType";
 
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 
 import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBarDescriptBottle";
+import { LatLng } from "leaflet";
 
 type TProps = {
     // addres: string,
@@ -37,9 +39,51 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
     const [dataBottleDescription, setDataBottleDesc] = useState(initObj);
 
-    const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup]
+    const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}])
+    //состояние с бутылками, которые уже есть на карте -> обновляется через вебсокеты или при создании клиентом бутылки
+    //useEffect для обновления состояния ^ при перезагрузке стр
 
     useEffect(() => {
+        async function getAllBottles() {
+            let res = await fetch('https://localhost:44358/api/bottles', {
+                credentials: 'include'
+            })
+            let bottles = await res.json() as BottlesRequestArrayType;
+            // console.log(bottles)
+            let newBottles : [{data: DataBottleDescType, coordinates: LatLng}] = [null];
+            for(let e of bottles) {
+                let currentBottleData: DataBottleDescType = {
+                    address: e.address,
+                    content: e.contentIds,
+                    countPick: e.maxPickingUp - e.pickingUp,
+                    description: e.description,
+                    timeLife: e.lifeTime,
+                    titleName: e.title
+                }
+                if (newBottles[0] === null) {
+                    newBottles = [{coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}];
+                } else {
+                    newBottles.push({coordinates: new LatLng(e.lat, e.lng), data: currentBottleData});
+                }
+            }
+            // setBottlesOnMap([...bottlesOnMap, {coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}])
+            // console.log(newBottles)
+            setBottlesOnMap(newBottles);            
+        }
+        console.log('update')
+        getAllBottles();
+
+        return () => setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}])
+    }, [props.children]);
+
+    useEffect(() => {
+        // console.log(bottlesOnMap)
+    }, [bottlesOnMap])
+    
+
+    const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup]
+
+    useEffect(() => {//for chat?
         props.openLeftMainBar.current = onClickOpenLeftBar
     }, [])
 
@@ -128,7 +172,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button>
 
         {leftbarState}
-        <ContextForCreateBottleMarker.Provider value={{openDescriptionBar: onClickOpenPopup, data: dataBottleDescription, setData: setDataBottleDesc }}>
+        <ContextForCreateBottleMarker.Provider value={{openDescriptionBar: onClickOpenPopup, data: dataBottleDescription, setData: setDataBottleDesc, bottlesOnMap: bottlesOnMap }}>
             {rightbarState}
             {props.children} {/*map*/}
         </ContextForCreateBottleMarker.Provider>

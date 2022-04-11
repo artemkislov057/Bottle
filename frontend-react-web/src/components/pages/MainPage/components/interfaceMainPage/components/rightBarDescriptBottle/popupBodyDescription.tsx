@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 type TProps = {
     description: string,
-    content: string[]
+    content: string[] | number[]
 }
 
 export const BodyDescription:React.FC<TProps> = React.memo((props) => {
@@ -13,7 +13,7 @@ export const BodyDescription:React.FC<TProps> = React.memo((props) => {
             setContent(
                 <div className="right-bar-map-popup-body-description-content">
                     {props.content.map((data, index) => 
-                        <img key={data+index} className="right-bar-map-popup-body-description-content-photo" src={data} alt="фотография" />
+                        <img key={+data+index} className="right-bar-map-popup-body-description-content-photo" src={data.toString()} alt="фотография" />
                         )}            
                 </div>
             )
