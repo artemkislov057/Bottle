@@ -16,6 +16,7 @@ type data = {
 
 export const wsOnCreateBottle = (bottlesData : data) => {
     ws.onmessage = (e) => {
+        console.log(e)
         let data = JSON.parse(e.data) as WsDataType
         if(data.eventNumber === 3) {
             //ПОДУМАТЬ КАК СОЗДАВАТЬ БУТЫЛКУ НЕ СОКЕТАМИ БЛЕАТЬ
@@ -25,7 +26,8 @@ export const wsOnCreateBottle = (bottlesData : data) => {
                 countPick: data.model.maxPickingUp - data.model.pickingUp,
                 description: data.model.description,
                 timeLife: data.model.lifeTime,
-                titleName: data.model.title
+                titleName: data.model.title,
+                bottleId: data.model.id
             }
             let coord = new LatLng(data.model.lat, data.model.lng);
             let newBottle = {coordinates: coord, data: currentBottleData}

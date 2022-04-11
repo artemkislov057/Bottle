@@ -37,7 +37,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         content: null,
         countPick:0,
         description: null,
-        timeLife:0
+        timeLife:0,
+        bottleId: -1
     }
     const [dataBottleDescription, setDataBottleDesc] = useState(initObj);
 
@@ -60,7 +61,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     countPick: e.maxPickingUp - e.pickingUp,
                     description: e.description,
                     timeLife: e.lifeTime,
-                    titleName: e.title
+                    titleName: e.title,
+                    bottleId: e.id
                 }
                 if (newBottles[0] === null) {
                     newBottles = [{coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}];
@@ -122,7 +124,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     function onClickOpenPopup(data: DataBottleDescType) {
         setRightBarPopup(<RightBarDescrBottle 
             setSelfState={setRightBarPopup}
-            data={ data } />
+            data={data}
+            onClickOpenDialog={openPartnerChat}/>
         )
     }
 
@@ -135,7 +138,17 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     //args - maybe id partner
-    function goToPartnerChat() {
+    function openPartnerChat(id : number) {
+        //request
+        console.log(id)
+        fetch(`https://localhost:44358/api/bottles/${id}/pick-up`, {
+            method: 'POST',            
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => props.openChat())
+        // props.openChat();
         // props.openChat + maybe this args 
     }
 

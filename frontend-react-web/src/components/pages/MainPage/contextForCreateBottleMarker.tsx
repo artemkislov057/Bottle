@@ -9,7 +9,8 @@ let initData: DataBottleDescType = {
     content:[''],
     countPick:0,
     description:'',
-    timeLife:0
+    timeLife:0,
+    bottleId: -1
 }
 
 let a : React.Dispatch<React.SetStateAction<DataBottleDescType>> = function(){};
@@ -22,5 +23,5 @@ export const ContextForCreateBottleMarker = React.createContext({
         openDescriptionBar: (data: DataBottleDescType) => {return},
         data: null || initData,
         setData: a,
-        bottlesOnMap: b
+        bottlesOnMap: b,
 });

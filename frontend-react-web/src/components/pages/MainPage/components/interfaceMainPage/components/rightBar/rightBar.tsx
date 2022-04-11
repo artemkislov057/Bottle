@@ -23,7 +23,8 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
         content:null,
         countPick:0,
         description:'',
-        timeLife:0//seconds
+        timeLife:0,
+        bottleId: -1
     }
     const [bottleData, setBottleData] = useState(initObj);
 
@@ -32,10 +33,11 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
     }
 
     function findPlaceForBottle() {
-        onClickBackToMapButton();
+        // onClickBackToMapButton();
     }
 
     function onSubmitBottleDataForm() {
+        console.log('fuck')
         onClickBackToMapButton();
 
         setData(bottleData);

@@ -11,7 +11,7 @@ export const RightBarFooter:React.FC<TProps> = React.memo((props) => {
             form="right-bar-map-body-form" 
             className="right-bar-map-footer-on-map-button"
             onClick={(e) => { 
-                // props.onClick() 
+                props.onClick()
                 }}>
                 {props.title}
         </button>

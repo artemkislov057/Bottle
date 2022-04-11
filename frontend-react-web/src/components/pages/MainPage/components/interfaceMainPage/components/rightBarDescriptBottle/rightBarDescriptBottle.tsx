@@ -13,7 +13,8 @@ const tempLine = 'Описание описаниеОписание описан
 
 type TProps = {
     setSelfState: React.Dispatch<React.SetStateAction<JSX.Element>>,
-    data: DataBottleDescType    
+    data: DataBottleDescType,
+    onClickOpenDialog: Function,
 }
 
 export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
@@ -32,10 +33,10 @@ export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
                 countPick: props.data.countPick,
                 description: props.data.description,
                 timeLife: props.data.timeLife,
-                titleName:props.data.titleName
-            
+                titleName:props.data.titleName,
+                bottleId: props.data.bottleId            
             }}            
         />
-        <RightBarFooter title="Откликнуться" onClick={temp} />
+        <RightBarFooter title="Откликнуться" onClick={() => props.onClickOpenDialog(props.data.bottleId)} />
     </div>
 })
