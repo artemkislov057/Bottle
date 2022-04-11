@@ -7,15 +7,16 @@ import { RightBarProfile } from "./components/rightBarProfile/rightBarProfile";
 import { RightBarMyBottles } from "./components/rightBarMyBottles/rightBarMyBottles";
 import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
 import { BottlesRequestArrayType } from "../../BottlesRequestArrayType";
+import { ws } from "components/connections/ws";
+import { WsDataType } from "../../WsDataType";
+import { wsOnCreateBottle } from "./components/wsCreateBottle";
 
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 
 import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBarDescriptBottle";
 import { LatLng } from "leaflet";
 
-type TProps = {
-    // addres: string,
-    // setAddress: Function,
+type TProps = {    
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
     openChat: Function,
     openMap: Function,
@@ -28,6 +29,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
+    const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup];
 
     let initObj : DataBottleDescType = {
         titleName:'',
@@ -43,13 +45,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     //состояние с бутылками, которые уже есть на карте -> обновляется через вебсокеты или при создании клиентом бутылки
     //useEffect для обновления состояния ^ при перезагрузке стр
 
-    useEffect(() => {
+    useEffect(() => { // при обновлении стр получение всех бутылок
         async function getAllBottles() {
             let res = await fetch('https://localhost:44358/api/bottles', {
                 credentials: 'include'
             })
             let bottles = await res.json() as BottlesRequestArrayType;
-            // console.log(bottles)
+            console.log(bottles)
             let newBottles : [{data: DataBottleDescType, coordinates: LatLng}] = [null];
             for(let e of bottles) {
                 let currentBottleData: DataBottleDescType = {
@@ -62,27 +64,20 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 }
                 if (newBottles[0] === null) {
                     newBottles = [{coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}];
-                } else {
+                } else {                    
                     newBottles.push({coordinates: new LatLng(e.lat, e.lng), data: currentBottleData});
                 }
             }
-            // setBottlesOnMap([...bottlesOnMap, {coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}])
-            // console.log(newBottles)
             setBottlesOnMap(newBottles);            
         }
         console.log('update')
         getAllBottles();
 
         return () => setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}])
-    }, [props.children]);
+    }, []);//
 
-    useEffect(() => {
-        // console.log(bottlesOnMap)
-    }, [bottlesOnMap])
+    wsOnCreateBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap});
     
-
-    const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup]
-
     useEffect(() => {//for chat?
         props.openLeftMainBar.current = onClickOpenLeftBar
     }, [])
@@ -123,25 +118,12 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     function setBackgroundGray() {
         props.backgroundState(<div className="background-gray"></div>);
     }
-
-    let tempData = {
-        titleName:'Oh fuck, is test',
-        address:'блю',
-        content:[''],
-        countPick:2,
-        description:'Описание описание описание',
-        timeLife:10
-    }
-
     
-    //временно
     function onClickOpenPopup(data: DataBottleDescType) {
         setRightBarPopup(<RightBarDescrBottle 
-                setSelfState={setRightBarPopup}
-                data={ 
-                    data
-                }                
-            />)
+            setSelfState={setRightBarPopup}
+            data={ data } />
+        )
     }
 
     function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>>) {
@@ -152,11 +134,30 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         }
     }
 
+    //args - maybe id partner
+    function goToPartnerChat() {
+        // props.openChat + maybe this args 
+    }
 
-    return <>
-        {/* <ContextForCreateBottleMarker.Provider value={onClickOpenPopup}>
-            
-        </ContextForCreateBottleMarker.Provider> */}
+    function tempLogin() {
+        fetch('https://localhost:44358/api/account', {
+            method: 'POST',
+            body: JSON.stringify({
+                "nickname": "secondUser",
+                "password": "000",
+                "email": "string",
+                "sex": "string",
+                "commercialData": null
+            }),
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+
+
+    return <>        
         <select className="filter-select-mainPage">            
             <option className="aaaa">Все</option>
             <option>Тусовки</option>
@@ -169,7 +170,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             <HelpSearchContainer />
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
         </div>       
-        <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button>
+        {/* <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button> */}
+        <button className="create-bottle-button-mainPage" onClick={tempLogin}>+</button>
 
         {leftbarState}
         <ContextForCreateBottleMarker.Provider value={{openDescriptionBar: onClickOpenPopup, data: dataBottleDescription, setData: setDataBottleDesc, bottlesOnMap: bottlesOnMap }}>

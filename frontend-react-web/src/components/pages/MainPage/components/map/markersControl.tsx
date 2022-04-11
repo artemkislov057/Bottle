@@ -1,6 +1,6 @@
-import { latLng, LatLng, LeafletMouseEvent } from "leaflet";
+import { LatLng, LeafletMouseEvent } from "leaflet";
 import React, { useContext, useEffect, useState } from "react";
-import { Marker, useMap, useMapEvent, useMapEvents } from "react-leaflet";
+import { Marker, useMap } from "react-leaflet";
 import marker from '../../../../../marker_siniy.svg';
 import L from 'leaflet';
 import { Popup } from "react-leaflet";
@@ -63,7 +63,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
 
                 let pos = e.latlng;
                 let addressPlace = await provider.search({query:`${pos.lat}, ${pos.lng}`});
-                setCurrentBottles([...currentBottles, {coordinates:pos, data: {...data, address:addressPlace[0].label}}])                    
+                // setCurrentBottles([...currentBottles, {coordinates:pos, data: {...data, address:addressPlace[0].label}}])
                 console.log(addressPlace[0].label);
 
                 map.removeEventListener('click');
@@ -91,27 +91,15 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         }
     }, [data])
 
-    useEffect(() => {
-        // for(let e of bottlesOnMap) {
-            
-        //     if(e.data.titleName === '') {                
-        //         continue
-        //     }
-        //     if(!currentBottles.includes(e)) {
-        //         setCurrentBottles([...currentBottles, e])
-        //     }
-        // }
-        // setCurrentBottles([...currentBottles, ...bottlesOnMap])
-        setCurrentBottles(bottlesOnMap)
-        // console.log('fuck', bottlesOnMap)
-        return () => setCurrentBottles([{coordinates: new LatLng(null, null), data: data}])
-        
-    }, [bottlesOnMap])
+    // useEffect(() => {// при обновлении стр
+    //     setCurrentBottles(bottlesOnMap);
+    //     return () => setCurrentBottles([{coordinates: new LatLng(null, null), data: data}])        
+    // }, [bottlesOnMap]);
     
     //icon={L.icon({iconUrl: marker, iconSize:[50,50]})}
     return <React.Fragment>                   
         {searchResultMarker}
-        {currentBottles.map(marker => {            
+        {bottlesOnMap.map(marker => {            
             if(marker.data.titleName !== '')
                 return <Marker key={marker.coordinates.toString()} position={marker.coordinates} eventHandlers={{click: (e) => {openDescriptionBar(marker.data)} } } />
             }

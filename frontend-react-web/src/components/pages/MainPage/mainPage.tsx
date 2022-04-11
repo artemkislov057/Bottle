@@ -15,11 +15,11 @@ export const MainPage:React.FC = React.memo(() => {
         WebSockets();
     }, []);
 
-    ws.onmessage = (e) => {
-        let data = JSON.parse(e.data) as WsDataType
-        console.log(e.data)
-        console.log(data)
-    }
+    // ws.onmessage = (e) => {
+    //     let data = JSON.parse(e.data) as WsDataType
+    //     console.log(e.data)
+    //     console.log(data)
+    // }
 
     const [latLngForSearch, setLatLng] = useState(new L.LatLng(0,0));
     const [backgroundGray, setBackgroundGray] = useState(<></>);
