@@ -2,55 +2,85 @@ import React, { useEffect, useState } from "react";
 import './leftBarChatPage.css';
 import { HeaderLeftBarChat } from "./headerLeftBarChat";
 import { ChatUserItem } from "./chatUserItem";
+import { WsDialogType } from "components/pages/MainPage/WsDialogType";
+import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 
-import defaultAvatar from '../../../interfaceMainPage/components/rightBarProfile/defaultAvatar.svg';
+// import defaultAvatar from '../../../interfaceMainPage/components/rightBarProfile/defaultAvatar.svg';
+import defaultAvatar from '../newDefAvatar.svg'
 
 type TProps = {
-    onClickOtherButton: Function
+    onClickOtherButton: Function,
+    setCurrentDialog: React.Dispatch<React.SetStateAction<UserItem>>
+}
+
+type UserItem = {
+    dialogInfo: WsDialogType;
+    userInfo: UserInfoType;
+    userAvatar: string;
 }
 
 export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
-    const [chatUsers, setChatUsers] = useState(<></>);
+    let init: [{dialogInfo: WsDialogType, userInfo:UserInfoType, userAvatar: string}];
+    const [chatUsers, setChatUsers] = useState(init);//type maybe avatar, name, descr, maybe при нажатии на диалог нужно срать запрос, для этого надо какие то данные, мб тот же id бутылки или чата
 
     useEffect(() => {
         async function getChatUsers() {
-            let response = await fetch('https://localhost:44358/api/dialogs', {
+            let selfResponse = await fetch('https://localhost:44358/api/account', {
                 credentials: 'include'
             });
-            let users = await response.json();
-            
+            let selfData = await selfResponse.json() as UserInfoType;
+            const selfId = selfData.id;
+
+            let responseDialogs = await fetch('https://localhost:44358/api/dialogs', {
+                credentials: 'include'
+            });
+            let dialogs = await responseDialogs.json() as WsDialogType[];            
+            console.log(dialogs);
+
+            let items : [{dialogInfo: WsDialogType, userInfo:UserInfoType, userAvatar: string}];
+            for(let e of dialogs) {
+                let currentId = e.bottleOwnerId === selfId ? e.recipientId : e.bottleOwnerId;
+
+                let responseUserInfo = await fetch(`https://localhost:44358/api/user/${currentId}`, {
+                    credentials: 'include'
+                });
+                let userInfo = await responseUserInfo.json() as UserInfoType;
+
+                let responseUserAvatar = await fetch(`https://localhost:44358/api/user/${currentId}/avatar`, {
+                    credentials: 'include'
+                });
+                let userAvatarBlob = await responseUserAvatar.blob();
+                let userAvatar = URL.createObjectURL(userAvatarBlob);
+                if(items) {
+                    items.push({dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar});
+                } else {
+                    items = [{dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar}];
+                }
+            }
+            console.log(items)
+            setChatUsers(items);
         }
 
         getChatUsers();
-    }, [])
+    }, []);    
+
+    function onClickChatUserItem(data: UserItem) {
+        props.setCurrentDialog(data);
+        console.log(data)
+    }
 
     return <div className="chat-page-left-bar">
         <HeaderLeftBarChat onClickOtherButton={props.onClickOtherButton}/>{/*сделать поиск*/}
         <div className="chat-page-left-user-items">
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
-            <ChatUserItem urlAvatar={defaultAvatar} name="Пользователь" demoDescript="demo demo demo demo"/>
+            {chatUsers?.map(userItem => 
+                <ChatUserItem 
+                    key={userItem?.dialogInfo.id}
+                    name={userItem.userInfo.nickname} 
+                    demoDescript={userItem.dialogInfo.lastMessage?.value}
+                    urlAvatar={userItem.userAvatar}
+                    onClick={() => onClickChatUserItem(userItem)}/>
+                )
+            }            
         </div>
     </div>
 })

@@ -1,4 +1,5 @@
-.chat-page-right-side {
+.chat-page-right-side,
+.chat-page-right-side-empty {
     flex: 4;
     display: flex;
     height: 100vh;
@@ -6,9 +7,9 @@
 
     z-index: inherit;
 }
-    
 
-.chat-page-right-header {
+.chat-page-right-header,
+.chat-page-right-header-empty {
     flex: none;
     display: flex;
     height: 80px;
@@ -56,7 +57,8 @@
     background: #766AC8;
 }
 
-.chat-page-right-message-area {
+.chat-page-right-message-area,
+.chat-page-right-message-area-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -90,9 +92,10 @@
 
 .chat-page-message-container-HELP {
     display: flex;
+    min-height: 100%;    
 }
 
-.chat-page-message-container {        
+.chat-page-message-container {
     /* margin: 0 300px; */
     margin: 0 20%;
 

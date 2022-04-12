@@ -52,6 +52,9 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 credentials: 'include'
             })
             let bottles = await res.json() as BottlesRequestArrayType;
+            if(bottles.length < 1) {
+                return
+            }
             console.log(bottles)
             let newBottles : [{data: DataBottleDescType, coordinates: LatLng}] = [null];
             for(let e of bottles) {
@@ -70,13 +73,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     newBottles.push({coordinates: new LatLng(e.lat, e.lng), data: currentBottleData});
                 }
             }
-            setBottlesOnMap(newBottles);            
+            setBottlesOnMap(newBottles);
         }
         console.log('update')
         getAllBottles();
 
         return () => setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}])
-    }, []);//
+    }, [props.children]);//
 
     wsOnCreateBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap});
     
@@ -153,14 +156,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     function tempLogin() {
-        fetch('https://localhost:44358/api/account', {
+        fetch('https://localhost:44358/api/account/login', {
             method: 'POST',
             body: JSON.stringify({
                 "nickname": "secondUser",
                 "password": "000",
                 "email": "string",
-                "sex": "string",
-                "commercialData": null
+                "rememberMe": false
             }),
             credentials: 'include',
             headers: {

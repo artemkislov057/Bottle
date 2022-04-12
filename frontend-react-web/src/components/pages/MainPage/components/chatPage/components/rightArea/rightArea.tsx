@@ -1,13 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './rightArea.css';
 import { HeaderRightArea } from "./rightAreaHeader";
 import { MessageArea } from "./messageArea";
 
 import defaultAvatar from '../../../interfaceMainPage/components/rightBarProfile/defaultAvatar.svg';
+import { WsDialogType } from "components/pages/MainPage/WsDialogType";
+import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 
-export const MessageAreaChat:React.FC = React.memo(() => {    
-    return <div className="chat-page-right-side">
-        <HeaderRightArea name="Пользователь" rating={3.5} urlAvatar={defaultAvatar} />
-        <MessageArea />        
-    </div>
+type TProps = {
+    currentDialogData: {
+        dialogInfo: WsDialogType;
+        userInfo: UserInfoType;
+        userAvatar: string;
+    }
+}
+
+export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
+    const [currentChat, setCurrentChat] = useState(
+        <div className="chat-page-right-side-empty">
+            <div className="chat-page-right-header-empty"></div>
+            <div className="chat-page-right-message-area-empty"></div>
+        </div>
+    );
+    useEffect(() => {
+        if(props.currentDialogData) {
+            setCurrentChat(
+                <div className="chat-page-right-side">
+                    <HeaderRightArea 
+                        name={props.currentDialogData?.userInfo.nickname} 
+                        rating={props.currentDialogData?.userInfo.rating.value} 
+                        urlAvatar={props.currentDialogData?.userAvatar} />
+                    <MessageArea currentDialogData={props.currentDialogData}/>
+                </div>
+            )
+        }
+        
+    }, [props])
+    return <>
+        {currentChat}
+    </>
 })
