@@ -12,7 +12,8 @@ type TProps = {
         dialogInfo: WsDialogType;
         userInfo: UserInfoType;
         userAvatar: string;
-    }
+    },
+    newMessage: WsGetMessageType,    
 }
 
 export const MessageArea:React.FC<TProps> = React.memo((props) => {
@@ -36,7 +37,6 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             for(let e of allMessages) {
                 let messFrom = '';
                 if(e.senderId === selfId) {
-                    console.log('fuuuuck')
                     messFrom = 'self';
                 } else {
                     messFrom = 'partner';
@@ -63,6 +63,21 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
         allMessages[allMessages.length - 1].scrollIntoView();
     },[messages]);
 
+    useEffect(() => {
+        let newMessage = props.newMessage;
+        let currentTime = new Date(newMessage?.dateTime);
+        let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+        
+        
+        if(messages) {
+            //@ts-ignore
+            setMessages([...messages, {messId:newMessage?.id, time: time, type:'self', value: newMessage?.value}]);////////////
+        } else {
+            setMessages([{messId:newMessage?.id, time: time, type:'self', value: newMessage?.value}]);
+        }
+            
+    }, [props.newMessage])
+
     async function onSendMessage(value: string) {
         let response = await fetch(`https://localhost:44358/api/dialogs/${props.currentDialogData.dialogInfo.id}`, {
             method: 'POST',
@@ -72,14 +87,14 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
                 'Content-type': 'application/json'
             }
         });
-        
+
         let collbackData = await response.json() as WsGetMessageType;
         if(response.status) {
             let currentTime = new Date(collbackData.dateTime);
             let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
             
             //@ts-ignore
-            setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);
+            setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);////////////
         }
         console.log(value)
     }
@@ -89,7 +104,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             <div className="chat-page-message-container-HELP">
                 <div className="chat-page-message-container">
                     {messages?.map(message => 
-                        <Message key={message.messId} messageFrom={message.type} value={message.value} time={message.time}/>    
+                        <Message key={`${message.messId} ${props.currentDialogData.dialogInfo.id}`} messageFrom={message.type} value={message.value} time={message.time}/>    
                         )}                    
                 </div>
             </div>

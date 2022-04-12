@@ -125,7 +125,7 @@
 .chat-page-message-container-message-time {
     align-self: flex-end;
     position: relative;
-    bottom: 10px;
+    bottom: 5px;
     color: #D5DCDF80;
     font-size: 13px;
 }

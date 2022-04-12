@@ -6,13 +6,15 @@ import { MessageArea } from "./messageArea";
 import defaultAvatar from '../../../interfaceMainPage/components/rightBarProfile/defaultAvatar.svg';
 import { WsDialogType } from "components/pages/MainPage/WsDialogType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
+import { WsGetMessageType } from "components/pages/MainPage/WsGetMessageType";
 
 type TProps = {
     currentDialogData: {
         dialogInfo: WsDialogType;
         userInfo: UserInfoType;
         userAvatar: string;
-    }
+    },
+    newMessage: WsGetMessageType,    
 }
 
 export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
@@ -30,7 +32,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                         name={props.currentDialogData?.userInfo.nickname} 
                         rating={props.currentDialogData?.userInfo.rating.value} 
                         urlAvatar={props.currentDialogData?.userAvatar} />
-                    <MessageArea currentDialogData={props.currentDialogData}/>
+                    <MessageArea currentDialogData={props.currentDialogData} newMessage={props.newMessage} />
                 </div>
             )
         }
