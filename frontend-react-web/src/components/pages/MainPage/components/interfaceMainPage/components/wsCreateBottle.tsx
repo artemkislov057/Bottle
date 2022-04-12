@@ -19,7 +19,6 @@ export const wsOnCreateBottle = (bottlesData : data) => {
         console.log(e)
         let data = JSON.parse(e.data) as WsDataType
         if(data.eventNumber === 3) {
-            //ПОДУМАТЬ КАК СОЗДАВАТЬ БУТЫЛКУ НЕ СОКЕТАМИ БЛЕАТЬ
             let currentBottleData: DataBottleDescType = {
                 address: data.model.address,
                 content: data.model.contentIds,

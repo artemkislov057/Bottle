@@ -24,17 +24,19 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             let idResponse = await fetch(`https://localhost:44358/api/account`, {
                 credentials: 'include',
             });
-            let selfId : string  = await idResponse.json();
+            let self  = await idResponse.json() as UserInfoType;
+            let selfId = self.id
 
             let responseMessages = await fetch(`https://localhost:44358/api/dialogs/${props.currentDialogData.dialogInfo.id}/messages`, {
                 credentials: 'include',
             });
             let allMessages = await responseMessages.json() as WsGetMessageType[];
-
+            console.log(selfId, 'свой id')
             let items : [{type: string, value:string, time: string, messId: number}];
             for(let e of allMessages) {
                 let messFrom = '';
                 if(e.senderId === selfId) {
+                    console.log('fuuuuck')
                     messFrom = 'self';
                 } else {
                     messFrom = 'partner';
@@ -55,11 +57,32 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
         getMessages();
     }, [props]);
 
-    useEffect(() => {
+    useEffect(() => {//scroll to last message
         if(!messages) return
         let allMessages = document.querySelectorAll('.chat-page-message-container-message');
         allMessages[allMessages.length - 1].scrollIntoView();
     },[messages]);
+
+    async function onSendMessage(value: string) {
+        let response = await fetch(`https://localhost:44358/api/dialogs/${props.currentDialogData.dialogInfo.id}`, {
+            method: 'POST',
+            body: JSON.stringify(value),
+            credentials: 'include',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        
+        let collbackData = await response.json() as WsGetMessageType;
+        if(response.status) {
+            let currentTime = new Date(collbackData.dateTime);
+            let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+            
+            //@ts-ignore
+            setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);
+        }
+        console.log(value)
+    }
 
     return <div className="chat-page-right-message-area">
         <div className="chat-page-message-container-scroll">
@@ -71,6 +94,6 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
                 </div>
             </div>
         </div>
-        <ToolBarMessageArea />
+        <ToolBarMessageArea onSubmit={onSendMessage}/>
     </div>
 })

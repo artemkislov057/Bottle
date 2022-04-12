@@ -57,7 +57,6 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                     items = [{dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar}];
                 }
             }
-            console.log(items)
             setChatUsers(items);
         }
 
@@ -66,7 +65,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
 
     function onClickChatUserItem(data: UserItem) {
         props.setCurrentDialog(data);
-        console.log(data)
+        // console.log(data)
     }
 
     return <div className="chat-page-left-bar">
