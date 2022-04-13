@@ -260,21 +260,28 @@ namespace Bottle.Controllers
         [ProducesResponseType(403)]
         public async Task<IActionResult> ChangeInformationAsync([FromBody] Account data)
         {
-            if (ModelState.IsValid)
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            user.Sex = data.Sex is null ? user.Sex : data.Sex;
+            if (data.Nickname != null)
             {
-                var user = await userManager.GetUserAsync(HttpContext.User);
-                user.Sex = data.Sex is null ? user.Sex : data.Sex;
-                if (user.Type == 2)
-                {
-                    user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
-                    user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
-                    user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
-                }
-                db.SaveChanges();
-                var account = new Account(user, user.CommercialData, db.GetUserRating(user.Id));
-                return Ok(account);
+                user.UserName = data.Nickname;
+                user.NormalizedUserName = data.Nickname.ToUpper();
             }
-            return BadRequest();
+            if (data.Email != null)
+            {
+                user.Email = data.Email;
+                user.NormalizedEmail = data.Email.ToUpper();
+            }
+            if (data.CommercialData != null)
+            {
+                var cd = db.CommercialData.FirstOrDefault(x => x.User == user);
+                user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
+                user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
+                user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
+            }
+            db.SaveChanges();
+            var account = new Account(user, user.CommercialData, db.GetUserRating(user.Id));
+            return Ok(account);
         }
 
         [HttpPost("password")]
