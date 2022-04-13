@@ -33,6 +33,8 @@
     width: 30px;
     background: url('backToMap.svg') 50% 50% no-repeat;
     border: none;
+
+    cursor: pointer;
 }
 
 .right-bar-map-create-title {

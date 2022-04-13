@@ -54,7 +54,7 @@
     background: url('otherIcon.svg') 50% 50% no-repeat;
     background-size: 20px 20px;
     
-
+    cursor: pointer;
 }
 
 .chat-page-left-header-search-container,

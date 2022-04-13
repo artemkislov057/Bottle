@@ -56,6 +56,8 @@
     background: linear-gradient(137.6deg, #766AC8 6.67%, #B77EFF 104.65%);
     color: #D5DCDF;
     font-size: 30px;
+
+    cursor: pointer;
 }
 
 .interfaceButton-search-field-with-otherButton {
@@ -70,7 +72,7 @@
     z-index: 400;
     left: 20px;
     top: 30px;
-    border-radius: 10px;
+    border-radius: 10px;    
 }
 
 .open-other-container-button,
@@ -94,6 +96,8 @@
     width: 30px;
     background: url('otherIcon.svg') 50% 50% no-repeat;
     border: 0;
+
+    cursor: pointer;
 }
 
 .search-address-container-button {

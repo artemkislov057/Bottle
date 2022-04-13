@@ -39,6 +39,7 @@
     align-items: center;
     gap: 5px;
     color: #D5DCDF80;
+    cursor: pointer;
 }
 
 .rename-button-icon {
@@ -73,6 +74,8 @@
     gap: 5px;
     padding: 0;
     margin: 15px 10px 0 10px;
+
+    cursor: pointer;
 }
 
 .left-bar-map-body-item {
