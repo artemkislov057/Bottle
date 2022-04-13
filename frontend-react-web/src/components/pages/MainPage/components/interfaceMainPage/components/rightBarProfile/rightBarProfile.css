@@ -89,4 +89,10 @@
     border: none;
     color: #D5DCDF40;
     background-color: #373839;
+
+    outline: none;
+}
+
+.profile-map-body-change-avatar-button-input {
+    display: none;
 }

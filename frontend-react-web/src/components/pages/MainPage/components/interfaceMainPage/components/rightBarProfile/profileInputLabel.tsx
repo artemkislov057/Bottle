@@ -2,7 +2,9 @@ import React from "react";
 
 type TProps = {
     type: string,
-    labelName: string
+    labelName: string,
+    value: string,
+    onChange: Function
 }
 
 export const InputLableContainerProfileBar:React.FC<TProps> = React.memo((props) => {
@@ -15,6 +17,8 @@ export const InputLableContainerProfileBar:React.FC<TProps> = React.memo((props)
         <input 
             type={props.type}
             className={`user-info-container-input ${props.labelName}`}
-            id={`user-info-container-inp-${props.labelName}`} />
+            id={`user-info-container-inp-${props.labelName}`}
+            value={props.value}
+            onChange={(e) => props.onChange(e)} />
     </div>
 })

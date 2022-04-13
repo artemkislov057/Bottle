@@ -1,20 +1,57 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { InputLableContainerProfileBar } from "./profileInputLabel";
 import { ProfileAvatarContainer } from "./profileAvatarContainer";
 import { ProfileRatingContainer } from "./profileRating";
 import defaultAvatar from './defaultAvatar.svg';
+import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 
-export const ProfileBody:React.FC = React.memo(() => {
+type TProps = {
+    data: {
+        info: UserInfoType;
+        avatar: string;
+    },    
+    changedData: {
+        nickName: string;
+        email: string;
+    },
+    setChangedData: React.Dispatch<React.SetStateAction<{
+        nickName: string;
+        email: string;
+    }>>
+}
+
+export const ProfileBody:React.FC<TProps> = React.memo((props) => {
+    const [nickName, setNickName] = useState(props.data?.info.nickname || '');
+    const [email, setEmail] = useState(props.data?.info.nickname || '');
+    const [password, setPassword] = useState("*******");
+
+    function onChangeNickName(e: React.ChangeEvent<HTMLInputElement>) {
+        setNickName(e.target.value);
+        props.setChangedData({email:props.changedData.email, nickName: e.target.value});
+    }
+
+    function onChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
+        setEmail(e.target.value);
+        props.setChangedData({email: e.target.value, nickName: props.changedData.nickName});
+    }
+    
+    function onChangePassword(e: React.ChangeEvent<HTMLInputElement>) {
+        setPassword(e.target.value)
+    }
+
     useEffect(() => {
-        //запрос инфа о себе - мб это делать в родительском компоненте, т к там кнопка сохранить
-    },[])
+        setNickName(props.data?.info.nickname);
+        setEmail(props.data?.info.email);
+        props.setChangedData({email:props.data?.info.email, nickName: props.data?.info.nickname})
+    }, [props.data]);
+
     return <div className="right-bar-profile-map-body">
-        <ProfileAvatarContainer urlAvatar={defaultAvatar}/>
-        <ProfileRatingContainer rating={4.5}/>
+        <ProfileAvatarContainer urlAvatar={props.data?.avatar}/>
+        <ProfileRatingContainer rating={props.data?.info.rating.value}/>
         <div className="profile-map-body-user-info-container">
-            <InputLableContainerProfileBar labelName="Никнейм:" type="text" />
-            <InputLableContainerProfileBar labelName="Почта:" type="email" />
-            <InputLableContainerProfileBar labelName="Пароль:" type="password" />
+            <InputLableContainerProfileBar labelName="Никнейм:" type="text" value={nickName} onChange={onChangeNickName}/>
+            <InputLableContainerProfileBar labelName="Почта:" type="email" value={email} onChange={onChangeEmail}/>
+            <InputLableContainerProfileBar labelName="Пароль:" type="password" value={password} onChange={onChangePassword}/>
         </div>
     </div>
 })

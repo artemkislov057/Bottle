@@ -10,7 +10,8 @@ export const ProfileAvatarContainer:React.FC<TProps> = React.memo((props) => {
         <img className="profile-map-body-avatar" src={props.urlAvatar} alt='your avatar' />
         <div className="profile-map-body-change-avatar-cont">
             <img className="profile-map-body-change-avatar-icon" src={changeAvatarIcon} alt="icon button" />
-            <div className="profile-map-body-change-avatar-button">Изменить</div>
+            <label className="profile-map-body-change-avatar-button" htmlFor="map-body-change-avatar-button-input">Изменить</label>
+            <input type={'file'} className="profile-map-body-change-avatar-button-input" id="map-body-change-avatar-button-input" />
         </div>
     </div>
 })

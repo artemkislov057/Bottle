@@ -30,7 +30,9 @@
 }
 
 .left-bar-map-header-info-avatar {   
-    
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
 }
 
 .left-bar-map-header-info-rename-button {

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './rightBarProfile.css';
 
 import { RightBarHeader } from "../rightBar/header";
 import { ProfileBody } from "./profileBody";
 import { RightBarFooter } from "../rightBar/footer";
+import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 
 type TProps = {
     setStateRightProfileBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -11,8 +12,61 @@ type TProps = {
 }
 
 export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
-    function temp() {
+    let init : {info: UserInfoType, avatar: string}
+    const [selfInfo, setSelfInfo] = useState(init);
+    const [changedData, setChangedData] = useState({nickName: '', email: ''});
 
+    useEffect(() => {
+        async function getInformation() {
+            let response = await fetch(`https://localhost:44358/api/account`, {
+                credentials: 'include',
+            });
+            let data = await response.json() as UserInfoType;
+
+            let avatarRes = await fetch(`https://localhost:44358/api/account/avatar`, {
+                credentials: 'include',
+            }); 
+            let avatar = await avatarRes.blob();
+            let resAvatar = URL.createObjectURL(avatar);
+            setSelfInfo({
+                info: {
+                    commercialData: data.commercialData,
+                    id: data.id,
+                    nickname: data.nickname,
+                    rating: data.rating,
+                    sex: data.sex,
+                    type: data.type,
+                    email: data.email
+                },
+                avatar: resAvatar
+            })            
+        }
+
+        getInformation();
+    }, []);
+
+    async function saveChanges() {
+        if(!(changedData.email && changedData.nickName && (changedData.email !== selfInfo.info.email || changedData.nickName !== selfInfo.info.nickname))) {
+            return
+        }
+
+        console.log('try save')
+        fetch(`https://localhost:44358/api/account`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                commercialData: selfInfo.info.commercialData,
+                id: selfInfo.info.id,
+                nickname: changedData.nickName,
+                rating: selfInfo.info.rating,
+                sex: selfInfo.info.sex,
+                type: selfInfo.info.type,
+                email: changedData.email
+            }),
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(() => onClickBackButton());
     }
 
     function onClickBackButton() {
@@ -22,7 +76,7 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
     
     return <div className="right-bar-profile-map">
         <RightBarHeader title="Мой профиль" onClick={onClickBackButton} />
-        <ProfileBody />
-        <RightBarFooter title="Сохранить" onClick={temp} />
+        <ProfileBody data={selfInfo} changedData={changedData} setChangedData={setChangedData}/>
+        <RightBarFooter title="Сохранить" onClick={saveChanges} />
     </div>
 })
