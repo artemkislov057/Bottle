@@ -140,9 +140,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         }
     }
 
-    //args - maybe id partner
     function openPartnerChat(id : number) {
-        //request
         console.log(id)
         fetch(`https://localhost:44358/api/bottles/${id}/pick-up`, {
             method: 'POST',            
@@ -150,19 +148,22 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).then(res => props.openChat())
-        // props.openChat();
-        // props.openChat + maybe this args 
+        }).then(res => res.json().then(res => {
+            console.log(res);
+            let result = res as {dialogId : number}
+            props.openChat(result.dialogId);
+        }))
     }
 
     function tempLogin() {
-        fetch('https://localhost:44358/api/account/login', {
+        fetch('https://localhost:44358/api/account/', {
             method: 'POST',
             body: JSON.stringify({
-                "nickname": "secondUser",
+                "nickname": "Man",
                 "password": "000",
-                "email": "string",
-                "rememberMe": false
+                "email": "aaa",
+                "sex": 'false',
+                commercialData: null
             }),
             credentials: 'include',
             headers: {

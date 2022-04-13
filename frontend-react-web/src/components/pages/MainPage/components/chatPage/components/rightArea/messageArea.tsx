@@ -94,7 +94,9 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             let currentTime = new Date(collbackData.dateTime);
             let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
             
-            setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);
+            if(messages)
+                setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);
+            else setMessages([{messId:collbackData.id, time: time, type:'self', value:value}]);
         }
         console.log(value)
         

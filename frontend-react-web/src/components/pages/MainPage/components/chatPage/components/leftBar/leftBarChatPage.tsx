@@ -12,7 +12,8 @@ import { WsGetMessageType } from "components/pages/MainPage/WsGetMessageType";
 type TProps = {
     onClickOtherButton: Function,
     setCurrentDialog: React.Dispatch<React.SetStateAction<UserItem>>,
-    updateDialogsInfo: boolean
+    updateDialogsInfo: boolean,
+    openDialogId?: number
 }
 
 type UserItem = {
@@ -52,15 +53,21 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                     credentials: 'include'
                 });
                 let userAvatarBlob = await responseUserAvatar.blob();
-                let userAvatar = URL.createObjectURL(userAvatarBlob);
+                let userAvatar = URL.createObjectURL(userAvatarBlob);                
                 if(items) {
                     items.push({dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar});
                 } else {
                     items = [{dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar}];
                 }
+                if(props.openDialogId) {
+                    if(e.id === props.openDialogId) {
+                        console.log('заходит')
+                        onClickChatUserItem({dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar});
+                    }
+                }
             }
-            
-            items.sort((x,y) => _compareTime(x.dialogInfo.lastMessage.dateTime, y.dialogInfo.lastMessage.dateTime));
+
+            items.sort((x,y) => _compareTime(x.dialogInfo.lastMessage?.dateTime, y.dialogInfo.lastMessage?.dateTime));
             setChatUsers(items);
         }
 
@@ -73,6 +80,8 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
     }
 
     function _compareTime(time1 : string, time2 : string) {
+        if(time1 === undefined) return 1
+        if(time2 === undefined) return -1
         let date1 = new Date(time1).getTime();
         let date2 = new Date(time2).getTime();
         return date1 - date2 > 0 ? -1 : 0

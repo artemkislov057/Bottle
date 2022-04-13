@@ -10,7 +10,8 @@ import { UserInfoType } from "../../UserInfoType";
 import { WsGetMessageType } from "../../WsGetMessageType";
 
 type TProps = {
-    openMainLeftBar: React.MutableRefObject<() => void>
+    openMainLeftBar: React.MutableRefObject<() => void>,
+    openDialogId?: number
 }
 
 type WsAnswer = {
@@ -38,7 +39,7 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     }
     
     return <div className="chat-page-main">
-        <LeftBarChat onClickOtherButton={props.openMainLeftBar.current} setCurrentDialog={setCurrentDialog} updateDialogsInfo={updateDialogsInfo} />
+        <LeftBarChat onClickOtherButton={props.openMainLeftBar.current} setCurrentDialog={setCurrentDialog} updateDialogsInfo={updateDialogsInfo} openDialogId={props.openDialogId}/>
         <MessageAreaChat currentDialogData={currentDialog} newMessage={newMessage} updateDialogsInfo={updateDialogsInfo} setUpdateDialogsInfo={setUpdateDialogsInfo}/>{/*put <- currentChat*/}
     </div>
 })

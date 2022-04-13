@@ -38,7 +38,7 @@ export const MainPage:React.FC = React.memo(() => {
         </InterfaceButtonMainPage>
     )    
 
-    function openChatPage() {
+    function openChatPage(dialogId? : number) {
         setInterfaceMainPage(
             <InterfaceButtonMainPage 
                 backgroundState={setBackgroundGray} 
@@ -47,7 +47,7 @@ export const MainPage:React.FC = React.memo(() => {
                 openLeftMainBar={openLeftMainBar} >
             </InterfaceButtonMainPage>
         );
-        setChatPageContainer(<ChatPage openMainLeftBar={openLeftMainBar} />);
+        setChatPageContainer(<ChatPage openMainLeftBar={openLeftMainBar} openDialogId={dialogId}/>);
     }  
       
     function openMainPage() {
