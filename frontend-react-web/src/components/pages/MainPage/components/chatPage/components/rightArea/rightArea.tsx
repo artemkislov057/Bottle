@@ -39,7 +39,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
             )
         }
         
-    }, [props.currentDialogData])
+    }, [props.currentDialogData, props.newMessage, props.updateDialogsInfo])
     return <>
         {currentChat}
     </>

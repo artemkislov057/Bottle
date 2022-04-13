@@ -33,7 +33,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
                 credentials: 'include',
             });
             let allMessages = await responseMessages.json() as WsGetMessageType[];
-            console.log(selfId, 'свой id')
+
             let items : [{type: string, value:string, time: string, messId: number}];
             for(let e of allMessages) {
                 let messFrom = '';
@@ -53,7 +53,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
                     items = [{time: time, type: messFrom, value: e.value, messId: e.id}];
                 }
             }
-            console.log(allMessages)
+            // console.log(allMessages)
             setMessages(items);
         }
         getMessages();
@@ -65,8 +65,9 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
         allMessages[allMessages.length - 1].scrollIntoView();
     },[messages]);
 
-    useEffect(() => {        
+    useEffect(() => {  
         let newMessage = props.newMessage;
+
         let currentTime = new Date(newMessage?.dateTime);
         let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
         time = currentTime.toLocaleTimeString().slice(0, -3);
@@ -97,11 +98,9 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             if(messages)
                 setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);
             else setMessages([{messId:collbackData.id, time: time, type:'self', value:value}]);
+            props.setUpdateDialogsInfo(!props.updateDialogsInfo);
+            // console.log(value, 'отправилось')
         }
-        console.log(value)
-        
-        props.setUpdateDialogsInfo(!props.updateDialogsInfo);
-        
     }
 
     return <div className="chat-page-right-message-area">

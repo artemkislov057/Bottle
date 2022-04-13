@@ -38,7 +38,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                 credentials: 'include'
             });
             let dialogs = await responseDialogs.json() as WsDialogType[];            
-            console.log(dialogs);
+            // console.log(dialogs);
 
             let items : [{dialogInfo: WsDialogType, userInfo:UserInfoType, userAvatar: string}];
             for(let e of dialogs) {
@@ -53,7 +53,15 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                     credentials: 'include'
                 });
                 let userAvatarBlob = await responseUserAvatar.blob();
-                let userAvatar = URL.createObjectURL(userAvatarBlob);                
+                let userAvatar = URL.createObjectURL(userAvatarBlob);
+                
+                if(e.lastMessage) {
+                    if(e.lastMessage.value.length > 20) {
+                        e.lastMessage.value = `${e.lastMessage.value.substring(0,20)}...`;
+                    }
+                }
+                
+
                 if(items) {
                     items.push({dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar});
                 } else {
