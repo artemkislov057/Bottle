@@ -23,20 +23,22 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     const [currentDialog, setCurrentDialog] = useState(init);
     let newMessInit : WsGetMessageType;
     const [newMessage, setNewMessage] = useState(newMessInit);
+    const [updateDialogsInfo, setUpdateDialogsInfo] = useState(true);
 
-    ws.onmessage = (e) => { // надо как то обнвоялять демо при приходе новых сообщений
+    ws.onmessage = (e) => {
         let data = JSON.parse(e.data) as WsAnswer;
         console.log(data)
         if(data.eventNumber === 1) {
             if(data.model.dialogId === currentDialog?.dialogInfo.id) {
-                setNewMessage(data.model);
+                setNewMessage(data.model);                
             }
+            setUpdateDialogsInfo(!updateDialogsInfo);
         }
 
     }
     
     return <div className="chat-page-main">
-        <LeftBarChat onClickOtherButton={props.openMainLeftBar.current} setCurrentDialog={setCurrentDialog} />
-        <MessageAreaChat currentDialogData={currentDialog} newMessage={newMessage}/>{/*put <- currentChat*/}
+        <LeftBarChat onClickOtherButton={props.openMainLeftBar.current} setCurrentDialog={setCurrentDialog} updateDialogsInfo={updateDialogsInfo} />
+        <MessageAreaChat currentDialogData={currentDialog} newMessage={newMessage} updateDialogsInfo={updateDialogsInfo} setUpdateDialogsInfo={setUpdateDialogsInfo}/>{/*put <- currentChat*/}
     </div>
 })

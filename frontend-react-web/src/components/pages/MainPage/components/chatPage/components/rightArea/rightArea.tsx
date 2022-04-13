@@ -14,7 +14,9 @@ type TProps = {
         userInfo: UserInfoType;
         userAvatar: string;
     },
-    newMessage: WsGetMessageType,    
+    newMessage: WsGetMessageType,
+    setUpdateDialogsInfo: React.Dispatch<React.SetStateAction<boolean>>,
+    updateDialogsInfo: boolean
 }
 
 export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
@@ -32,7 +34,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                         name={props.currentDialogData?.userInfo.nickname} 
                         rating={props.currentDialogData?.userInfo.rating.value} 
                         urlAvatar={props.currentDialogData?.userAvatar} />
-                    <MessageArea currentDialogData={props.currentDialogData} newMessage={props.newMessage} />
+                    <MessageArea currentDialogData={props.currentDialogData} newMessage={props.newMessage} setUpdateDialogsInfo={props.setUpdateDialogsInfo} updateDialogsInfo={props.updateDialogsInfo}/>
                 </div>
             )
         }

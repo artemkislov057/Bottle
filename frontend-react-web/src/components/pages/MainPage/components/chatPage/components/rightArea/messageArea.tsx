@@ -11,11 +11,14 @@ type TProps = {
         userInfo: UserInfoType;
         userAvatar: string;
     },
-    newMessage: WsGetMessageType,    
+    newMessage: WsGetMessageType,
+    setUpdateDialogsInfo: React.Dispatch<React.SetStateAction<boolean>>,
+    updateDialogsInfo: boolean
 }
 
+
 export const MessageArea:React.FC<TProps> = React.memo((props) => {
-    let init : [{type: string, value:string, time: string, messId: number}];
+    let init : Array<{type: string, value:string, time: string, messId: number}>;
     const [messages, setMessages] = useState(init);    
 
     useEffect(() => {
@@ -42,6 +45,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
 
                 let currentTime = new Date(e.dateTime);
                 let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+                time = currentTime.toLocaleTimeString().slice(0, -3);
 
                 if(items) {
                     items.push({time: time, type: messFrom, value: e.value, messId: e.id});
@@ -61,19 +65,18 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
         allMessages[allMessages.length - 1].scrollIntoView();
     },[messages]);
 
-    useEffect(() => {
+    useEffect(() => {        
         let newMessage = props.newMessage;
         let currentTime = new Date(newMessage?.dateTime);
         let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
-        
+        time = currentTime.toLocaleTimeString().slice(0, -3);
         
         if(messages) {
-            //@ts-ignore
-            setMessages([...messages, {messId:newMessage?.id, time: time, type:'partner', value: newMessage?.value}]);////////////
+            setMessages([...messages, {messId:newMessage?.id, time: time, type:'partner', value: newMessage?.value}]);
         } else {
             setMessages([{messId:newMessage?.id, time: time, type:'partner', value: newMessage?.value}]);
         }
-            
+        
     }, [props.newMessage])
 
     async function onSendMessage(value: string) {
@@ -91,10 +94,12 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             let currentTime = new Date(collbackData.dateTime);
             let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
             
-            //@ts-ignore
-            setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);////////////
+            setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);
         }
         console.log(value)
+        
+        props.setUpdateDialogsInfo(!props.updateDialogsInfo);
+        
     }
 
     return <div className="chat-page-right-message-area">

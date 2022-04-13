@@ -7,10 +7,12 @@ import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 
 // import defaultAvatar from '../../../interfaceMainPage/components/rightBarProfile/defaultAvatar.svg';
 import defaultAvatar from '../newDefAvatar.svg'
+import { WsGetMessageType } from "components/pages/MainPage/WsGetMessageType";
 
 type TProps = {
     onClickOtherButton: Function,
-    setCurrentDialog: React.Dispatch<React.SetStateAction<UserItem>>
+    setCurrentDialog: React.Dispatch<React.SetStateAction<UserItem>>,
+    updateDialogsInfo: boolean
 }
 
 type UserItem = {
@@ -20,7 +22,7 @@ type UserItem = {
 }
 
 export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
-    let init: [{dialogInfo: WsDialogType, userInfo:UserInfoType, userAvatar: string}];
+    let init: Array<UserItem>;
     const [chatUsers, setChatUsers] = useState(init);//type maybe avatar, name, descr, maybe при нажатии на диалог нужно срать запрос, для этого надо какие то данные, мб тот же id бутылки или чата
 
     useEffect(() => {
@@ -57,15 +59,23 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                     items = [{dialogInfo: e, userInfo: userInfo, userAvatar: userAvatar}];
                 }
             }
+            
+            items.sort((x,y) => _compareTime(x.dialogInfo.lastMessage.dateTime, y.dialogInfo.lastMessage.dateTime));
             setChatUsers(items);
         }
 
         getChatUsers();
-    }, []);    
+    }, [props.updateDialogsInfo]);
 
     function onClickChatUserItem(data: UserItem) {
         props.setCurrentDialog(data);
         // console.log(data)
+    }
+
+    function _compareTime(time1 : string, time2 : string) {
+        let date1 = new Date(time1).getTime();
+        let date2 = new Date(time2).getTime();
+        return date1 - date2 > 0 ? -1 : 0
     }
 
     return <div className="chat-page-left-bar">
