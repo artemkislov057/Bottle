@@ -24,7 +24,7 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     let newMessInit : WsGetMessageType;
     const [newMessage, setNewMessage] = useState(newMessInit);
 
-    ws.onmessage = (e) => {        
+    ws.onmessage = (e) => { // надо как то обнвоялять демо при приходе новых сообщений
         let data = JSON.parse(e.data) as WsAnswer;
         console.log(data)
         if(data.eventNumber === 1) {

@@ -5,8 +5,6 @@ import { WsDialogType } from "components/pages/MainPage/WsDialogType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 import { WsGetMessageType } from "components/pages/MainPage/WsGetMessageType";
 
-const testMEss = 'ББББББББББББББББББББББББББББББББББББББББББББББББББББББББББББББББ Привет Привет ААААААААААА Привет Привет ААААААААААА Привет Привет ААААААААААА Привет Привет АААААААААААПривет Привет ААААААААААА Привет Привет АААААААААААПривет Привет ААААААААААА Привет Привет АААААААААААПривет Привет ААААААААААА Привет Привет АААААААААААПривет Привет ААААААААААА Привет Привет';
-
 type TProps = {
     currentDialogData: {
         dialogInfo: WsDialogType;
@@ -55,7 +53,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             setMessages(items);
         }
         getMessages();
-    }, [props]);
+    }, [props.currentDialogData]);
 
     useEffect(() => {//scroll to last message
         if(!messages) return
@@ -71,9 +69,9 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
         
         if(messages) {
             //@ts-ignore
-            setMessages([...messages, {messId:newMessage?.id, time: time, type:'self', value: newMessage?.value}]);////////////
+            setMessages([...messages, {messId:newMessage?.id, time: time, type:'partner', value: newMessage?.value}]);////////////
         } else {
-            setMessages([{messId:newMessage?.id, time: time, type:'self', value: newMessage?.value}]);
+            setMessages([{messId:newMessage?.id, time: time, type:'partner', value: newMessage?.value}]);
         }
             
     }, [props.newMessage])
