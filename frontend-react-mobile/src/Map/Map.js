@@ -16,8 +16,8 @@ export default function Map() {
                     longitudeDelta: 0.0421,
                 }}
             >
-                <PutMarker latitude='56.824' longitude = '60.621' />
-                <PutMarker latitude='56.852' longitude='60.654' />
+                <PutMarker latitude ={56.824} longitude ={60.621} />
+                <PutMarker latitude={56.852} longitude={60.654} />
             </MapView>
         </View>
     );
