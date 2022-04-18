@@ -6,8 +6,16 @@ import L from 'leaflet';
 import { Popup } from "react-leaflet";
 import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
 
+import commercMarker from './markerIcons/markerCommercIcon.svg';
+import hangMarker from './markerIcons/markerHangIcon.svg';
+import otherMarker from './markerIcons/markerOtherIcon.svg';
+import sportMarker from './markerIcons/markerSportIcon.svg';
+import acquainMarker from './markerIcons/markerAcquaintanceIcon.svg';
+
 import { ContextForSearch } from "../../contextForSearch";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
+
+ 
 
 type TProps = {
     address: string,
@@ -31,6 +39,14 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
 
     const {data, bottlesOnMap, setData, openDescriptionBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
     const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]); //созданные бутылки
+
+    const markerIcons: Map<string, string> = new Map();
+    markerIcons.set('Продажи', commercMarker);
+    markerIcons.set('Тусовки', hangMarker);
+    markerIcons.set('Знакомства', acquainMarker);
+    markerIcons.set('Спорт', sportMarker);
+    markerIcons.set('Прочее', otherMarker);
+
         
     // useMapEvent('click', (e) => {
     //     if(coord.length < 2) {
@@ -101,8 +117,14 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         {searchResultMarker}
         {bottlesOnMap.map(marker => {            
             if(marker.data.titleName !== '')
-                return <Marker key={marker.coordinates.toString()} position={marker.coordinates} eventHandlers={{click: (e) => {openDescriptionBar(marker.data)} } } />
+                return <Marker 
+                    key={marker.coordinates.toString()} 
+                    position={marker.coordinates} 
+                    eventHandlers={{click: (e) => {openDescriptionBar(marker.data)} } }
+                    icon={L.icon({iconUrl: markerIcons.get(marker.data.category), iconSize:[50,50]})}
+                    />
             }
+            
         )}
     </React.Fragment>
 })

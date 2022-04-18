@@ -18,11 +18,6 @@
     gap: 10px;
 }
 
-.right-bar-map-popup-body-title-icon {
-    width: 37px;
-    height: 37px;
-}
-
 .right-bar-map-popup-body-title {
     display: flex;
     align-items: center;
@@ -55,6 +50,16 @@
 
 .right-bar-map-popup-body-title.other {
     background: linear-gradient(91.83deg, #3BB532 24.57%, #87DF81 98.2%);
+}
+
+.right-bar-map-popup-body-title-icon {
+    width: 37px;
+    height: 37px;
+}
+
+.right-bar-map-popup-body-title.other .right-bar-map-popup-body-title-icon {
+    width: 34px;
+    height: 34px;
 }
 
 .right-bar-map-popup-body-info {
