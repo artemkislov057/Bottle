@@ -20,7 +20,7 @@ export const SelectCategory:React.FC<TProps> = React.memo((props) => {
 
     function changeCurrentCategory(current: string) {
         setCurtrentCategory(current);
-        if(props.setCategory)
+        if(props.setCategory)//временно
             props.setCategory(current);
         setCategoryList({list: <></>, isOpen: false});
     }

@@ -3,14 +3,48 @@ import { PopupBodyInfo } from "./popupBodyInfo";
 import { BodyTitle } from "./popupBodyTitle";
 import { BodyDescription } from "./popupBodyDescription";
 import { DataBottleDescType } from "components/pages/MainPage/DataBottleDescriptType";
-import categoryIcon from './categoryIconTusovki.svg';
+import categoryIconTest from './categoryIconTusovki.svg';
+
+import hangIcon from './popupHangIcon.svg'
+import acquaintanceIcon from './popupAcquaintanceIcon.svg';
+import otherIcon from './popupOtherIcon.svg';
+import sportIcon from './popupSportIcon.svg';
+import commercIcon from './popupCommercIcon.svg';
 
 type TProps = {
     data: DataBottleDescType    
 }
 
 export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
-    let addres = props.data.address.split(',').slice(0,2).toString();//
+    const [categoryIcon, setCategoryIcon] = useState('');
+    const [categoryType, setCategoryType] = useState('');
+
+    useEffect(() => {
+        switch(props.data.category) {
+            case 'Продажи':
+                setCategoryIcon(commercIcon);
+                setCategoryType('commerc');
+                break;
+            case 'Тусовки':
+                setCategoryIcon(hangIcon);
+                setCategoryType('hang');
+                break;
+            case 'Знакомства':
+                setCategoryIcon(acquaintanceIcon);
+                setCategoryType('acquaintance');
+                break;
+            case 'Спорт':
+                setCategoryIcon(sportIcon);
+                setCategoryType('sport');
+                break;
+            case 'Прочее':
+                setCategoryIcon(otherIcon);
+                setCategoryType('other');
+                break
+        }
+    }, [props.data])
+
+    let addres = props.data.address.split(',').slice(0,2).toString();// // мб надо состояние?
     let time = convertTime(props.data.timeLife);
 
     function convertTime(timeInSeconds : number) {
@@ -26,7 +60,7 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
     }
 
     return <div className="right-bar-map-popup-body">
-        <BodyTitle icon={categoryIcon} titleName={props.data.titleName}/>        
+        <BodyTitle icon={categoryIcon} titleName={props.data.titleName} category={categoryType}/>
         <div className="right-bar-map-popup-body-info">
             <PopupBodyInfo className="addres" title="Адрес:" value={addres}/>
             <PopupBodyInfo className="timeLeft" title="До конца мероприятия:" value={time}/>

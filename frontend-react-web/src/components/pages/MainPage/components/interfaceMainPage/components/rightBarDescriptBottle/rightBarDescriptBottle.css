@@ -18,6 +18,11 @@
     gap: 10px;
 }
 
+.right-bar-map-popup-body-title-icon {
+    width: 37px;
+    height: 37px;
+}
+
 .right-bar-map-popup-body-title {
     display: flex;
     align-items: center;
@@ -30,6 +35,26 @@
     font-weight: 500;
     color: #D5DCDF;
     background: linear-gradient(91.83deg, #7346AB 24.57%, #A35BFF 98.2%);
+}
+
+.right-bar-map-popup-body-title.commerc {
+    background: linear-gradient(91.83deg, #CC9D3A 24.57%, #E2BC6D 98.2%);
+}
+
+.right-bar-map-popup-body-title.hang {
+    background: linear-gradient(91.83deg, #7346AB 24.57%, #A35BFF 98.2%);
+}
+
+.right-bar-map-popup-body-title.acquaintance {
+    background: linear-gradient(91.83deg, #BB27C5 24.57%, #DD68E4 98.2%);
+}
+
+.right-bar-map-popup-body-title.sport {
+    background: linear-gradient(91.83deg, #3784BE 24.57%, #6CB3E9 98.2%);
+}
+
+.right-bar-map-popup-body-title.other {
+    background: linear-gradient(91.83deg, #3BB532 24.57%, #87DF81 98.2%);
 }
 
 .right-bar-map-popup-body-info {
