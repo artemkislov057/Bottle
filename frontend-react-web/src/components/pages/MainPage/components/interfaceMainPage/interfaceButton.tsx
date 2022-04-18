@@ -156,7 +156,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     function tempLogin() {
-        fetch('https://localhost:44358/api/account/', {
+        fetch('https://localhost:44358/api/account/login', {
             method: 'POST',
             body: JSON.stringify({
                 "nickname": "Man",
