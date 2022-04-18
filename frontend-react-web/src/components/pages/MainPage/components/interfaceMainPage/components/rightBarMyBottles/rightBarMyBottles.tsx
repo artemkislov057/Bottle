@@ -3,10 +3,11 @@ import './rightBarMyBottles.css'
 import { ListBottleItem } from "./listBottleItem";
 import { RightBarHeader } from "../rightBar/header";
 
-import commercIcon from './commercCategoryIcon.svg';
-import hangIcon from './hangoutCategoryIcon.svg';
-import meetIcon from './meetingCategoryIcon.svg';
-import sportIcon from './sportCategoryIcon.svg';
+import commercIcon from './categoryIcon/categoryCommercIcon.svg';
+import hangIcon from './categoryIcon/categoryHangIcon.svg';
+import meetIcon from './categoryIcon/categoryAcquaintanceIcon.svg';
+import sportIcon from './categoryIcon/categorySportIcon.svg';
+import otherIcon from './categoryIcon/categoryOtherIcon.svg';
 import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 
 type TProps = {
@@ -18,6 +19,13 @@ type TProps = {
 export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
     let init : Array<BottleRequestType>;
     const [currentBottles, setCurrentBottles] = useState(init);
+    
+    const categoryIcons: Map<string, string> = new Map();
+    categoryIcons.set('Продажи', commercIcon);
+    categoryIcons.set('Тусовки', hangIcon);
+    categoryIcons.set('Знакомства', meetIcon);
+    categoryIcons.set('Спорт', sportIcon);
+    categoryIcons.set('Прочее', otherIcon);
 
     useEffect(() => {
         async function getMyBottles() {
@@ -67,11 +75,12 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
                 } else {
                     demoDescr = bottle.description
                 }
+                let icon = categoryIcons.get(bottle.category);
                 return <ListBottleItem 
                     key={bottle.address + bottle.description}
                     title={bottle.title}
                     demoDescript={demoDescr}
-                    urlIcon={hangIcon}
+                    urlIcon={icon}
                     bottleData={bottle}
                     onClickDelete={deleteBottle}
                 />
