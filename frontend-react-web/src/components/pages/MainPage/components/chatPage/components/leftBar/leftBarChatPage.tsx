@@ -25,6 +25,7 @@ type UserItem = {
 export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
     let init: Array<UserItem>;
     const [chatUsers, setChatUsers] = useState(init);//type maybe avatar, name, descr, maybe при нажатии на диалог нужно срать запрос, для этого надо какие то данные, мб тот же id бутылки или чата
+    const [activeDialogId, setActiveDialogId] = useState(null);
 
     useEffect(() => {
         async function getChatUsers() {
@@ -83,6 +84,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
     }, [props.updateDialogsInfo]);
 
     function onClickChatUserItem(data: UserItem) {
+        setActiveDialogId(data.dialogInfo.id);
         props.setCurrentDialog(data);
         // console.log(data)
     }
@@ -104,7 +106,8 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                     name={userItem.userInfo.nickname} 
                     demoDescript={userItem.dialogInfo.lastMessage?.value}
                     urlAvatar={userItem.userAvatar}
-                    onClick={() => onClickChatUserItem(userItem)}/>
+                    onClick={() => onClickChatUserItem(userItem)}
+                    activeClass={userItem?.dialogInfo.id === activeDialogId ? 'active' : ''} />                    
                 )
             }            
         </div>

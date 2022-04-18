@@ -130,6 +130,10 @@
     /* background-color: chocolate; */
 }
 
+.chat-page-left-user-item.active {
+    background-color: #766AC8;
+}
+
 .chat-page-left-user-item:hover {
     background-color: #766AC8;
     cursor: pointer;
