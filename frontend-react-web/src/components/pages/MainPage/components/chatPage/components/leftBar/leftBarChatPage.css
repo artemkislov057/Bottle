@@ -139,6 +139,7 @@
 .chat-page-left-user-item-avatar {
     width: 65px;
     height: 65px;
+    border-radius: 10px;
 }
 
 .chat-page-left-user-item-info {

@@ -2,15 +2,18 @@ import React from "react";
 
 import { IconCategory } from "./iconCategory";
 import { InfoContainerTitle } from "./itemInfoContainerTitle";
-import { IconDelete } from "./iconDelete";
+import { DeleteButton } from "./DeleteButton";
 
 import changeIcon from '../leftBar/renameButtonIcon.svg';
 import deleteItemIcon from './deleteIcon.svg';
+import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 
 type TProps = {
     title: string
     demoDescript: string,
-    urlIcon: string
+    urlIcon: string,
+    bottleData: BottleRequestType,
+    onClickDelete: (bottleData: BottleRequestType) => void
 }
 
 export const ListBottleItem:React.FC<TProps> = React.memo((props) => {
@@ -22,6 +25,6 @@ export const ListBottleItem:React.FC<TProps> = React.memo((props) => {
                 {props.demoDescript}
             </div>
         </div>
-        <IconDelete />
+        <DeleteButton bottleData={props.bottleData} onClickDelete={props.onClickDelete}/>
     </div>
 })

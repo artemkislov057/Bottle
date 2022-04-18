@@ -6,7 +6,7 @@ import { HelpSearchContainer } from "./components/helpSearchContainer/helpSearch
 import { RightBarProfile } from "./components/rightBarProfile/rightBarProfile";
 import { RightBarMyBottles } from "./components/rightBarMyBottles/rightBarMyBottles";
 import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
-import { BottlesRequestArrayType } from "../../BottlesRequestArrayType";
+import { BottleRequestType } from "../../BottleRequestType";
 import { ws } from "components/connections/ws";
 import { WsDataType } from "../../WsDataType";
 import { wsOnCreateBottle } from "./components/wsCreateBottle";
@@ -51,7 +51,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             let res = await fetch('https://localhost:44358/api/bottles', {
                 credentials: 'include'
             })
-            let bottles = await res.json() as BottlesRequestArrayType;
+            let bottles = await res.json() as Array<BottleRequestType>;
             if(bottles.length < 1) {
                 return
             }
