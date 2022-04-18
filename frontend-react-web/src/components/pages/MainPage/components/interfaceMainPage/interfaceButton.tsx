@@ -10,6 +10,7 @@ import { BottleRequestType } from "../../BottleRequestType";
 import { ws } from "components/connections/ws";
 import { WsDataType } from "../../WsDataType";
 import { wsOnCreateBottle } from "./components/wsCreateBottle";
+import { SelectCategory } from "./components/selectCategory/selectCategory";
 
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 
@@ -173,14 +174,18 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
 
-    return <>        
+    return <div className="interface-button-container">
+        <div className="select-category-mainPage-input">
+            <SelectCategory />
+        </div>
+        
         <select className="filter-select-mainPage">            
             <option className="aaaa">Все</option>
             <option>Тусовки</option>
             <option>Продажи</option>
         </select>        
         
-        <div className="interfaceButton-search-field-with-otherButton">
+        <div className="interfaceButton-search-field-with-otherButton">        
             <button className="open-other-container-button" onClick={onClickOpenLeftBar}></button>
             {/* <SearchAddressControl /> */}
             <HelpSearchContainer />
@@ -197,5 +202,5 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         {rightbarProfileState}
         {rightBarMyBottles}
         {rightBarPopup}
-    </>
+    </div>
 })

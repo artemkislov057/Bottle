@@ -1,3 +1,7 @@
+.interface-button-container {
+    z-index: 400;
+}
+
 .profile-button-mainPage,
 .filter-select-mainPage, 
 .search-field-mainPage, 
@@ -34,6 +38,8 @@
     padding: 0 10px 0 10px;
     background-color: #212121;
     color: #D5DCDF99;
+
+    display: none;
 }
 
 .search-field-mainPage {
@@ -104,4 +110,15 @@
     width: 30px;
     border: 0;
     background: url('searchButton.svg') 50% 50% no-repeat;
+}
+
+.select-category-mainPage-input {    
+    position: fixed;
+    width: 200px;
+    height: 50px;
+    top: 30px;
+    left: 410px;
+    background-color: #212121;
+    border-radius: 10px;
+    z-index: inherit;
 }
