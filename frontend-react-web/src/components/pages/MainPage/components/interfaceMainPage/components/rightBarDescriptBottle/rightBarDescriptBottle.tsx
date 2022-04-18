@@ -34,7 +34,8 @@ export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
                 description: props.data.description,
                 timeLife: props.data.timeLife,
                 titleName:props.data.titleName,
-                bottleId: props.data.bottleId            
+                bottleId: props.data.bottleId,
+                category: props.data.category
             }}            
         />
         <RightBarFooter title="Откликнуться" onClick={() => props.onClickOpenDialog(props.data.bottleId)} />

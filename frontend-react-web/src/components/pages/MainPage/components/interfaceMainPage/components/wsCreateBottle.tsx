@@ -26,7 +26,8 @@ export const wsOnCreateBottle = (bottlesData : data) => {
                 description: data.model.description,
                 timeLife: data.model.lifeTime,
                 titleName: data.model.title,
-                bottleId: data.model.id
+                bottleId: data.model.id,
+                category: data.model.category
             }
             let coord = new LatLng(data.model.lat, data.model.lng);
             let newBottle = {coordinates: coord, data: currentBottleData}

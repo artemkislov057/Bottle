@@ -7,13 +7,16 @@ import sportIcon from './categorySportIcon.svg';
 import otherIcon from './categoryOtherIcon.svg';
 import acquaintanceIcon from './categoryAcquaintanceIcon.svg';
 
+type TProps = {
+    changeCategory: Function
+}
 
-export const CategoryList:React.FC = React.memo(() => {
+export const CategoryList:React.FC<TProps> = React.memo((props) => {
     return <div className="select-category-list-container">
-        <CategoryListItem titleName="Продажи" urlImage={commercIcon} />
-        <CategoryListItem titleName="Тусовки" urlImage={hangIcon} />
-        <CategoryListItem titleName="Знакомства" urlImage={acquaintanceIcon} />
-        <CategoryListItem titleName="Спорт" urlImage={sportIcon} />
-        <CategoryListItem titleName="Прочее" urlImage={otherIcon} />
+        <CategoryListItem titleName="Продажи" urlImage={commercIcon} category="Продажи" changeCategory={props.changeCategory} />
+        <CategoryListItem titleName="Тусовки" urlImage={hangIcon} category="Тусовки" changeCategory={props.changeCategory} />
+        <CategoryListItem titleName="Знакомства" urlImage={acquaintanceIcon} category="Знакомства" changeCategory={props.changeCategory} />
+        <CategoryListItem titleName="Спорт" urlImage={sportIcon} category="Спорт" changeCategory={props.changeCategory} />
+        <CategoryListItem titleName="Прочее" urlImage={otherIcon} category="Прочее" changeCategory={props.changeCategory} />
     </div>
 })

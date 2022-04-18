@@ -77,7 +77,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                         geoObjectName: null,
                         address: addressPlace[0].label,
                         description: data.description,
-                        category: 'Продажи',//
+                        category: data.category,//
                         lifeTime: data.timeLife,
                         maxPickingUp: data.countPick,
                         contentItemsCount: data.content?.length || 0,

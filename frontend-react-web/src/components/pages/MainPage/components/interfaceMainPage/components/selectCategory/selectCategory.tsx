@@ -2,16 +2,27 @@ import React, { useState } from 'react';
 import './selectCategory.css';
 import { CategoryList } from './categoryListContainer';
 
-export const SelectCategory:React.FC = React.memo(() => {
+type TProps = {
+    setCategory?: React.Dispatch<React.SetStateAction<string>>
+}
+
+export const SelectCategory:React.FC<TProps> = React.memo((props) => {
     const [currentCategory, setCurtrentCategory] = useState('Все категории');
     const [categoryList, setCategoryList] = useState({list: <></>, isOpen: false});
 
     function onClickCategoryContainer() {
         if(categoryList.isOpen) {
-            setCategoryList({list: <></>, isOpen: false})
+            setCategoryList({list: <></>, isOpen: false});
         } else {
-            setCategoryList({list: <CategoryList />, isOpen: true})
+            setCategoryList({list: <CategoryList changeCategory={changeCurrentCategory}/>, isOpen: true});
         }        
+    }
+
+    function changeCurrentCategory(current: string) {
+        setCurtrentCategory(current);
+        if(props.setCategory)
+            props.setCategory(current);
+        setCategoryList({list: <></>, isOpen: false});
     }
 
     return <div className='select-category-container'>

@@ -6,5 +6,6 @@ export type DataBottleDescType = {
     countPick: number,
     description: string,
     content: string[] | number[],
-    bottleId: number
+    bottleId: number,
+    category: string
 }

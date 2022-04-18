@@ -24,7 +24,8 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
         countPick:0,
         description:'',
         timeLife:0,
-        bottleId: -1
+        bottleId: -1,
+        category: 'Все категории'
     }
     const [bottleData, setBottleData] = useState(initObj);
 
@@ -42,8 +43,6 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
 
         setData(bottleData);
     }
-
-    
 
     return <div className="right-bar-map">
         <RightBarHeader onClick={onClickBackToMapButton} title='Создать записку'/>

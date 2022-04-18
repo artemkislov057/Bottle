@@ -39,7 +39,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         countPick:0,
         description: null,
         timeLife:0,
-        bottleId: -1
+        bottleId: -1,
+        category: 'Все категории'
     }
     const [dataBottleDescription, setDataBottleDesc] = useState(initObj);
 
@@ -66,7 +67,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     description: e.description,
                     timeLife: e.lifeTime,
                     titleName: e.title,
-                    bottleId: e.id
+                    bottleId: e.id,
+                    category: e.category
                 }
                 if (newBottles[0] === null) {
                     newBottles = [{coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}];

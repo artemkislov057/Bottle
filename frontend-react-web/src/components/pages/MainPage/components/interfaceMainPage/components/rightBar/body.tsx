@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { DataBottleDescType } from "components/pages/MainPage/DataBottleDescriptType";
 
@@ -14,10 +14,16 @@ type TProps = {
     setBottleData: React.Dispatch<React.SetStateAction<DataBottleDescType>>
 }
 
-export const RightBarBody:React.FC<TProps> = React.memo((props) => {    
+export const RightBarBody:React.FC<TProps> = React.memo((props) => {
+    const [currentCategory, setCurrentCategory] = useState('Все категории');
+
+    useEffect(() => {
+        props.setBottleData({...props.bottleData, category: currentCategory});
+    }, [currentCategory])
+
     return <form id="right-bar-map-body-form" className="right-bar-map-body" onSubmit={(e) => { e.preventDefault(); props.onSubmit() }}>
         <BottleNameContainer bottleData={props.bottleData} setBottleData={props.setBottleData}/>
-        <CategoryContainer />
+        <CategoryContainer setCategory={setCurrentCategory}/>
         <DescriptionContainer bottleData={props.bottleData} setBottleData={props.setBottleData} />
         <SettingContainer bottleData={props.bottleData} setBottleData={props.setBottleData} />
         <PhotosContainer bottleData={props.bottleData} setBottleData={props.setBottleData} />

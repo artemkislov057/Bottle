@@ -10,7 +10,8 @@ let initData: DataBottleDescType = {
     countPick:0,
     description:'',
     timeLife:0,
-    bottleId: -1
+    bottleId: -1,
+    category: 'Все категории'
 }
 
 let a : React.Dispatch<React.SetStateAction<DataBottleDescType>> = function(){};
