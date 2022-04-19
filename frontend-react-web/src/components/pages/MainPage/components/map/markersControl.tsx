@@ -14,6 +14,7 @@ import acquainMarker from './markerIcons/markerAcquaintanceIcon.svg';
 
 import { ContextForSearch } from "../../contextForSearch";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
+import { DataBottleDescType } from "../../DataBottleDescriptType";
 
  
 
@@ -39,6 +40,17 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
 
     const {data, bottlesOnMap, setData, openDescriptionBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
     const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]); //созданные бутылки
+    
+    let initObj : DataBottleDescType = {
+        titleName:'',
+        address:'',
+        content: null,
+        countPick:0,
+        description: null,
+        timeLife:0,
+        bottleId: -1,
+        category: 'Все категории'
+    }
 
     const markerIcons: Map<string, string> = new Map();
     markerIcons.set('Продажи', commercMarker);
@@ -73,6 +85,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     }, [latLngForSearch])
 
     useEffect(() => { // создание бутылки
+        console.log(data)
         if(data.titleName !== '') {
             map.on('click', async (e : LeafletMouseEvent) => {
                 let provider = new OpenStreetMapProvider();
@@ -102,7 +115,8 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                     headers: {
                         'Content-type': 'application/json'
                     }
-                })
+                });
+                setData(initObj)
             })            
         }
     }, [data])
