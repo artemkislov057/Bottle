@@ -175,7 +175,6 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         })
     }
 
-
     return <div className="interface-button-container">
         <div className="select-category-mainPage-input">
             <SelectCategory />

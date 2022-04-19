@@ -26,6 +26,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
     let init: Array<UserItem>;
     const [chatUsers, setChatUsers] = useState(init);//type maybe avatar, name, descr, maybe при нажатии на диалог нужно срать запрос, для этого надо какие то данные, мб тот же id бутылки или чата
     const [activeDialogId, setActiveDialogId] = useState(null);
+    const [searchValue, setSearchValue] = useState('');
 
     useEffect(() => {
         async function getChatUsers() {
@@ -98,17 +99,20 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
     }
 
     return <div className="chat-page-left-bar">
-        <HeaderLeftBarChat onClickOtherButton={props.onClickOtherButton}/>{/*сделать поиск*/}
+        <HeaderLeftBarChat onClickOtherButton={props.onClickOtherButton} searchValue={searchValue} setSearchValue={setSearchValue}/>{/*сделать поиск*/}
         <div className="chat-page-left-user-items">
-            {chatUsers?.map(userItem => 
-                <ChatUserItem 
+            {chatUsers?.map(userItem => {
+                if (searchValue !== '' && !userItem.userInfo.nickname.toLowerCase().includes(searchValue.toLowerCase())) {
+                    return null;
+                }
+                return <ChatUserItem 
                     key={userItem?.dialogInfo.id}
                     name={userItem.userInfo.nickname} 
                     demoDescript={userItem.dialogInfo.lastMessage?.value}
                     urlAvatar={userItem.userAvatar}
                     onClick={() => onClickChatUserItem(userItem)}
-                    activeClass={userItem?.dialogInfo.id === activeDialogId ? 'active' : ''} />                    
-                )
+                    activeClass={userItem?.dialogInfo.id === activeDialogId ? 'active' : ''} />
+            })
             }            
         </div>
     </div>
