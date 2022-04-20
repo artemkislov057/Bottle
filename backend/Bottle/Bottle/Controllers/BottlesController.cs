@@ -155,6 +155,7 @@ namespace Bottle.Controllers
                 bottle.IsContentLoaded = true;
                 await WebSocketController.OnCreatingBottle(db.GetBottleModel(bottle));
             }
+            db.SaveChanges();
             return Ok();
         }
 
