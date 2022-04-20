@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './interfaceButton.css';
 import { LeftBar } from "./components/leftBar/leftBar";
 import { RightBar } from "./components/rightBar/rightBar";
@@ -11,6 +11,7 @@ import { ws } from "components/connections/ws";
 import { WsDataType } from "../../WsDataType";
 import { wsOnCreateBottle } from "./components/wsCreateBottle";
 import { SelectCategory } from "./components/selectCategory/selectCategory";
+import { WsEventContext } from "../../contextWsEvents";
 
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 
@@ -21,7 +22,7 @@ type TProps = {
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
     openChat: Function,
     openMap: Function,
-    openLeftMainBar: React.MutableRefObject<() => void>
+    openLeftMainBar: React.MutableRefObject<() => void>,    
 }
 
 export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
@@ -31,6 +32,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
     const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup];
+    const wsEvent = useContext(WsEventContext);
 
     // let initObj : DataBottleDescType = {
     //     titleName:'',
@@ -76,16 +78,11 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     address: e.address,
                     contentIds: e.contentIds,
                     contentItemsCount: e.contentIds?.length,
-                    // content: e.contentIds,
                     pickingUp: e.maxPickingUp - e.pickingUp,
-                    // countPick: e.maxPickingUp - e.pickingUp,
                     description: e.description,
                     lifeTime: e.lifeTime,
-                    // timeLife: e.lifeTime,
-                    // titleName: e.title,
                     title: e.title,
                     id: e.id,
-                    // bottleId: e.id,
                     category: e.category
                 }
                 if (newBottles[0] === null) {
@@ -102,8 +99,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         return () => setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}])
     }, [props.children]);//
 
-    wsOnCreateBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap});
-    
+    useEffect(() => {
+        wsOnCreateBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap}, wsEvent);
+    }, [wsEvent]);    
+       
     useEffect(() => {//for chat?
         props.openLeftMainBar.current = onClickOpenLeftBar
     }, [])

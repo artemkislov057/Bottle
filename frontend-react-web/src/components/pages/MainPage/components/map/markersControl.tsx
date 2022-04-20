@@ -96,11 +96,11 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                 let pos = e.latlng;
                 let addressPlace = await provider.search({query:`${pos.lat}, ${pos.lng}`});
                 // setCurrentBottles([...currentBottles, {coordinates:pos, data: {...data, address:addressPlace[0].label}}])
-                console.log(addressPlace[0].label);
+                // console.log(addressPlace[0].label);
 
                 map.removeEventListener('click');
 
-                console.log(data);
+                // console.log(data);
                 let responseCreate = await fetch('https://localhost:44358/api/bottles', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -121,7 +121,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                     }
                 });
                 let bottleData = await responseCreate.json() as BottleRequestType;                
-                console.log(bottleData)
+                // console.log(bottleData)
                 if(data.content) {
                     for (let urlPhoto of data.content) {
                         // console.log(urlPhoto)

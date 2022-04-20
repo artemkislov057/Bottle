@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './chatPage.css';
 
 import { LeftBar } from "../interfaceMainPage/components/leftBar/leftBar";
@@ -8,10 +8,11 @@ import { ws } from "components/connections/ws";
 import { WsDialogType } from "../../WsDialogType";
 import { UserInfoType } from "../../UserInfoType";
 import { WsGetMessageType } from "../../WsGetMessageType";
+import { WsEventContext } from "../../contextWsEvents";
 
 type TProps = {
     openMainLeftBar: React.MutableRefObject<() => void>,
-    openDialogId?: number
+    openDialogId?: number,    
 }
 
 type WsAnswer = {
@@ -25,19 +26,24 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     let newMessInit : WsGetMessageType;
     const [newMessage, setNewMessage] = useState(newMessInit);
     const [updateDialogsInfo, setUpdateDialogsInfo] = useState(true);
-    
-    ws.onmessage = (e) => {
-        let data = JSON.parse(e.data) as WsAnswer;
-        // console.log(data)
-        if(data.eventNumber === 1) {            
+    const wsEvent = useContext(WsEventContext);
+        
+    useEffect(() => {
+        if(!wsEvent)return
+        let data = JSON.parse(wsEvent.data) as WsAnswer;
+        if(data.eventNumber === 1) {
+            console.log(data)
             if(data.model.dialogId === currentDialog?.dialogInfo.id) {
                 setNewMessage(data.model);      
             }
             setUpdateDialogsInfo(!updateDialogsInfo);
         }
-
         //добавить обновление диалогов при появлении нового диалога
-    }
+    }, [wsEvent]);
+
+    useEffect(() => {
+        console.log('меняется')
+    }, [updateDialogsInfo])
         
     return <div className="chat-page-main">
         <LeftBarChat onClickOtherButton={props.openMainLeftBar.current} setCurrentDialog={setCurrentDialog} updateDialogsInfo={updateDialogsInfo} openDialogId={props.openDialogId}/>

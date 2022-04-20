@@ -15,8 +15,9 @@ type data = {
     }[]>>
 }
 
-export const wsOnCreateBottle = (bottlesData : data) => {
-    ws.onmessage = (e) => {
+export const wsOnCreateBottle = (bottlesData : data, e: MessageEvent<any>) => {    
+    // ws.onmessage = (e) => {
+        if(!e) return
         console.log(e)
         let data = JSON.parse(e.data) as WsDataType;
         let info = data.model;
@@ -49,5 +50,5 @@ export const wsOnCreateBottle = (bottlesData : data) => {
             }
             
         }
-    }
+    // }
 }
