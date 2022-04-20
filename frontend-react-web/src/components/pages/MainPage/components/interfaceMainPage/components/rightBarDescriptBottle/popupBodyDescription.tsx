@@ -12,10 +12,12 @@ export const BodyDescription:React.FC<TProps> = React.memo((props) => {
     useEffect(() => {
         if(props.content[0]) {
             setContent(
-                <div className="right-bar-map-popup-body-description-content">
+                <div className="right-bar-map-popup-body-description-content" onWheel={e => document.querySelector('.right-bar-map-popup-body-description-content').scrollLeft += e.deltaY / 4}>
                     {props.content.map((data, index) => 
-                        <img key={data+index} className="right-bar-map-popup-body-description-content-photo" src={data} alt="фотография" />
-                        )}            
+                        <div key={data+index} className="right-bar-map-popup-body-description-content-container">
+                            <img className="right-bar-map-popup-body-description-content-photo" src={data} alt="фотография" />
+                        </div>   
+                    )}     
                 </div>
             )
         } else {
