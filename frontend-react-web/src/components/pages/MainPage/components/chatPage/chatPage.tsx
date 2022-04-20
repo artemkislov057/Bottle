@@ -31,13 +31,17 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     useEffect(() => {
         if(!wsEvent)return
         let data = JSON.parse(wsEvent.data) as WsAnswer;
-        if(data.eventNumber === 1) {
+        if(data.eventNumber === 1) { //new message
             console.log(data)
             if(data.model.dialogId === currentDialog?.dialogInfo.id) {
                 setNewMessage(data.model);      
             }
             setUpdateDialogsInfo(!updateDialogsInfo);
         }
+        if(data.eventNumber === 4 || data.eventNumber === 2) { //появился новый диалог
+            setUpdateDialogsInfo(!updateDialogsInfo);
+        }
+            
         //добавить обновление диалогов при появлении нового диалога
     }, [wsEvent]);
 

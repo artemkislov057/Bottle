@@ -15,7 +15,7 @@ type data = {
     }[]>>
 }
 
-export const wsOnCreateBottle = (bottlesData : data, e: MessageEvent<any>) => {    
+export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {    
     // ws.onmessage = (e) => {
         if(!e) return
         console.log(e)
@@ -49,6 +49,19 @@ export const wsOnCreateBottle = (bottlesData : data, e: MessageEvent<any>) => {
                 bottlesData.setBotMap([...bottlesData.bottleOnMap, newBottle])
             }
             
+        }
+        if(data.eventNumber === 5 || data.eventNumber === 6) {
+            let deleteIndex = -1;
+            bottlesData.bottleOnMap.forEach((e, index) => {
+                if(e.data?.id === data.model?.id) {
+                    deleteIndex = index;
+                    return;
+                }
+            });
+            if(deleteIndex === -1) return;
+            let tempBottles = bottlesData.bottleOnMap.slice();
+            tempBottles.splice(deleteIndex, 1);
+            bottlesData.setBotMap(tempBottles);
         }
     // }
 }

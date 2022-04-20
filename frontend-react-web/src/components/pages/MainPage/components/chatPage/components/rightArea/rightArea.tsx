@@ -111,8 +111,9 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                 props.setCurrentDialog(null);
                 setCurrentChat(initRigthArea)
                 // setRateModal(<></>);
-                rateModal.current = <></>;
-            }  
+                rateModal.current = <></>;                
+            }
+            setRateValue(init);
         }
 
         responseRatePartner();

@@ -9,7 +9,7 @@ import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker
 import { BottleRequestType } from "../../BottleRequestType";
 import { ws } from "components/connections/ws";
 import { WsDataType } from "../../WsDataType";
-import { wsOnCreateBottle } from "./components/wsCreateBottle";
+import { wsBottle } from "./components/wsBottle";
 import { SelectCategory } from "./components/selectCategory/selectCategory";
 import { WsEventContext } from "../../contextWsEvents";
 
@@ -54,6 +54,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     //useEffect для обновления состояния ^ при перезагрузке стр
 
     useEffect(() => { // при обновлении стр получение всех бутылок
+        if(!props.children) return;
         async function getAllBottles() {
             let res = await fetch('https://localhost:44358/api/bottles', {
                 credentials: 'include'
@@ -100,7 +101,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }, [props.children]);//
 
     useEffect(() => {
-        wsOnCreateBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap}, wsEvent);
+        wsBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap}, wsEvent);
     }, [wsEvent]);    
        
     useEffect(() => {//for chat?
