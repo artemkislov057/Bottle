@@ -32,13 +32,16 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
     const leftRightBarsStates = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup];
-    const wsEvent = useContext(WsEventContext);    
+    const wsEvent = useContext(WsEventContext);
+    const[currentFilterCategory, setcurrentFilterCategory] = useState('Все категории');
 
     let initObj : BottleRequestType;
     let initObjForSelfCreate : DataBottleDescType;
     const [dataBottleDescription, setDataBottleDesc] = useState(initObjForSelfCreate);
 
-    const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}])
+    const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
+    const [constBottlesOnMap, setConstBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
+
     //состояние с бутылками, которые уже есть на карте -> обновляется через вебсокеты или при создании клиентом бутылки
     //useEffect для обновления состояния ^ при перезагрузке стр
 
@@ -81,6 +84,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     newBottles.push({coordinates: new LatLng(e.lat, e.lng), data: currentBottleData});
                 }
             }
+            setConstBottlesOnMap(newBottles);
             setBottlesOnMap(newBottles);
         }
         console.log('update')
@@ -90,7 +94,23 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }, [props.children]);//
 
     useEffect(() => {
-        wsBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap}, wsEvent);
+        if(!currentFilterCategory) return;
+        if(currentFilterCategory === 'Все категории') {
+            setBottlesOnMap(constBottlesOnMap);
+            return;
+        }
+        let filteredBottles = [];
+        for(let e of constBottlesOnMap) {
+            if(e.data?.category === currentFilterCategory) {
+                filteredBottles.push(e);
+            }
+        }
+        setBottlesOnMap(filteredBottles);
+
+    }, [currentFilterCategory])
+
+    useEffect(() => {
+        wsBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap, constBotMap: constBottlesOnMap, setConstBottle: setConstBottlesOnMap, currentCategory: currentFilterCategory}, wsEvent);
     }, [wsEvent]);    
        
     useEffect(() => {//for chat?
@@ -169,7 +189,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             }
         }).then(res => res.json().then(res => {
             console.log(res);
-            let result = res as {dialogId : number}
+            let result = res as {dialogId : number};
             props.openChat(result.dialogId);
         }))
     }
@@ -193,7 +213,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
 
     return <div className="interface-button-container">
         <div className="select-category-mainPage-input">
-            <SelectCategory />
+            <SelectCategory currentCategory={currentFilterCategory} setCategory={setcurrentFilterCategory}/>
         </div>
         
         <select className="filter-select-mainPage">            

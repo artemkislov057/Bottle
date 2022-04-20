@@ -12,7 +12,16 @@ type data = {
     setBotMap: React.Dispatch<React.SetStateAction<{
         data: BottleRequestType;
         coordinates: LatLng;
-    }[]>>
+    }[]>>,
+    constBotMap: {
+        data: BottleRequestType;
+        coordinates: LatLng;
+    }[],
+    setConstBottle:React.Dispatch<React.SetStateAction<{
+        data: BottleRequestType;
+        coordinates: LatLng;
+    }[]>>,
+    currentCategory: string
 }
 
 export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {    
@@ -46,7 +55,9 @@ export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {
             let newBottle = {coordinates: coord, data: currentBottleData}
             if(!bottlesData.bottleOnMap.includes(newBottle)) {
                 console.log('yes')
-                bottlesData.setBotMap([...bottlesData.bottleOnMap, newBottle])
+                if(bottlesData.currentCategory === newBottle.data.category || bottlesData.currentCategory === 'Все категории')
+                    bottlesData.setBotMap([...bottlesData.bottleOnMap, newBottle]);
+                bottlesData.setConstBottle([...bottlesData.constBotMap, newBottle]);
             }
             
         }
@@ -58,10 +69,23 @@ export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {
                     return;
                 }
             });
+            if(deleteIndex !== -1) {
+                let tempBottles = bottlesData.bottleOnMap.slice();
+                tempBottles.splice(deleteIndex, 1);
+                bottlesData.setBotMap(tempBottles);    
+            }            
+
+            deleteIndex = -1;
+            bottlesData.constBotMap.forEach((e, index) => {
+                if(e.data?.id === data.model?.id) {
+                    deleteIndex = index;
+                    return;
+                }
+            });
             if(deleteIndex === -1) return;
-            let tempBottles = bottlesData.bottleOnMap.slice();
+            let tempBottles = bottlesData.constBotMap.slice();
             tempBottles.splice(deleteIndex, 1);
-            bottlesData.setBotMap(tempBottles);
+            bottlesData.setConstBottle(tempBottles);
         }
     // }
 }

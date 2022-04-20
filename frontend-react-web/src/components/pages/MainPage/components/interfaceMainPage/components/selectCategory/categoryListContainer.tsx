@@ -13,6 +13,7 @@ type TProps = {
 
 export const CategoryList:React.FC<TProps> = React.memo((props) => {
     return <div className="select-category-list-container">
+        <CategoryListItem titleName="Все категории" urlImage={otherIcon} category="Все категории" changeCategory={props.changeCategory} />
         <CategoryListItem titleName="Продажи" urlImage={commercIcon} category="Продажи" changeCategory={props.changeCategory} />
         <CategoryListItem titleName="Тусовки" urlImage={hangIcon} category="Тусовки" changeCategory={props.changeCategory} />
         <CategoryListItem titleName="Знакомства" urlImage={acquaintanceIcon} category="Знакомства" changeCategory={props.changeCategory} />
