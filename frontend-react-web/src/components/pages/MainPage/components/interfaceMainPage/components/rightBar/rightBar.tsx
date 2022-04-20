@@ -12,7 +12,8 @@ import { OpenStreetMapProvider } from "leaflet-geosearch";
 import L from "leaflet";
 
 type TProps = {
-    setStateRightBar: React.Dispatch<React.SetStateAction<JSX.Element>>
+    setStateRightBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
+    disableBackgroundGray: Function,
 }
 
 export const RightBar:React.FC<TProps> = React.memo((props) => {
@@ -31,6 +32,7 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
 
     function onClickBackToMapButton() {
         props.setStateRightBar(<></>);
+        props.disableBackgroundGray();
     }
 
     function findPlaceForBottle() {

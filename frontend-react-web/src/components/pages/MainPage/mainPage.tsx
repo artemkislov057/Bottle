@@ -64,7 +64,7 @@ export const MainPage:React.FC = React.memo(() => {
             <WsEventContext.Provider value={wsEvent}>
                 {interfaceMainPageContainer}
                 {chatPageContainer}
-                {/* {backgroundGray} */}
+                {backgroundGray}
             </WsEventContext.Provider>            
         </ContextForSearch.Provider>    
     </>

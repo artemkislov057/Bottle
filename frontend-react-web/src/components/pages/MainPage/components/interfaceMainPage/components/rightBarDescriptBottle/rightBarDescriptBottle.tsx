@@ -14,6 +14,7 @@ const tempLine = 'Описание описаниеОписание описан
 
 type TProps = {
     setSelfState: React.Dispatch<React.SetStateAction<JSX.Element>>,
+    disableBackgroundGray: Function,
     data: BottleRequestType,
     onClickOpenDialog: Function,
 }
@@ -21,6 +22,7 @@ type TProps = {
 export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
     function onClickBackToMap() {
         props.setSelfState(<></>);
+        props.disableBackgroundGray()
     }
     
     return <div className="right-bar-map-popup-bottle">
