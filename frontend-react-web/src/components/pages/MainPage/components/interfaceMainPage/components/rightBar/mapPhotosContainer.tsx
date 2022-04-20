@@ -1,5 +1,5 @@
 import { DataBottleDescType } from "components/pages/MainPage/DataBottleDescriptType";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AddPhotoButton } from "./addPhotosInBottle";
 
 type TProps = {
@@ -11,26 +11,45 @@ export const PhotosContainer:React.FC<TProps> = React.memo((props) => {
     let init : Array<string>;
     let [photos, setPhotos] = useState(init)
 
-    function onAddPhoto(e: React.ChangeEvent<HTMLInputElement>) {
-        let photo = e.target.files[0];
-        console.log(photo)
-        let fr = new FileReader();
-        fr.readAsDataURL(photo);
+    async function onAddPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+        console.log(e.target.files)
+        let resCurrentPhotos = Array<string>();
+        let resSendPhotos = Array<File>();
         
-        fr.onload = (event) => {
+        let photosArray = [];
+
+        let addPhotos = e.target.files;
+        for(let i = 0; i < addPhotos.length; i++) {
+            photosArray.push(addPhotos[i]);
+        }
+        
+        let fr = new FileReader();
+        
+        for(let el of photosArray) {
+            let currentPhoto = el;
+            resSendPhotos.push(currentPhoto);
+            
+            fr = new FileReader()
+            fr.onload = (event) => {
+                 resCurrentPhotos.push(event.target.result.toString());
+            }
+            fr.readAsDataURL(currentPhoto);
+        }
+        
+        fr.onloadend = e => {
+            console.log('finis loaded');
             if(!photos) {
-                setPhotos([event.target.result.toString()]);
+                setPhotos(resCurrentPhotos);
             } else {
-                setPhotos([...photos, event.target.result.toString()]);                
+                setPhotos([...photos, ...resCurrentPhotos]);                
             }
         }
 
         if(props.bottleData.content) {
-            props.setBottleData({...props.bottleData, content: [...props.bottleData.content, photo]});
+            props.setBottleData({...props.bottleData, content: [...props.bottleData.content, ...resSendPhotos]});
         } else {
-            props.setBottleData({...props.bottleData, content: [photo]});
+            props.setBottleData({...props.bottleData, content: resSendPhotos});
         }
-        console.log(props.bottleData?.content);
     }
 
     function onDeletePhoto(photo: string) {       
