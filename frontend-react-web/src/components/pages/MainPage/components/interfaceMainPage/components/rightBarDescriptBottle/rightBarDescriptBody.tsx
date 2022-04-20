@@ -10,14 +10,43 @@ import acquaintanceIcon from './popupAcquaintanceIcon.svg';
 import otherIcon from './popupOtherIcon.svg';
 import sportIcon from './popupSportIcon.svg';
 import commercIcon from './popupCommercIcon.svg';
+import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 
 type TProps = {
-    data: DataBottleDescType    
+    data: BottleRequestType    
 }
 
 export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
     const [categoryIcon, setCategoryIcon] = useState('');
     const [categoryType, setCategoryType] = useState('');
+    const [photosContent, setPhotosContent] = useState(['']);
+
+    useEffect(() => {
+        async function getPhotos() {
+            console.log(props.data)
+            if(!props.data || !props.data.contentIds || !props.data.isContentLoaded) {
+                setPhotosContent([''])
+                return;
+            }
+
+            let resultPhotosContent = Array<string>();
+            for(let e of props.data.contentIds) {
+                let response = await fetch(`https://localhost:44358/api/bottles/${props.data.id}/content/${e}`, {                    
+                    credentials: "include"
+                });
+
+                let blobImage = await response.blob();
+                let resImage = URL.createObjectURL(blobImage);
+                console.log(resImage)
+                resultPhotosContent.push(resImage);
+            }
+            // console.log(resultPhotosContent)
+            setPhotosContent(resultPhotosContent);
+        }
+
+        getPhotos();
+    }, [props.data, props.data.id])
+
 
     useEffect(() => {
         switch(props.data.category) {
@@ -40,12 +69,17 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
             case 'Прочее':
                 setCategoryIcon(otherIcon);
                 setCategoryType('other');
-                break
+                break;
+            default:
+                setCategoryIcon(otherIcon);
+                setCategoryType('other');
+                break;
+
         }
     }, [props.data])
 
     let addres = props.data.address.split(',').slice(0,2).toString();// // мб надо состояние?
-    let time = convertTime(props.data.timeLife);
+    let time = convertTime(props.data.lifeTime);
 
     function convertTime(timeInSeconds : number) {
         let minutes = (timeInSeconds / 60).toFixed(0);
@@ -60,12 +94,12 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
     }
 
     return <div className="right-bar-map-popup-body">
-        <BodyTitle icon={categoryIcon} titleName={props.data.titleName} category={categoryType}/>
+        <BodyTitle icon={categoryIcon} titleName={props.data.title} category={categoryType}/>
         <div className="right-bar-map-popup-body-info">
             <PopupBodyInfo className="addres" title="Адрес:" value={addres}/>
             <PopupBodyInfo className="timeLeft" title="До конца мероприятия:" value={time}/>
-            <PopupBodyInfo className="pickCount" title="Осталось мест:" value={props.data.countPick} />            
+            <PopupBodyInfo className="pickCount" title="Осталось мест:" value={props.data.pickingUp} />
         </div>
-        <BodyDescription description={props.data.description} content={props.data.content} />
+        <BodyDescription description={props.data.description} content={photosContent} bottleId={props.data.id} />
     </div>
 })

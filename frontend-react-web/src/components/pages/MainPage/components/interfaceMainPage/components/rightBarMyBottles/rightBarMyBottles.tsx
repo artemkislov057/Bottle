@@ -26,6 +26,7 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
     categoryIcons.set('Знакомства', meetIcon);
     categoryIcons.set('Спорт', sportIcon);
     categoryIcons.set('Прочее', otherIcon);
+    categoryIcons.set('Все категории', otherIcon);
 
     useEffect(() => {
         async function getMyBottles() {

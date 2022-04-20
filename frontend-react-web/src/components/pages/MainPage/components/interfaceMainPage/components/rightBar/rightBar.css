@@ -93,6 +93,17 @@
     resize: none;
     height: 250px;
     font-size: 16px;
+    outline: none;
+}
+
+.right-bar-map-description-textArea::-webkit-scrollbar {    
+    background-color: #373839;
+    width: 6px;    
+}
+
+.right-bar-map-description-textArea::-webkit-scrollbar-thumb {
+    background-color: #212121;
+    border-radius: 8px;    
 }
 
 .right-bar-map-setting-container {
@@ -132,6 +143,36 @@
 
 .right-bar-map-add-photos-input {
     display: none;
+}
+
+.right-bar-map-photos-add-photos {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+
+    -webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+    -webkit-user-drag: none;
+
+}
+
+.right-bar-map-photos-add-photos::-webkit-scrollbar {    
+    background-color: #212121;
+    height: 8px;
+}
+
+.right-bar-map-photos-add-photos::-webkit-scrollbar-thumb {
+    background-color: #373839;
+    border-radius: 8px;    
+}
+
+.right-bar-map-photos-add-photo {
+    max-width: 120px;
+    height: 80px;
 }
 
 .right-bar-map-footer {

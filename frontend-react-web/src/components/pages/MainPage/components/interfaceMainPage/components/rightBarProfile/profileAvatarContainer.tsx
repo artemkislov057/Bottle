@@ -18,6 +18,9 @@ export const ProfileAvatarContainer:React.FC<TProps> = React.memo((props) => {
         let formData = new FormData()
         formData.append('file', newAvatar);
 
+        console.log(newAvatar)
+        
+
         let changeAvatarResponse = await fetch(`https://localhost:44358/api/account/avatar`, {
             method: 'POST',
             body: formData,
@@ -28,7 +31,7 @@ export const ProfileAvatarContainer:React.FC<TProps> = React.memo((props) => {
             let fr = new FileReader();        
             fr.readAsDataURL(newAvatar);
             fr.onload = e => {
-                setCurrentAvatar(e.target.result.toString())
+                setCurrentAvatar(e.target.result.toString());
             }
         }
     }

@@ -2,32 +2,44 @@ import { ws } from "components/connections/ws"
 import { WsDataType } from "components/pages/MainPage/WsDataType";
 import { DataBottleDescType } from "components/pages/MainPage/DataBottleDescriptType";
 import { LatLng } from "leaflet";
+import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 
 type data = {
     bottleOnMap: {
-        data: DataBottleDescType;
+        data: BottleRequestType;
         coordinates: LatLng;
-    }[];
+    }[],
     setBotMap: React.Dispatch<React.SetStateAction<{
-        data: DataBottleDescType;
+        data: BottleRequestType;
         coordinates: LatLng;
-    }[]>>;
+    }[]>>
 }
 
 export const wsOnCreateBottle = (bottlesData : data) => {
     ws.onmessage = (e) => {
         console.log(e)
-        let data = JSON.parse(e.data) as WsDataType
+        let data = JSON.parse(e.data) as WsDataType;
+        let info = data.model;
         if(data.eventNumber === 3) {
-            let currentBottleData: DataBottleDescType = {
-                address: data.model.address,
-                content: data.model.contentIds,
-                countPick: data.model.maxPickingUp - data.model.pickingUp,
-                description: data.model.description,
-                timeLife: data.model.lifeTime,
-                titleName: data.model.title,
-                bottleId: data.model.id,
-                category: data.model.category
+            let currentBottleData: BottleRequestType = {
+                active: info.active,
+                contentIds: info.contentIds,
+                contentItemsCount: info.contentItemsCount,
+                created: info.created,
+                endTime: info.endTime,
+                geoObjectName: info.geoObjectName,
+                id: info.id,
+                isContentLoaded: info.isContentLoaded,
+                lat: info.lat,
+                lifeTime: info.lifeTime,
+                lng: info.lng,
+                maxPickingUp: info.maxPickingUp,
+                pickingUp: info.pickingUp,
+                title: info.title,
+                userId: info.userId,
+                address: info.address,
+                category: info.category,
+                description: info.description
             }
             let coord = new LatLng(data.model.lat, data.model.lng);
             let newBottle = {coordinates: coord, data: currentBottleData}

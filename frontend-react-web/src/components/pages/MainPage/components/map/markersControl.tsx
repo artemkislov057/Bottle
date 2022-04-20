@@ -5,6 +5,7 @@ import marker from '../../../../../marker_siniy.svg';
 import L from 'leaflet';
 import { Popup } from "react-leaflet";
 import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
+import { WsDialogType } from "../../WsDialogType";
 
 import commercMarker from './markerIcons/markerCommercIcon.svg';
 import hangMarker from './markerIcons/markerHangIcon.svg';
@@ -15,6 +16,7 @@ import acquainMarker from './markerIcons/markerAcquaintanceIcon.svg';
 import { ContextForSearch } from "../../contextForSearch";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { DataBottleDescType } from "../../DataBottleDescriptType";
+import { BottleRequestType } from "../../BottleRequestType";
 
  
 
@@ -58,6 +60,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     markerIcons.set('Знакомства', acquainMarker);
     markerIcons.set('Спорт', sportMarker);
     markerIcons.set('Прочее', otherMarker);
+    markerIcons.set('Все категории', otherMarker);
 
         
     // useMapEvent('click', (e) => {
@@ -85,8 +88,8 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     }, [latLngForSearch])
 
     useEffect(() => { // создание бутылки
-        console.log(data)
-        if(data.titleName !== '') {
+        // console.log(data)
+        if(data?.titleName) {
             map.on('click', async (e : LeafletMouseEvent) => {
                 let provider = new OpenStreetMapProvider();
 
@@ -97,7 +100,8 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
 
                 map.removeEventListener('click');
 
-                fetch('https://localhost:44358/api/bottles', {
+                console.log(data);
+                let responseCreate = await fetch('https://localhost:44358/api/bottles', {
                     method: 'POST',
                     body: JSON.stringify({
                         lat: pos.lat,
@@ -109,14 +113,31 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                         category: data.category,//
                         lifeTime: data.timeLife,
                         maxPickingUp: data.countPick,
-                        contentItemsCount: data.content?.length || 0,
+                        contentItemsCount: data.content?.length,
                     }),
                     credentials: 'include',
                     headers: {
                         'Content-type': 'application/json'
                     }
                 });
-                setData(initObj)
+                let bottleData = await responseCreate.json() as BottleRequestType;                
+                console.log(bottleData)
+                if(data.content) {
+                    for (let urlPhoto of data.content) {
+                        // console.log(urlPhoto)
+                        let formData = new FormData();
+                        //@ts-ignore
+                        formData.append('file', urlPhoto);
+    
+                        await fetch(`https://localhost:44358/api/bottles/${bottleData.id}/content`, {
+                            method: 'POST',
+                            body: formData,
+                            credentials: "include",                           
+                        });
+                    }
+                }                
+
+                setData(initObj);
             })            
         }
     }, [data])
@@ -130,15 +151,15 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     return <React.Fragment>                   
         {searchResultMarker}
         {bottlesOnMap.map(marker => {            
-            if(marker.data.titleName !== '')
-                return <Marker 
-                    key={marker.coordinates.toString()} 
-                    position={marker.coordinates} 
-                    eventHandlers={{click: (e) => {openDescriptionBar(marker.data)} } }
-                    icon={L.icon({iconUrl: markerIcons.get(marker.data.category), iconSize:[50,50]})}
-                    />
+                if(marker.data?.title)
+                    return <Marker 
+                        key={marker.coordinates.toString()} 
+                        position={marker.coordinates} 
+                        eventHandlers={{click: (e) => {openDescriptionBar(marker?.data)} } }
+                        icon={L.icon({iconUrl: markerIcons.get(marker.data.category), iconSize:[50,50]})}
+                        />
+                return null;
             }
-            
         )}
     </React.Fragment>
 })

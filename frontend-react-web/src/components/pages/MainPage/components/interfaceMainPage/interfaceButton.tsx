@@ -32,17 +32,20 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
     const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup];
 
-    let initObj : DataBottleDescType = {
-        titleName:'',
-        address:'',
-        content: null,
-        countPick:0,
-        description: null,
-        timeLife:0,
-        bottleId: -1,
-        category: 'Все категории'
-    }
-    const [dataBottleDescription, setDataBottleDesc] = useState(initObj);
+    // let initObj : DataBottleDescType = {
+    //     titleName:'',
+    //     address:'',
+    //     content: null,
+    //     countPick:0,
+    //     description: null,
+    //     timeLife:0,
+    //     bottleId: -1,
+    //     category: 'Все категории'
+    // }
+
+    let initObj : BottleRequestType;
+    let initObjForSelfCreate : DataBottleDescType;
+    const [dataBottleDescription, setDataBottleDesc] = useState(initObjForSelfCreate);
 
     const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}])
     //состояние с бутылками, которые уже есть на карте -> обновляется через вебсокеты или при создании клиентом бутылки
@@ -58,16 +61,31 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 return
             }
             console.log(bottles)
-            let newBottles : [{data: DataBottleDescType, coordinates: LatLng}] = [null];
+            let newBottles : [{data: BottleRequestType, coordinates: LatLng}] = [null];
             for(let e of bottles) {
-                let currentBottleData: DataBottleDescType = {
+                let currentBottleData: BottleRequestType = {
+                    active: e.active,
+                    created: e.created,
+                    endTime: e.endTime,
+                    geoObjectName: e.geoObjectName,
+                    isContentLoaded: e.isContentLoaded,
+                    lat: e.lat,
+                    lng: e.lng,
+                    maxPickingUp: e.maxPickingUp,
+                    userId: e.userId,
                     address: e.address,
-                    content: e.contentIds,
-                    countPick: e.maxPickingUp - e.pickingUp,
+                    contentIds: e.contentIds,
+                    contentItemsCount: e.contentIds?.length,
+                    // content: e.contentIds,
+                    pickingUp: e.maxPickingUp - e.pickingUp,
+                    // countPick: e.maxPickingUp - e.pickingUp,
                     description: e.description,
-                    timeLife: e.lifeTime,
-                    titleName: e.title,
-                    bottleId: e.id,
+                    lifeTime: e.lifeTime,
+                    // timeLife: e.lifeTime,
+                    // titleName: e.title,
+                    title: e.title,
+                    id: e.id,
+                    // bottleId: e.id,
                     category: e.category
                 }
                 if (newBottles[0] === null) {
@@ -127,7 +145,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         props.backgroundState(<div className="background-gray"></div>);
     }
     
-    function onClickOpenPopup(data: DataBottleDescType) {
+    function onClickOpenPopup(data: BottleRequestType) {
+        closeOtherBars(setRightBarPopup);
         setRightBarPopup(<RightBarDescrBottle 
             setSelfState={setRightBarPopup}
             data={data}
