@@ -21,8 +21,8 @@ type TProps = {
 }
 
 export const ProfileBody:React.FC<TProps> = React.memo((props) => {
-    const [nickName, setNickName] = useState(props.data?.info.nickname || '');
-    const [email, setEmail] = useState(props.data?.info.nickname || '');
+    const [nickName, setNickName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState("*******");
 
     function onChangeNickName(e: React.ChangeEvent<HTMLInputElement>) {
@@ -40,8 +40,10 @@ export const ProfileBody:React.FC<TProps> = React.memo((props) => {
     }
 
     useEffect(() => {
-        setNickName(props.data?.info.nickname);
-        setEmail(props.data?.info.email);
+        if(props.data?.info.nickname)
+            setNickName(props.data?.info.nickname);
+        if(props.data?.info.email)
+            setEmail(props.data?.info.email);
         props.setChangedData({email:props.data?.info.email, nickName: props.data?.info.nickname})
     }, [props.data]);
 

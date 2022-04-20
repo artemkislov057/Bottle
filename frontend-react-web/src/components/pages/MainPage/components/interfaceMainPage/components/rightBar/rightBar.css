@@ -170,9 +170,37 @@
     border-radius: 8px;    
 }
 
-.right-bar-map-photos-add-photo {
-    max-width: 120px;
+.right-bar-map-photos-add-photo-container {
+    min-width: 120px;
+    min-height: 80px;
+    width: 120px;
     height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+
+    background-color: #373839;
+    position: relative;
+}
+
+.right-bar-map-photos-add-photo {
+    /* max-width: 120px; */
+    /* object-fit: cover; */
+    max-width: 120px;
+    max-height: 80px;
+    border-radius: 10px;
+}
+
+.right-bar-map-photos-add-photo-delete-button {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    background: url('deletePhotoImage.svg') 50% 50% no-repeat;
+    background-size: 10px 10px;
+    border: none;
 }
 
 .right-bar-map-footer {
