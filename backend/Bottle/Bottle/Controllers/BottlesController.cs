@@ -94,7 +94,7 @@ namespace Bottle.Controllers
                 }
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
-                if (bottle.IsContentLoaded)
+                if (data.ContentItemsCount == 0)
                     await WebSocketController.OnCreatingBottle(new BottleModel(bottle));
                 return Created(string.Empty, new BottleModel(bottle));
             }
@@ -147,14 +147,14 @@ namespace Bottle.Controllers
                 BottleId = bottle.Id,
                 ContentType = file.ContentType
             };
+            db.BottleContent.Add(bottleContent);
+            db.SaveChanges();
             var contentCount = db.BottleContent.Count(bc => bc.BottleId == bottle.Id);
-            if (contentCount >= bottle.ContentItemsCount - 1)
+            if (contentCount >= bottle.ContentItemsCount)
             {
                 bottle.IsContentLoaded = true;
                 await WebSocketController.OnCreatingBottle(db.GetBottleModel(bottle));
             }
-            db.BottleContent.Add(bottleContent);
-            db.SaveChanges();
             return Ok();
         }
 
