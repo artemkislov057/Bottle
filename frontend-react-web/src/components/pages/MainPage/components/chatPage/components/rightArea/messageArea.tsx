@@ -43,7 +43,10 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
                     messFrom = 'partner';
                 }
 
-                let currentTime = new Date(e.dateTime);
+                let offset = new Date().getTimezoneOffset();
+                let currentTimeInSeconds = new Date(e.dateTime).getTime() / 1000 + (-offset * 60);
+
+                let currentTime = new Date(currentTimeInSeconds*1000);
                 let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
                 time = currentTime.toLocaleTimeString().slice(0, -3);
 

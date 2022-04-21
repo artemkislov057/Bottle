@@ -229,7 +229,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
         </div>       
         {/* <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button> */}
-        <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button>
+        <button className="create-bottle-button-mainPage" onClick={tempLogin}>+</button>
 
         {leftbarState}
         <ContextForCreateBottleMarker.Provider value={{openDescriptionBar: onClickOpenPopup, data: dataBottleDescription, setData: setDataBottleDesc, bottlesOnMap: bottlesOnMap }}>
