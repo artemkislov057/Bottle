@@ -20,6 +20,8 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
     const [categoryIcon, setCategoryIcon] = useState('');
     const [categoryType, setCategoryType] = useState('');
     const [photosContent, setPhotosContent] = useState(['']);
+    const [timeLife, setTimeLife] = useState('0');
+    const [address, setAddress] = useState('');
 
     useEffect(() => {
         async function getPhotos() {
@@ -73,14 +75,32 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
             default:
                 setCategoryIcon(otherIcon);
                 setCategoryType('other');
-                break;
-
+                break;                                
         }
-    }, [props.data])
 
-    let addres = props.data.address.split(',').slice(0,2).toString();// // мб надо состояние?
-    let time = convertTime(props.data.lifeTime);
 
+    }, [props.data]);
+
+    useEffect(() => {
+        setAddress(props.data.address.split(',').slice(0,2).toString());
+        calculateTime();
+        let interval = setInterval(() => {            
+            calculateTime();
+        }, 30000);//
+        
+        return () => clearInterval(interval);
+    }, [props.data]);
+
+    function calculateTime() {
+        let offset = new Date().getTimezoneOffset();
+        let endTime = new Date(props.data.endTime).getTime() / 1000 + (-offset * 60);        
+        let delta = endTime - new Date().getTime() / 1000;
+
+        console.log(new Date());
+        
+        setTimeLife(convertTime(delta));
+    }
+    
     function convertTime(timeInSeconds : number) {
         let minutes = (timeInSeconds / 60).toFixed(0);
         let hours = '';
@@ -89,16 +109,16 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
             minutes = (+minutes % 60).toFixed(0);
         }
         return +hours === 0 ? `${minutes} мин`
-            : +minutes === 0 ? `${hours} ч 0 мин`
+            : +minutes === 0 ? `${hours} ч`
             : `${hours} ч ${minutes} мин`;
     }
 
     return <div className="right-bar-map-popup-body">
         <BodyTitle icon={categoryIcon} titleName={props.data.title} category={categoryType}/>
         <div className="right-bar-map-popup-body-info">
-            <PopupBodyInfo className="addres" title="Адрес:" value={addres}/>
-            <PopupBodyInfo className="timeLeft" title="До конца мероприятия:" value={time}/>
-            <PopupBodyInfo className="pickCount" title="Осталось мест:" value={props.data.pickingUp} />
+            <PopupBodyInfo className="addres" title="Адрес:" value={address}/>
+            <PopupBodyInfo className="timeLeft" title="До конца мероприятия:" value={timeLife}/>
+            <PopupBodyInfo className="pickCount" title="Осталось мест:" value={props.data.maxPickingUp - props.data.pickingUp} />
         </div>
         <BodyDescription description={props.data.description} content={photosContent} bottleId={props.data.id} />
     </div>
