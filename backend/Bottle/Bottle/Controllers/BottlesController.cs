@@ -224,7 +224,7 @@ namespace Bottle.Controllers
         {
             var userId = userManager.GetUserId(HttpContext.User);
             var bottles = (await db.GetBottles()).Where(b => b.UserId == userId);
-            return Ok(bottles.ToList().Select(b => new BottleModel(b)));
+            return Ok(bottles.ToList().Select(b => db.GetBottleModel(b)));
         }
 
         /// <summary>
