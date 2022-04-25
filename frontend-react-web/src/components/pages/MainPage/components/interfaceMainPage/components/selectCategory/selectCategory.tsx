@@ -25,6 +25,10 @@ export const SelectCategory:React.FC<TProps> = React.memo((props) => {
         }        
     }
 
+    function onBlurCategoryContainer() {
+        setCategoryList({list: <></>, isOpen: false});
+    }
+
     function changeCurrentCategory(current: string) {
         setCurtrentCategory(current);
         if(props.setCategory)//временно
@@ -32,8 +36,8 @@ export const SelectCategory:React.FC<TProps> = React.memo((props) => {
         setCategoryList({list: <></>, isOpen: false});
     }
 
-    return <div className='select-category-container'>
-        <div className='select-category-checked-area' onClick={() => onClickCategoryContainer()}>
+    return <div className='select-category-container' tabIndex={0} onBlur={onBlurCategoryContainer}>
+        <div className='select-category-checked-area' onClick={() => onClickCategoryContainer()} >
             <div className='select-category-checked-category-name'>{currentCategory}</div>
             <div className='select-category-checked-category-button'></div>
         </div>
