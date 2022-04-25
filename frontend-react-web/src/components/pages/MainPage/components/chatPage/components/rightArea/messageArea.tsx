@@ -60,6 +60,12 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             setMessages(items);
         }
         getMessages();
+        
+        if(props.currentDialogData.dialogInfo.active) {
+            let messageInput = document.querySelector('.chat-page-message-toolBar-input') as HTMLElement;
+            messageInput.focus();
+        }
+        
     }, [props.currentDialogData]);
 
     useEffect(() => {//scroll to last message
