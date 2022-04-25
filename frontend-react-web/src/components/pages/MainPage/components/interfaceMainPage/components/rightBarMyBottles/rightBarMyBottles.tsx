@@ -12,7 +12,8 @@ import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 
 type TProps = {
     setRightBarMyBottles: React.Dispatch<React.SetStateAction<JSX.Element>>,
-    openLeftBar: Function
+    openLeftBar: Function,
+    openChangeRightBar: Function
 }
 
 
@@ -32,7 +33,7 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
         async function getMyBottles() {
             let myBottlesResponse = await fetch('https://localhost:44358/api/bottles/my', {
                 credentials: 'include'
-            })
+            })            
 
             let myBottles = await myBottlesResponse.json() as Array<BottleRequestType>;
             console.log(myBottles)
@@ -71,10 +72,10 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
         <div className="right-bar-map-my-bottles-items">
             {currentBottles?.map(bottle => {
                 let demoDescr = '';
-                if(bottle.description && bottle.description.length > 40) {                    
-                    demoDescr = `${bottle.description.substring(0,40)}...`;                    
+                if(bottle.description && bottle.description.length > 40) {
+                    demoDescr = `${bottle.description.substring(0,40)}...`;
                 } else {
-                    demoDescr = bottle.description
+                    demoDescr = bottle.description;
                 }
                 let icon = categoryIcons.get(bottle.category);
                 return <ListBottleItem 
@@ -84,6 +85,7 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
                     urlIcon={icon}
                     bottleData={bottle}
                     onClickDelete={deleteBottle}
+                    onClickChange={() => props.openChangeRightBar(bottle)}
                 />
                 }
             )}            

@@ -209,6 +209,7 @@
     display: flex;
     padding: 20px;
     justify-content: end;
+    gap: 10px;
 }
 
 .right-bar-map-photos-title {

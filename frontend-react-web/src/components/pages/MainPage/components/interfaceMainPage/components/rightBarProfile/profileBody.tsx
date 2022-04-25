@@ -23,7 +23,7 @@ type TProps = {
 export const ProfileBody:React.FC<TProps> = React.memo((props) => {
     const [nickName, setNickName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState("*******");
+    const [password, setPassword] = useState('ssssss');//пустое поле
 
     function onChangeNickName(e: React.ChangeEvent<HTMLInputElement>) {
         setNickName(e.target.value);

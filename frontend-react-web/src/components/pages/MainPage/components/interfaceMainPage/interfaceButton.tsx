@@ -42,9 +42,6 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
     const [constBottlesOnMap, setConstBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
 
-    //состояние с бутылками, которые уже есть на карте -> обновляется через вебсокеты или при создании клиентом бутылки
-    //useEffect для обновления состояния ^ при перезагрузке стр
-
     useEffect(() => { // при обновлении стр получение всех бутылок
         if(!props.children) return;
         async function getAllBottles() {
@@ -131,10 +128,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         />)
     }
 
-    function onClickOpenRightBar() {
+    function onClickOpenRightBar(changeBottleData?: BottleRequestType) {
         closeOtherBars(setRightBar);
         enableBackgroundGray();
-        setRightBar(<RightBar setStateRightBar={setRightBar} disableBackgroundGray={disableBackgroundGray} />);            
+        setRightBar(<RightBar setStateRightBar={setRightBar} disableBackgroundGray={disableBackgroundGray} changeBottleData={changeBottleData} />);            
     }
 
     function onClickProfileInfofromLeft() {
@@ -148,7 +145,9 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         closeOtherBars(setRightBarMyBottles);
         setRightBarMyBottles(<RightBarMyBottles 
             setRightBarMyBottles={setRightBarMyBottles}
-            openLeftBar={onClickOpenLeftBar}/>)
+            openLeftBar={onClickOpenLeftBar}
+            openChangeRightBar={onClickOpenRightBar}
+            />)
     }    
     
     function onClickOpenPopup(data: BottleRequestType) {

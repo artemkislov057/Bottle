@@ -13,6 +13,12 @@ export const BottleNameContainer:React.FC<TProps> = React.memo((props) => {
 
     return <div className="right-bar-map-name-bottle-container">
         <label className="right-bar-map-name-bottle-title" htmlFor="map-name-bottle-input">Название записки</label>
-        <input className="right-bar-map-name-bottle-input" id="map-name-bottle-input" required onChange={(e) => onChangeInput(e)}></input>
+        <input className="right-bar-map-name-bottle-input" 
+            id="map-name-bottle-input" 
+            required 
+            onChange={(e) => onChangeInput(e)} 
+            value={props.bottleData.titleName}>
+
+        </input>
     </div>
 })

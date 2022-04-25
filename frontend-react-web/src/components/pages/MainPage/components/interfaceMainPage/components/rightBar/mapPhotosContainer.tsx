@@ -31,7 +31,7 @@ export const PhotosContainer:React.FC<TProps> = React.memo((props) => {
             
             fr = new FileReader()
             fr.onload = (event) => {
-                 resCurrentPhotos.push(event.target.result.toString());
+                resCurrentPhotos.push(event.target.result.toString());
             }
             fr.readAsDataURL(currentPhoto);
         }
@@ -51,6 +51,31 @@ export const PhotosContainer:React.FC<TProps> = React.memo((props) => {
             props.setBottleData({...props.bottleData, content: resSendPhotos});
         }
     }
+
+    useEffect(() => {
+        if(!props.bottleData.content) return;
+        if(photos) return
+        let photosArray = Array<string>();
+        let fr = new FileReader();
+        for(let el of props.bottleData.content) {
+            let currentPhoto = el;
+            
+            fr = new FileReader()
+            fr.onload = (event) => {
+                photosArray.push(event.target.result.toString());
+            }
+            fr.readAsDataURL(currentPhoto);
+        }
+        
+        fr.onloadend = e => {
+            console.log('finis loaded');
+            if(!photos) {
+                setPhotos(photosArray);
+            } else {
+                setPhotos([...photos, ...photosArray]);                
+            }
+        }
+    }, [props.bottleData.content]);
 
     function onDeletePhoto(photo: string) {       
         let ind = photos.indexOf(photo);

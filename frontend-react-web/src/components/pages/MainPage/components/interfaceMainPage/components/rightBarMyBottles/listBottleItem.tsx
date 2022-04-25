@@ -13,14 +13,15 @@ type TProps = {
     demoDescript: string,
     urlIcon: string,
     bottleData: BottleRequestType,
-    onClickDelete: (bottleData: BottleRequestType) => void
+    onClickDelete: (bottleData: BottleRequestType) => void,
+    onClickChange: Function
 }
 
 export const ListBottleItem:React.FC<TProps> = React.memo((props) => {
     return <div className="right-bar-map-my-bottles-item">
         <IconCategory urlIcon={props.urlIcon}/>        
         <div className="right-bar-map-my-bottles-item-information-container">
-            <InfoContainerTitle title={props.title}/>            
+            <InfoContainerTitle title={props.title} onClickChange={props.onClickChange}/>            
             <div className="right-bar-map-my-bottles-item-information-descritpion">
                 {props.demoDescript}
             </div>

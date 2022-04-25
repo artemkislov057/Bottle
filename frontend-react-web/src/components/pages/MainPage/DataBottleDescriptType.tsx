@@ -7,5 +7,6 @@ export type DataBottleDescType = {
     // content: string[] | number[],
     content: Array<File>,
     bottleId: number,
-    category: string
+    category: string,
+    initTimeLife?: number
 }

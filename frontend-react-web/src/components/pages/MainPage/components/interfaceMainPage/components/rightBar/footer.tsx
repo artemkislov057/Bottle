@@ -2,7 +2,8 @@ import React from "react";
 
 type TProps = {
     onClick: Function,
-    title: string
+    title: string,
+    saveChangeFunc?: Function
 }
 
 export const RightBarFooter:React.FC<TProps> = React.memo((props) => {
@@ -10,10 +11,22 @@ export const RightBarFooter:React.FC<TProps> = React.memo((props) => {
         <button type="submit" 
             form="right-bar-map-body-form" 
             className="right-bar-map-footer-on-map-button"
-            onClick={(e) => { 
+            onClick={(e) => {
                 props.onClick()
                 }}>
                 {props.title}
         </button>
+        {
+            props.saveChangeFunc ?
+            <button type="submit" 
+                form="right-bar-map-body-form" 
+                className="right-bar-map-footer-on-map-button"
+                onClick={(e) => { 
+                    props.saveChangeFunc()
+                    }}>
+                    Сохранить
+            </button> : null
+        }
+        
     </div>
 })

@@ -13,6 +13,13 @@ export const DescriptionContainer:React.FC<TProps> = React.memo((props) => {
 
     return <div className="right-bar-map-description-container">
         <label className="right-bar-map-description-title" htmlFor="map-description-textArea">Описание записки</label>
-        <textarea className="right-bar-map-description-textArea" id="map-description-textArea" required onChange={(e) => onChangeInput(e)}></textarea>
+        <textarea 
+            className="right-bar-map-description-textArea" 
+            id="map-description-textArea" 
+            required 
+            onChange={(e) => onChangeInput(e)}
+            value={props.bottleData.description} >
+            
+        </textarea>
     </div>
 })

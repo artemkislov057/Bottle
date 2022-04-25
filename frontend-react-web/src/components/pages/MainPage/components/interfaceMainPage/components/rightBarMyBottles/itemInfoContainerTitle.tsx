@@ -2,7 +2,8 @@ import React from "react";
 import { ChangeButton } from "./changeButton";
 
 type TProps = {
-    title: string    
+    title: string,
+    onClickChange: Function
 }
 
 export const InfoContainerTitle:React.FC<TProps> = React.memo((props) => {
@@ -10,6 +11,6 @@ export const InfoContainerTitle:React.FC<TProps> = React.memo((props) => {
         <div className="right-bar-map-my-bottles-item-information-title">
             {props.title}
         </div>
-        <ChangeButton />
+        <ChangeButton onClickChange={props.onClickChange}/>
     </div>
 })

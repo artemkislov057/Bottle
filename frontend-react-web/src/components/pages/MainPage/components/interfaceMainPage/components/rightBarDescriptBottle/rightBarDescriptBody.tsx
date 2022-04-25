@@ -86,7 +86,7 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
         calculateTime();
         let interval = setInterval(() => {            
             calculateTime();
-        }, 30000);//
+        }, 10000);//
         
         return () => clearInterval(interval);
     }, [props.data]);
