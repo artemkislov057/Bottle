@@ -227,6 +227,10 @@
     box-shadow: 0px 4.26846px 4.26846px rgba(0, 0, 0, 0.25);
 }
 
+.right-bar-map-footer-on-map-button:hover {
+    background-color: #6a5fb1;
+}
+
 .right-bar-map-category-custom-select {
     width: 70%;
     height: 40px;

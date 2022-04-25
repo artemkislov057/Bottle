@@ -50,12 +50,14 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
 
     function saveChangeData() {
         console.log('save change');
+        //методами с сервака сохранять данные и закрывать попап
         // setBottleData(initObj);
         // ...
     }
 
     function changeLocateBottle() {
         console.log('change locate')
+        //хранить в каждой бутылке bool стейт для маркера - dragable, при нажатии разрешать двигать маркер, сделать кнопку сохранения позиции и => сохр изменений
         // ...
     }
 

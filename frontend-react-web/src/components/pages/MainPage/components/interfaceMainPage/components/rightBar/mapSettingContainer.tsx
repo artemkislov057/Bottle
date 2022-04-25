@@ -16,6 +16,8 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
     const [currentHours, setCurrentHours] = useState('');
     const [currentMinutes, setCurrentMinutes] = useState('');
 
+    const [currentPickCount, setCurrentPickCount] = useState(0);
+
 
     function onChangeTimeInput(e: React.ChangeEvent<HTMLInputElement>, type: string) {
         let currentSeconds = 0;
@@ -30,7 +32,7 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
         }
     }
 
-    useEffect(() => {
+    useEffect(() => {        
         props.setBottleData({...props.bottleData, timeLife: hoursInSec + minutesInSec});
     }, [hoursInSec, minutesInSec]);
 
@@ -51,6 +53,8 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
             
             setCurrentHours(currH);
             setCurrentMinutes(currM);
+
+            setCurrentPickCount(props.bottleData.countPick);
         }
     }, [props.bottleData?.initTimeLife]);
 
@@ -65,6 +69,7 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
     }
    
     function onChangePickCount(e: React.ChangeEvent<HTMLInputElement>) {
+        setCurrentPickCount(+e.target.value);
         props.setBottleData({...props.bottleData, countPick: +e.target.value})
     }
 
@@ -91,7 +96,7 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
         </div>
         <div className="right-bar-map-setting-pick-count">
             <label className="right-bar-map-setting-pick-count-title" htmlFor="pick-count-input">Количество поднятий</label>
-            <input className="right-bar-map-setting-pick-count-input" id="pick-count-input" type={"number"} min='1' onChange={e => onChangePickCount(e)} value={props.bottleData?.countPick || ''} required/>
+            <input className="right-bar-map-setting-pick-count-input" id="pick-count-input" type={"number"} min='1' onChange={e => onChangePickCount(e)} value={currentPickCount} required/>
         </div>
     </div>
 })

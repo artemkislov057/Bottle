@@ -155,9 +155,9 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         }
 
         getSelfInfo();
-    }, [])
+    }, []);
 
-
+    
     // useEffect(() => {// при обновлении стр
     //     setCurrentBottles(bottlesOnMap);
     //     return () => setCurrentBottles([{coordinates: new LatLng(null, null), data: data}])        
@@ -168,6 +168,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         {searchResultMarker}
         {bottlesOnMap.map(marker => {            
                 if(marker.data?.title) {
+                    // console.log(marker)
                     return <Marker 
                         key={marker.coordinates.toString()} 
                         position={marker.coordinates} 

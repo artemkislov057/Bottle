@@ -68,7 +68,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     address: e.address,
                     contentIds: e.contentIds,
                     contentItemsCount: e.contentIds?.length,
-                    pickingUp: e.maxPickingUp - e.pickingUp,
+                    // pickingUp: e.maxPickingUp - e.pickingUp,//
+                    pickingUp: e.pickingUp,
                     description: e.description,
                     lifeTime: e.lifeTime,
                     title: e.title,
