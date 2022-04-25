@@ -119,9 +119,36 @@
 .right-bar-map-popup-body-description-content {
     flex: 1;
     display: flex;
-    gap: 10px;    
+    gap: 10px;
+    align-items: center;
+    overflow-x: auto;
+}
+
+.right-bar-map-popup-body-description-content::-webkit-scrollbar {    
+    background-color: #373839;
+    height: 8px;    
+}
+
+.right-bar-map-popup-body-description-content::-webkit-scrollbar-thumb {
+    background-color: #212121;
+    border-radius: 8px;    
+}
+
+.right-bar-map-popup-body-description-content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 180px;
+    min-height: 120px;
+    height: 120px;
+
+    border-radius: 10px;
+
+    background-color: #212121;
 }
 
 .right-bar-map-popup-body-description-content-photo {
-    width: 120px;
+    max-width: 180px;
+    max-height: 120px;
+    border-radius: 10px;
 }

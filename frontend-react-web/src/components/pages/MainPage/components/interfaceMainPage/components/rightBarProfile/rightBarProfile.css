@@ -64,6 +64,12 @@
     background-size: 30px 30px;
 }
 
+.rating-star.empty {
+    background: url('./emptyRatingStar.svg') 50% 50% no-repeat;
+    background-size: 30px 30px;
+}
+
+
 
 .profile-map-body-user-info-container {
     display: flex;

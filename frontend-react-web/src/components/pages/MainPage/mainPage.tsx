@@ -6,20 +6,22 @@ import { WebSockets, ws } from "components/connections/ws";
 import { WsDataType } from "./WsDataType";
 import L from 'leaflet';
 import './mainPage.css';
+import { WsEventContext } from "./contextWsEvents";
 
 
 import { ContextForSearch } from "./contextForSearch";
 
 export const MainPage:React.FC = React.memo(() => {
+    let wsEv : MessageEvent<any>;
+    const [wsEvent, setWsEvent] = useState(wsEv);  
+
     useEffect(() => {
         WebSockets();
     }, []);
 
-    // ws.onmessage = (e) => {
-    //     let data = JSON.parse(e.data) as WsDataType
-    //     console.log(e.data)
-    //     console.log(data)
-    // }
+    ws.onmessage = (e) => {
+        setWsEvent(e);        
+    }
 
     const [latLngForSearch, setLatLng] = useState(new L.LatLng(0,0));
     const [backgroundGray, setBackgroundGray] = useState(<></>);
@@ -28,46 +30,42 @@ export const MainPage:React.FC = React.memo(() => {
     
     const [chatPageContainer, setChatPageContainer] = useState(<></>);
 
-    const [interfaceMainPageContainer, setInterfaceMainPage] = useState(
-        <InterfaceButtonMainPage 
+    const interfaceMapContainer = <InterfaceButtonMainPage 
                 backgroundState={setBackgroundGray}
                 openChat={openChatPage}
                 openMap={openMainPage}
-                openLeftMainBar={openLeftMainBar} >
+                openLeftMainBar={openLeftMainBar}
+                >
             <MapMainPage />
         </InterfaceButtonMainPage>
-    )    
+
+    const [interfaceMainPageContainer, setInterfaceMainPage] = useState(interfaceMapContainer);
 
     function openChatPage(dialogId? : number) {
         setInterfaceMainPage(
-            <InterfaceButtonMainPage 
+            <InterfaceButtonMainPage
                 backgroundState={setBackgroundGray} 
                 openChat={openChatPage} 
                 openMap={openMainPage}
-                openLeftMainBar={openLeftMainBar} >
+                openLeftMainBar={openLeftMainBar}
+                >
             </InterfaceButtonMainPage>
         );
-        setChatPageContainer(<ChatPage openMainLeftBar={openLeftMainBar} openDialogId={dialogId}/>);
+        setChatPageContainer(<ChatPage openMainLeftBar={openLeftMainBar} openDialogId={dialogId} />);
     }  
       
     function openMainPage() {
         setChatPageContainer(<></>);
-        setInterfaceMainPage(
-            <InterfaceButtonMainPage 
-                    backgroundState={setBackgroundGray} 
-                    openChat={openChatPage} 
-                    openMap={openMainPage}
-                    openLeftMainBar={openLeftMainBar} >
-                <MapMainPage />                 
-            </InterfaceButtonMainPage>
-        )
+        setInterfaceMainPage(interfaceMapContainer);
     }
     
     return <>
         <ContextForSearch.Provider value={[latLngForSearch, setLatLng]}>
-            {interfaceMainPageContainer}
-            {chatPageContainer}
-            {/* {backgroundGray} */}
+            <WsEventContext.Provider value={wsEvent}>
+                {interfaceMainPageContainer}
+                {chatPageContainer}
+                {backgroundGray}
+            </WsEventContext.Provider>            
         </ContextForSearch.Provider>    
     </>
 })

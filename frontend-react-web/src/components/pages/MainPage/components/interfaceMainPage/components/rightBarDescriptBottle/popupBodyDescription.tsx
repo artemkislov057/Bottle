@@ -2,19 +2,22 @@ import React, { useEffect, useState } from "react";
 
 type TProps = {
     description: string,
-    content: string[] | number[]
+    content: string[],
+    bottleId: number
 }
 
 export const BodyDescription:React.FC<TProps> = React.memo((props) => {
     const [content, setContent] = useState(<></>);   
     
     useEffect(() => {
-        if(props.content) {
+        if(props.content[0]) {
             setContent(
-                <div className="right-bar-map-popup-body-description-content">
+                <div className="right-bar-map-popup-body-description-content" onWheel={e => document.querySelector('.right-bar-map-popup-body-description-content').scrollLeft += e.deltaY / 4}>
                     {props.content.map((data, index) => 
-                        <img key={+data+index} className="right-bar-map-popup-body-description-content-photo" src={data.toString()} alt="фотография" />
-                        )}            
+                        <div key={data+index} className="right-bar-map-popup-body-description-content-container">
+                            <img className="right-bar-map-popup-body-description-content-photo" src={data} alt="фотография" />
+                        </div>   
+                    )}     
                 </div>
             )
         } else {
@@ -24,7 +27,7 @@ export const BodyDescription:React.FC<TProps> = React.memo((props) => {
                 </div>
             )
         }
-    }, [])
+    }, [props.content, props.bottleId])
 
     return <div className="right-bar-map-popup-body-description">
         <div className="right-bar-map-popup-body-description-text">

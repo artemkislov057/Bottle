@@ -16,6 +16,7 @@ import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 
 type TProps = {
     setStateLeftBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
+    disableBackgroundGray: Function,
     onClickCreateButton: Function,
     onClickProfileInfo: Function,
     onClickMyBottles: Function,
@@ -50,30 +51,38 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
     }, []);
 
 
-    function closeLeftBar() {
-        props.setStateLeftBar(<></>);
+    function closeLeftBar() {        
+        props.setStateLeftBar(<></>);        
+    }
+
+    function closeLeftAndSendToMap() {
+        props.onClickMap();
+        closeLeftBar();
     }
 
     function onClickOnMapButton() {
-        closeLeftBar();
-        props.onClickMap();
+        closeLeftAndSendToMap();
+        props.disableBackgroundGray();
         // if(props.closeChat)
         //     props.closeChat()
     }
 
     function onClickCreateBottleButton() {
         props.onClickCreateButton();
-        onClickOnMapButton();
+        closeLeftAndSendToMap();
+        // onClickOnMapButton();
     }
 
     function onClickProfileInfo() {
         props.onClickProfileInfo();
-        onClickOnMapButton()
+        closeLeftAndSendToMap();
+        // onClickOnMapButton()
     }
 
     function onClickMyBottles() {
         props.onClickMyBottles();
-        onClickOnMapButton();
+        closeLeftAndSendToMap();
+        // onClickOnMapButton();
     }
 
     function onClickChatButton() {

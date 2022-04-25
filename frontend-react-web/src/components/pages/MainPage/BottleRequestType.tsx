@@ -8,7 +8,7 @@ export type BottleRequestType =  {
     description: string,
     contentItemsCount: number,
     isContentLoaded: boolean,
-    contentIds: number[],
+    contentIds: Array<number>,
     category: string,
     lifeTime: number,
     created: string,

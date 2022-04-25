@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './interfaceButton.css';
 import { LeftBar } from "./components/leftBar/leftBar";
 import { RightBar } from "./components/rightBar/rightBar";
@@ -9,8 +9,9 @@ import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker
 import { BottleRequestType } from "../../BottleRequestType";
 import { ws } from "components/connections/ws";
 import { WsDataType } from "../../WsDataType";
-import { wsOnCreateBottle } from "./components/wsCreateBottle";
+import { wsBottle } from "./components/wsBottle";
 import { SelectCategory } from "./components/selectCategory/selectCategory";
+import { WsEventContext } from "../../contextWsEvents";
 
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 
@@ -21,7 +22,7 @@ type TProps = {
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
     openChat: Function,
     openMap: Function,
-    openLeftMainBar: React.MutableRefObject<() => void>
+    openLeftMainBar: React.MutableRefObject<() => void>,    
 }
 
 export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
@@ -30,25 +31,22 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
-    const leftRightBars = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup];
+    const leftRightBarsStates = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup];
+    const wsEvent = useContext(WsEventContext);
+    const[currentFilterCategory, setcurrentFilterCategory] = useState('Все категории');
 
-    let initObj : DataBottleDescType = {
-        titleName:'',
-        address:'',
-        content: null,
-        countPick:0,
-        description: null,
-        timeLife:0,
-        bottleId: -1,
-        category: 'Все категории'
-    }
-    const [dataBottleDescription, setDataBottleDesc] = useState(initObj);
+    let initObj : BottleRequestType;
+    let initObjForSelfCreate : DataBottleDescType;
+    const [dataBottleDescription, setDataBottleDesc] = useState(initObjForSelfCreate);
 
-    const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}])
+    const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
+    const [constBottlesOnMap, setConstBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
+
     //состояние с бутылками, которые уже есть на карте -> обновляется через вебсокеты или при создании клиентом бутылки
     //useEffect для обновления состояния ^ при перезагрузке стр
 
     useEffect(() => { // при обновлении стр получение всех бутылок
+        if(!props.children) return;
         async function getAllBottles() {
             let res = await fetch('https://localhost:44358/api/bottles', {
                 credentials: 'include'
@@ -58,16 +56,26 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 return
             }
             console.log(bottles)
-            let newBottles : [{data: DataBottleDescType, coordinates: LatLng}] = [null];
+            let newBottles : [{data: BottleRequestType, coordinates: LatLng}] = [null];
             for(let e of bottles) {
-                let currentBottleData: DataBottleDescType = {
+                let currentBottleData: BottleRequestType = {
+                    active: e.active,
+                    created: e.created,
+                    endTime: e.endTime,
+                    geoObjectName: e.geoObjectName,
+                    isContentLoaded: e.isContentLoaded,
+                    lat: e.lat,
+                    lng: e.lng,
+                    maxPickingUp: e.maxPickingUp,
+                    userId: e.userId,
                     address: e.address,
-                    content: e.contentIds,
-                    countPick: e.maxPickingUp - e.pickingUp,
+                    contentIds: e.contentIds,
+                    contentItemsCount: e.contentIds?.length,
+                    pickingUp: e.maxPickingUp - e.pickingUp,
                     description: e.description,
-                    timeLife: e.lifeTime,
-                    titleName: e.title,
-                    bottleId: e.id,
+                    lifeTime: e.lifeTime,
+                    title: e.title,
+                    id: e.id,
                     category: e.category
                 }
                 if (newBottles[0] === null) {
@@ -76,6 +84,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     newBottles.push({coordinates: new LatLng(e.lat, e.lng), data: currentBottleData});
                 }
             }
+            setConstBottlesOnMap(newBottles);
             setBottlesOnMap(newBottles);
         }
         console.log('update')
@@ -84,15 +93,33 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         return () => setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}])
     }, [props.children]);//
 
-    wsOnCreateBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap});
-    
+    useEffect(() => {
+        if(!currentFilterCategory) return;
+        if(currentFilterCategory === 'Все категории') {
+            setBottlesOnMap(constBottlesOnMap);
+            return;
+        }
+        let filteredBottles = [];
+        for(let e of constBottlesOnMap) {
+            if(e.data?.category === currentFilterCategory) {
+                filteredBottles.push(e);
+            }
+        }
+        setBottlesOnMap(filteredBottles);
+
+    }, [currentFilterCategory])
+
+    useEffect(() => {
+        wsBottle({bottleOnMap: bottlesOnMap, setBotMap: setBottlesOnMap, constBotMap: constBottlesOnMap, setConstBottle: setConstBottlesOnMap, currentCategory: currentFilterCategory}, wsEvent);
+    }, [wsEvent]);    
+       
     useEffect(() => {//for chat?
         props.openLeftMainBar.current = onClickOpenLeftBar
-    }, [])
+    }, []);
 
     function onClickOpenLeftBar() {
         closeOtherBars(setLeftBar);
-        setBackgroundGray();
+        enableBackgroundGray();
         setLeftBar(<LeftBar 
             setStateLeftBar={setLeftBar} 
             onClickCreateButton={onClickOpenRightBar}
@@ -100,13 +127,14 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             onClickMyBottles={onClickMyBottles}
             onClickChat={props.openChat}
             onClickMap={props.openMap}
+            disableBackgroundGray={disableBackgroundGray}
         />)
     }
 
     function onClickOpenRightBar() {
         closeOtherBars(setRightBar);
-        setBackgroundGray();
-        setRightBar(<RightBar setStateRightBar={setRightBar} />);            
+        enableBackgroundGray();
+        setRightBar(<RightBar setStateRightBar={setRightBar} disableBackgroundGray={disableBackgroundGray} />);            
     }
 
     function onClickProfileInfofromLeft() {
@@ -121,22 +149,30 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         setRightBarMyBottles(<RightBarMyBottles 
             setRightBarMyBottles={setRightBarMyBottles}
             openLeftBar={onClickOpenLeftBar}/>)
-    }
-
-    function setBackgroundGray() {
-        props.backgroundState(<div className="background-gray"></div>);
-    }
+    }    
     
-    function onClickOpenPopup(data: DataBottleDescType) {
+    function onClickOpenPopup(data: BottleRequestType) {
+        closeOtherBars(setRightBarPopup);
+        enableBackgroundGray();
         setRightBarPopup(<RightBarDescrBottle 
             setSelfState={setRightBarPopup}
             data={data}
-            onClickOpenDialog={openPartnerChat}/>
+            onClickOpenDialog={openPartnerChat}
+            disableBackgroundGray={disableBackgroundGray}
+            />
         )
     }
 
+    function enableBackgroundGray() {
+        props.backgroundState(<div className="background-gray"></div>);
+    }
+
+    function disableBackgroundGray() {
+        props.backgroundState(<></>);
+    }
+
     function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>>) {
-        for(let e of leftRightBars) {
+        for(let e of leftRightBarsStates) {
             if(e !== currentBar) {
                 e(<></>);
             }
@@ -153,7 +189,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             }
         }).then(res => res.json().then(res => {
             console.log(res);
-            let result = res as {dialogId : number}
+            let result = res as {dialogId : number};
             props.openChat(result.dialogId);
         }))
     }
@@ -177,7 +213,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
 
     return <div className="interface-button-container">
         <div className="select-category-mainPage-input">
-            <SelectCategory />
+            <SelectCategory currentCategory={currentFilterCategory} setCategory={setcurrentFilterCategory}/>
         </div>
         
         <select className="filter-select-mainPage">            

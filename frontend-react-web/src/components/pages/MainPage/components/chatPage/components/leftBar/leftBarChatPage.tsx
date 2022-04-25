@@ -41,6 +41,8 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
             });
             let dialogs = await responseDialogs.json() as WsDialogType[];            
             // console.log(dialogs);
+            console.log('update dialogs')
+            
 
             let items : [{dialogInfo: WsDialogType, userInfo:UserInfoType, userAvatar: string}];
             for(let e of dialogs) {
