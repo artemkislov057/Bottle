@@ -65,7 +65,7 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
             let data = props.changeBottleData;
             let photos = Array<File>();
             console.log(data)
-            if(data.contentItemsCount !== 0) {
+            if(data.contentItemsCount && data.contentItemsCount !== 0) {
                 for(let e of data?.contentIds) {
                     let response = await fetch(`https://localhost:44358/api/bottles/${data.id}/content/${e}`, {
                         credentials: "include"

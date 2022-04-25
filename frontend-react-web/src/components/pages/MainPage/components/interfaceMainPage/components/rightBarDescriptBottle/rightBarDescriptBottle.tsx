@@ -17,12 +17,24 @@ type TProps = {
     disableBackgroundGray: Function,
     data: BottleRequestType,
     onClickOpenDialog: Function,
+    onClickOpenEdit?: Function
 }
 
 export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
     function onClickBackToMap() {
         props.setSelfState(<></>);
         props.disableBackgroundGray()
+    }
+
+    if(props.onClickOpenEdit) {
+        console.log(props.data)
+        return <div className="right-bar-map-popup-bottle">
+            <RightBarHeader title="Записка" onClick={onClickBackToMap} />
+            <RightBarDescrBody
+                data={props.data}            
+            />
+            <RightBarFooter title="Редактировать" onClick={() => props.onClickOpenEdit(props.data)} />
+        </div>   
     }
     
     return <div className="right-bar-map-popup-bottle">

@@ -150,7 +150,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             />)
     }    
     
-    function onClickOpenPopup(data: BottleRequestType) {
+    function onClickOpenPopup(data: BottleRequestType, onClickEdit?: Function) {
         closeOtherBars(setRightBarPopup);
         enableBackgroundGray();
         setRightBarPopup(<RightBarDescrBottle 
@@ -158,6 +158,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             data={data}
             onClickOpenDialog={openPartnerChat}
             disableBackgroundGray={disableBackgroundGray}
+            onClickOpenEdit={onClickEdit}
             />
         )
     }
@@ -231,7 +232,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         <button className="create-bottle-button-mainPage" onClick={tempLogin}>+</button>
 
         {leftbarState}
-        <ContextForCreateBottleMarker.Provider value={{openDescriptionBar: onClickOpenPopup, data: dataBottleDescription, setData: setDataBottleDesc, bottlesOnMap: bottlesOnMap }}>
+        <ContextForCreateBottleMarker.Provider 
+            value={{
+                openDescriptionBar: onClickOpenPopup, 
+                data: dataBottleDescription, 
+                setData: setDataBottleDesc,
+                bottlesOnMap: bottlesOnMap,
+                openEditRightBar: onClickOpenRightBar }}>
             {rightbarState}
             {props.children} {/*map*/}
         </ContextForCreateBottleMarker.Provider>

@@ -16,7 +16,9 @@ import acquainMarker from './markerIcons/markerAcquaintanceIcon.svg';
 import { ContextForSearch } from "../../contextForSearch";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { DataBottleDescType } from "../../DataBottleDescriptType";
+import { UserInfoType } from '../../UserInfoType';
 import { BottleRequestType } from "../../BottleRequestType";
+
 
  
 
@@ -40,8 +42,9 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     const [latLngForSearch] = useContext(ContextForSearch);//координаты при поиске
     const [searchResultMarker, setSearchMarker] = useState(<></>);//маркер при поиске
 
-    const {data, bottlesOnMap, setData, openDescriptionBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
+    const {data, bottlesOnMap, setData, openDescriptionBar, openEditRightBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
     const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]); //созданные бутылки
+    const [selfId, setSelfId] = useState('-1');
     
     let initObj : DataBottleDescType = {
         titleName:'',
@@ -140,7 +143,20 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                 setData(initObj);
             })            
         }
-    }, [data])
+    }, [data]);
+
+    useEffect(() => {
+        async function getSelfInfo() {
+            let response = await fetch('https://localhost:44358/api/account', {
+                credentials: "include"
+            });
+            let info = await response.json() as UserInfoType;
+            setSelfId(info.id);
+        }
+
+        getSelfInfo();
+    }, [])
+
 
     // useEffect(() => {// при обновлении стр
     //     setCurrentBottles(bottlesOnMap);
@@ -151,13 +167,22 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     return <React.Fragment>                   
         {searchResultMarker}
         {bottlesOnMap.map(marker => {            
-                if(marker.data?.title)
+                if(marker.data?.title) {
                     return <Marker 
                         key={marker.coordinates.toString()} 
                         position={marker.coordinates} 
-                        eventHandlers={{click: (e) => {openDescriptionBar(marker?.data)} } }
+                        eventHandlers={{click: (e) => {
+                                if(selfId === marker.data.userId) {                                    
+                                    openDescriptionBar(marker?.data, openEditRightBar)
+                                } else {
+                                    openDescriptionBar(marker?.data)
+                                }
+                            } 
+                        }}
                         icon={L.icon({iconUrl: markerIcons.get(marker.data.category), iconSize:[50,50]})}
                         />
+                }
+                    
                 return null;
             }
         )}

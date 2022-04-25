@@ -22,8 +22,9 @@ let b : {
 }[];
 
 export const ContextForCreateBottleMarker = React.createContext({
-        openDescriptionBar: (data: BottleRequestType) => {return},
+        openDescriptionBar: (data: BottleRequestType, openEditBar?: Function) => {return},
         data: null || initData,
         setData: a,
         bottlesOnMap: b,
+        openEditRightBar: (data: BottleRequestType) => {return}
 });

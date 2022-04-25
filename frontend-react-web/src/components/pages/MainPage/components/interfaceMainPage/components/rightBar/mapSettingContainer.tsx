@@ -40,7 +40,8 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
             let accessTimeInSec = 24 * 60 * 60 - initTLInSec + props.bottleData.timeLife;
 
             let [maxH, maxM] = calculateTime(accessTimeInSec);
-            
+            console.log([maxH, maxM])
+            console.log(accessTimeInSec)
             setMaxTimeHour(+maxH);
             console.log(maxH);
             setMaxTimeMinutes(+maxM);
