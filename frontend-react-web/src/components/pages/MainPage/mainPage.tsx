@@ -42,6 +42,7 @@ export const MainPage:React.FC = React.memo(() => {
     const [interfaceMainPageContainer, setInterfaceMainPage] = useState(interfaceMapContainer);
 
     function openChatPage(dialogId? : number) {
+        setBackgroundGray(<></>)
         setInterfaceMainPage(
             <InterfaceButtonMainPage
                 backgroundState={setBackgroundGray} 
