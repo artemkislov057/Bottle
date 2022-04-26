@@ -6,6 +6,7 @@ import { DataBottleDescType } from "components/pages/MainPage/DataBottleDescript
 import { RightBarHeader } from "./header";
 import { RightBarBody } from "./body";
 import { RightBarFooter } from "./footer";
+import { apiUrl } from "components/connections/apiUrl";
 
 import { ContextForCreateBottleMarker } from "components/pages/MainPage/contextForCreateBottleMarker"; 
 import { OpenStreetMapProvider } from "leaflet-geosearch";
@@ -69,7 +70,7 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
             console.log(data)
             if(data.contentItemsCount && data.contentItemsCount !== 0) {
                 for(let e of data?.contentIds) {
-                    let response = await fetch(`https://localhost:44358/api/bottles/${data.id}/content/${e}`, {
+                    let response = await fetch(`${apiUrl}/api/bottles/${data.id}/content/${e}`, {
                         credentials: "include"
                     });
                     let blobPhoto = await response.blob();

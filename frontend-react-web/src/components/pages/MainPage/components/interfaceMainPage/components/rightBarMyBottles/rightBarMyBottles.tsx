@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import './rightBarMyBottles.css'
 import { ListBottleItem } from "./listBottleItem";
 import { RightBarHeader } from "../rightBar/header";
+import { apiUrl } from "components/connections/apiUrl";
 
 import commercIcon from './categoryIcon/categoryCommercIcon.svg';
 import hangIcon from './categoryIcon/categoryHangIcon.svg';
@@ -31,7 +32,7 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         async function getMyBottles() {
-            let myBottlesResponse = await fetch('https://localhost:44358/api/bottles/my', {
+            let myBottlesResponse = await fetch(`${apiUrl}/api/bottles/my`, {
                 credentials: 'include'
             })            
 
@@ -50,7 +51,7 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
     }, []);
 
     async function deleteBottle(bottleData: BottleRequestType) {
-        let deleteResponse = await fetch(`https://localhost:44358/api/bottles/${bottleData.id}`, {
+        let deleteResponse = await fetch(`${apiUrl}/api/bottles/${bottleData.id}`, {
             method: 'DELETE',
             credentials: 'include'
         });

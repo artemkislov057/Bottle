@@ -12,6 +12,7 @@ import { WsDataType } from "../../WsDataType";
 import { wsBottle } from "./components/wsBottle";
 import { SelectCategory } from "./components/selectCategory/selectCategory";
 import { WsEventContext } from "../../contextWsEvents";
+import { apiUrl } from "components/connections/apiUrl";
 
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 
@@ -45,7 +46,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     useEffect(() => { // при обновлении стр получение всех бутылок
         if(!props.children) return;
         async function getAllBottles() {
-            let res = await fetch('https://localhost:44358/api/bottles', {
+            let res = await fetch(`${apiUrl}/api/bottles`, {
                 credentials: 'include'
             })
             let bottles = await res.json() as Array<BottleRequestType>;
@@ -182,7 +183,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
 
     function openPartnerChat(id : number) {
         console.log(id)
-        fetch(`https://localhost:44358/api/bottles/${id}/pick-up`, {
+        fetch(`${apiUrl}/api/bottles/${id}/pick-up`, {
             method: 'POST',            
             credentials: 'include',
             headers: {
@@ -196,7 +197,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     function tempLogin() {
-        fetch('https://localhost:44358/api/account/login', {
+        fetch(`${apiUrl}/api/account/login`, {
             method: 'POST',
             body: JSON.stringify({
                 "nickname": "Man",

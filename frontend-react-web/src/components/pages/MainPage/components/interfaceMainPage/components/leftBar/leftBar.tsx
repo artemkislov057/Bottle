@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { LeftBarItem } from "./leftBarItem";
 import { InfoUser } from "./infoUser";
 import { UserRating } from "./userRating";
-import './leftBar.css'
-
+import './leftBar.css';
+import { apiUrl } from "components/connections/apiUrl";
 import onMapIcon from './onMap2.svg';
 import chatIcon from './chat2.svg';
 import createIcon from './createBottle.svg';
@@ -30,12 +30,12 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         async function getInformation() {
-            let response = await fetch(`https://localhost:44358/api/account`, {
+            let response = await fetch(`${apiUrl}/api/account`, {
                 credentials: 'include',
             });
             let data = await response.json() as UserInfoType;
 
-            let avatarRes = await fetch(`https://localhost:44358/api/account/avatar`, {
+            let avatarRes = await fetch(`${apiUrl}/api/account/avatar`, {
                 credentials: 'include',
             }); 
             let avatar = await avatarRes.blob();

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import './rightArea.css';
 import { HeaderRightArea } from "./rightAreaHeader";
 import { MessageArea } from "./messageArea";
+import { apiUrl } from "components/connections/apiUrl";
 
 import defaultAvatar from '../../../interfaceMainPage/components/rightBarProfile/defaultAvatar.svg';
 import { WsDialogType } from "components/pages/MainPage/WsDialogType";
@@ -78,7 +79,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
 
     async function closeDialog(id: number, name: string) {
         console.log('fuck')
-        let response = await fetch(`https://localhost:44358/api/dialogs/${id}/close`, {
+        let response = await fetch(`${apiUrl}/api/dialogs/${id}/close`, {
             method: 'POST',
             credentials: 'include',
         });
@@ -99,7 +100,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
     useEffect(() => {
         if(!rateValue || rateValue?.value < 1 || rateValue?.value > 5) return;
         async function responseRatePartner() {
-            let responseRate = await fetch(`https://localhost:44358/api/dialogs/${rateValue?.id}/rating`, {
+            let responseRate = await fetch(`${apiUrl}/api/dialogs/${rateValue?.id}/rating`, {
                 method: 'POST',
                 body: JSON.stringify(rateValue.value),
                 credentials: 'include',

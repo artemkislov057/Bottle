@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import './rightBarProfile.css';
 
+import { apiUrl } from "components/connections/apiUrl";
 import { RightBarHeader } from "../rightBar/header";
 import { ProfileBody } from "./profileBody";
 import { RightBarFooter } from "../rightBar/footer";
@@ -18,12 +19,12 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         async function getInformation() {
-            let response = await fetch(`https://localhost:44358/api/account`, {
+            let response = await fetch(`${apiUrl}/api/account`, {
                 credentials: 'include',
             });
             let data = await response.json() as UserInfoType;
 
-            let avatarRes = await fetch(`https://localhost:44358/api/account/avatar`, {
+            let avatarRes = await fetch(`${apiUrl}/api/account/avatar`, {
                 credentials: 'include',
             }); 
             let avatar = await avatarRes.blob();
@@ -51,7 +52,7 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
         }
 
         console.log('try save')
-        fetch(`https://localhost:44358/api/account`, {
+        fetch(`${apiUrl}/api/account`, {
             method: 'PATCH',
             body: JSON.stringify({
                 commercialData: selfInfo.info.commercialData,

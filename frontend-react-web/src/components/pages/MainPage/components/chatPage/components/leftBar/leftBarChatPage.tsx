@@ -4,6 +4,7 @@ import { HeaderLeftBarChat } from "./headerLeftBarChat";
 import { ChatUserItem } from "./chatUserItem";
 import { WsDialogType } from "components/pages/MainPage/WsDialogType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
+import { apiUrl } from "components/connections/apiUrl";
 
 // import defaultAvatar from '../../../interfaceMainPage/components/rightBarProfile/defaultAvatar.svg';
 import defaultAvatar from '../newDefAvatar.svg'
@@ -30,13 +31,13 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         async function getChatUsers() {
-            let selfResponse = await fetch('https://localhost:44358/api/account', {
+            let selfResponse = await fetch(`${apiUrl}/api/account`, {
                 credentials: 'include'
             });
             let selfData = await selfResponse.json() as UserInfoType;
             const selfId = selfData.id;
 
-            let responseDialogs = await fetch('https://localhost:44358/api/dialogs', {
+            let responseDialogs = await fetch(`${apiUrl}/api/dialogs`, {
                 credentials: 'include'
             });
             let dialogs = await responseDialogs.json() as WsDialogType[];            
@@ -48,12 +49,12 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
             for(let e of dialogs) {
                 let currentId = e.bottleOwnerId === selfId ? e.recipientId : e.bottleOwnerId;
 
-                let responseUserInfo = await fetch(`https://localhost:44358/api/user/${currentId}`, {
+                let responseUserInfo = await fetch(`${apiUrl}/api/user/${currentId}`, {
                     credentials: 'include'
                 });
                 let userInfo = await responseUserInfo.json() as UserInfoType;
 
-                let responseUserAvatar = await fetch(`https://localhost:44358/api/user/${currentId}/avatar`, {
+                let responseUserAvatar = await fetch(`${apiUrl}/api/user/${currentId}/avatar`, {
                     credentials: 'include'
                 });
                 let userAvatarBlob = await responseUserAvatar.blob();

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import changeAvatarIcon from '../leftBar/renameButtonIcon.svg';
+import { apiUrl } from "components/connections/apiUrl";
 
 type TProps = {
     urlAvatar: string
@@ -21,7 +22,7 @@ export const ProfileAvatarContainer:React.FC<TProps> = React.memo((props) => {
         console.log(newAvatar)
         
 
-        let changeAvatarResponse = await fetch(`https://localhost:44358/api/account/avatar`, {
+        let changeAvatarResponse = await fetch(`${apiUrl}/api/account/avatar`, {
             method: 'POST',
             body: formData,
             credentials: 'include',

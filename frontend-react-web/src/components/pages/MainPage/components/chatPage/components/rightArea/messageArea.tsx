@@ -4,6 +4,7 @@ import { Message } from "./message";
 import { WsDialogType } from "components/pages/MainPage/WsDialogType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 import { WsGetMessageType } from "components/pages/MainPage/WsGetMessageType";
+import { apiUrl } from "components/connections/apiUrl"; 
 
 type TProps = {
     currentDialogData: {
@@ -23,13 +24,13 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         async function getMessages() {
-            let idResponse = await fetch(`https://localhost:44358/api/account`, {
+            let idResponse = await fetch(`${apiUrl}/api/account`, {
                 credentials: 'include',
             });
             let self  = await idResponse.json() as UserInfoType;
             let selfId = self.id
 
-            let responseMessages = await fetch(`https://localhost:44358/api/dialogs/${props.currentDialogData.dialogInfo.id}/messages`, {
+            let responseMessages = await fetch(`${apiUrl}/api/dialogs/${props.currentDialogData.dialogInfo.id}/messages`, {
                 credentials: 'include',
             });
             let allMessages = await responseMessages.json() as WsGetMessageType[];
@@ -90,7 +91,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
     }, [props.newMessage])
 
     async function onSendMessage(value: string) {
-        let response = await fetch(`https://localhost:44358/api/dialogs/${props.currentDialogData.dialogInfo.id}`, {
+        let response = await fetch(`${apiUrl}/api/dialogs/${props.currentDialogData.dialogInfo.id}`, {
             method: 'POST',
             body: JSON.stringify(value),
             credentials: 'include',

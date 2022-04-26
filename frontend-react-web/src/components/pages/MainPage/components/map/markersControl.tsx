@@ -6,6 +6,7 @@ import L from 'leaflet';
 import { Popup } from "react-leaflet";
 import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
 import { WsDialogType } from "../../WsDialogType";
+import { apiUrl } from "components/connections/apiUrl";
 
 import commercMarker from './markerIcons/markerCommercIcon.svg';
 import hangMarker from './markerIcons/markerHangIcon.svg';
@@ -120,7 +121,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                 map.removeEventListener('click');
 
                 // console.log(data);
-                let responseCreate = await fetch('https://localhost:44358/api/bottles', {
+                let responseCreate = await fetch(`${apiUrl}/api/bottles`, {
                     method: 'POST',
                     body: JSON.stringify({
                         lat: pos.lat,
@@ -148,7 +149,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                         //@ts-ignore
                         formData.append('file', urlPhoto);
     
-                        await fetch(`https://localhost:44358/api/bottles/${bottleData.id}/content`, {
+                        await fetch(`${apiUrl}/api/bottles/${bottleData.id}/content`, {
                             method: 'POST',
                             body: formData,
                             credentials: "include",                           
@@ -163,7 +164,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
 
     useEffect(() => {
         async function getSelfInfo() {
-            let response = await fetch('https://localhost:44358/api/account', {
+            let response = await fetch(`${apiUrl}/api/account`, {
                 credentials: "include"
             });
             let info = await response.json() as UserInfoType;

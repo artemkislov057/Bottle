@@ -4,6 +4,7 @@ import { BodyTitle } from "./popupBodyTitle";
 import { BodyDescription } from "./popupBodyDescription";
 import { DataBottleDescType } from "components/pages/MainPage/DataBottleDescriptType";
 import categoryIconTest from './categoryIconTusovki.svg';
+import { apiUrl } from "components/connections/apiUrl";
 
 import hangIcon from './popupHangIcon.svg'
 import acquaintanceIcon from './popupAcquaintanceIcon.svg';
@@ -33,7 +34,7 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
 
             let resultPhotosContent = Array<string>();
             for(let e of props.data.contentIds) {
-                let response = await fetch(`https://localhost:44358/api/bottles/${props.data.id}/content/${e}`, {                    
+                let response = await fetch(`${apiUrl}/api/bottles/${props.data.id}/content/${e}`, {                    
                     credentials: "include"
                 });
 
