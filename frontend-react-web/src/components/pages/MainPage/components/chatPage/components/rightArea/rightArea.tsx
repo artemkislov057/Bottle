@@ -41,12 +41,14 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
     let init :{value: number, id: number};
     const [rateValue, setRateValue] = useState(init);
 
-    useEffect(() => {        
+    useEffect(() => {
         if(props.currentDialogData) {
+            console.log(props.currentDialogData)
             if(!props.currentDialogData.dialogInfo.active) {
+                console.log('this dialog has been closed');
                 ratePartner(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
             } else {
-                rateModal.current = (<div></div>);
+                rateModal.current = (<div></div>);                
             }
             
             setCurrentChat(                
@@ -82,9 +84,10 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
         });
         if(response.ok) {
             console.log('close');
-
-            ratePartner(id, name);
+            
             props.setCurrentDialog({...props.currentDialogData, dialogInfo:{...props.currentDialogData.dialogInfo, active: false}});
+            props.setUpdateDialogsInfo(!props.updateDialogsInfo);
+            // ratePartner(id, name);
         }        
     }
 
@@ -111,7 +114,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                 props.setCurrentDialog(null);
                 setCurrentChat(initRigthArea)
                 // setRateModal(<></>);
-                rateModal.current = <></>;                
+                rateModal.current = <></>;
             }
             setRateValue(init);
         }

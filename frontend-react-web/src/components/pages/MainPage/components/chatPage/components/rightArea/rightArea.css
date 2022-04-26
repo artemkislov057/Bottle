@@ -1,5 +1,6 @@
 .chat-page-right-side,
 .chat-page-right-side-empty {
+    position: relative;
     flex: 4;
     display: flex;
     height: 100vh;

@@ -16,7 +16,7 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
     const [currentHours, setCurrentHours] = useState('');
     const [currentMinutes, setCurrentMinutes] = useState('');
 
-    const [currentPickCount, setCurrentPickCount] = useState(0);
+    const [currentPickCount, setCurrentPickCount] = useState('');
 
 
     function onChangeTimeInput(e: React.ChangeEvent<HTMLInputElement>, type: string) {
@@ -54,7 +54,7 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
             setCurrentHours(currH);
             setCurrentMinutes(currM);
 
-            setCurrentPickCount(props.bottleData.countPick);
+            setCurrentPickCount(props.bottleData.countPick.toString());
         }
     }, [props.bottleData?.initTimeLife]);
 
@@ -69,7 +69,7 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
     }
    
     function onChangePickCount(e: React.ChangeEvent<HTMLInputElement>) {
-        setCurrentPickCount(+e.target.value);
+        setCurrentPickCount(e.target.value);
         props.setBottleData({...props.bottleData, countPick: +e.target.value})
     }
 

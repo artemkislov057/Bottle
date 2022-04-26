@@ -88,7 +88,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
 
     function onClickChatUserItem(data: UserItem) {
         setActiveDialogId(data.dialogInfo.id);
-        props.setCurrentDialog(data);
+        props.setCurrentDialog(data);        
         // console.log(data)
     }
 

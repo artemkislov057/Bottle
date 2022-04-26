@@ -34,15 +34,17 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
         if(data.eventNumber === 1) { //new message
             console.log(data)
             if(data.model.dialogId === currentDialog?.dialogInfo.id) {
-                setNewMessage(data.model);      
+                setNewMessage(data.model);
             }
             setUpdateDialogsInfo(!updateDialogsInfo);
         }
-        if(data.eventNumber === 4 || data.eventNumber === 2) { //появился новый диалог
+        if(data.eventNumber === 4 || data.eventNumber === 2) { //появился новый диалог или закрылся какой то
             setUpdateDialogsInfo(!updateDialogsInfo);
+            console.log(data.eventNumber, data.model.id, currentDialog?.dialogInfo.id)
+            if(data.model.id === currentDialog?.dialogInfo.id && data.eventNumber === 2) {
+                setCurrentDialog({...currentDialog, dialogInfo: {...currentDialog.dialogInfo, active: false}});
+            }
         }
-            
-        //добавить обновление диалогов при появлении нового диалога
     }, [wsEvent]);
 
     useEffect(() => {
@@ -50,7 +52,16 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     }, [updateDialogsInfo])
         
     return <div className="chat-page-main">
-        <LeftBarChat onClickOtherButton={props.openMainLeftBar.current} setCurrentDialog={setCurrentDialog} updateDialogsInfo={updateDialogsInfo} openDialogId={props.openDialogId}/>
-        <MessageAreaChat currentDialogData={currentDialog} setCurrentDialog={setCurrentDialog} newMessage={newMessage} updateDialogsInfo={updateDialogsInfo} setUpdateDialogsInfo={setUpdateDialogsInfo}/>{/*put <- currentChat*/}
+        <LeftBarChat 
+            onClickOtherButton={props.openMainLeftBar.current} 
+            setCurrentDialog={setCurrentDialog} 
+            updateDialogsInfo={updateDialogsInfo} 
+            openDialogId={props.openDialogId}/>
+        <MessageAreaChat 
+            currentDialogData={currentDialog} 
+            setCurrentDialog={setCurrentDialog} 
+            newMessage={newMessage} 
+            updateDialogsInfo={updateDialogsInfo} 
+            setUpdateDialogsInfo={setUpdateDialogsInfo}/>
     </div>
 })
