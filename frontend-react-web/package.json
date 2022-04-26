@@ -47,5 +47,8 @@
   },
   "devDependencies": {
     "@types/leaflet": "^1.7.9"
+  },
+  "resolutions": {
+    "minimist": "1.2.6"
   }
 }
