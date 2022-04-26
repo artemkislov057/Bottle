@@ -32,6 +32,11 @@ type FuckTs = {
     data: {}
 }
 
+type searchMarkerType = {
+    children: any,
+    position: LatLng
+}
+
 export const AddMarkersOnMap:React.FC = React.memo((props) => {
     let temp : FuckTs = {
         latLng: new LatLng(0,0),
@@ -88,7 +93,18 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                 </Marker>);            
         }
         // return () => setSearchMarker(<></>);
-    }, [latLngForSearch])
+    }, [latLngForSearch]);
+
+    useEffect(() => {
+        let markerProps = searchResultMarker.props as searchMarkerType;
+        if(!markerProps.position) return
+        
+        map.on('click', () => {
+            console.log(10)
+            setSearchMarker(<></>);
+            map.removeEventListener('click')
+        });        
+    }, [searchResultMarker])
 
     useEffect(() => { // создание бутылки
         // console.log(data)
