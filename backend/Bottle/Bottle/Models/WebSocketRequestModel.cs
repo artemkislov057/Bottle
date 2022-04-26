@@ -17,7 +17,10 @@ namespace Bottle.Models
             CreateBottle = 3,
             CreateDialog = 4,
             BottlePickedUp = 5,
-            BottleEndLife = 6
+            BottleEndLife = 6,
+            ChangeBottle = 7,
+            ChangeBottleCoordinates = 8,
+            DeleteBottle = 9
         }
     }
 }

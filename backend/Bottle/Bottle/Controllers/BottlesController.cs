@@ -182,8 +182,11 @@ namespace Bottle.Controllers
             var user = await userManager.GetUserAsync(HttpContext.User);
             if (bottle != null && bottle.Active && bottle.UserId == user.Id)
             {
+                var lat = bottle.Lat;
+                var lng = bottle.Lng;
                 db.Bottles.Remove(bottle);
                 db.SaveChanges();
+                await WebSocketController.OnDeleteBottle(bottleId, lat, lng);
                 return Ok();
             }
             return BadRequest();
@@ -244,6 +247,51 @@ namespace Bottle.Controllers
                 db.Bottles.Remove(bottle);
                 db.SaveChanges();
                 return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("{bottle-id}/change")]
+        public async Task<IActionResult> ChangeBottleAsync([FromRoute(Name = "bottle-id")] int bottleId, [FromBody] ChangeBottleModel model)
+        {
+            var bottle = await db.GetBottleAsync(bottleId);
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            if (model == null || bottle == null || bottle.UserId != user.Id)
+            {
+                return BadRequest();
+            }
+            if (model.GeoObjectName != null) bottle.GeoObjectName = model.GeoObjectName;
+            if (model.Address != null) bottle.Address = model.Address;
+            if (model.Title != null) bottle.Title = model.Title;
+            if (model.Description != null) bottle.Description = model.Description;
+            if (model.Category != null) bottle.Category = model.Category;
+            //if (model.LifeTime != null) bottle.EndTime = bottle.Created + TimeSpan.FromSeconds((double)model.LifeTime);
+            //if (model.MaxPickingUp != null) bottle.MaxPickingUp = (int)model.MaxPickingUp;
+            var bottleModel = db.GetBottleModel(bottle);
+            await WebSocketController.OnChangeBottle(bottleModel);
+            db.SaveChanges();
+            return Ok(bottleModel);
+        }
+
+        [HttpPost("{bottle-id}/change-coordinates")]
+        public async Task<IActionResult> ChangeBottleCoordinatesAsync([FromRoute(Name = "bottle-id")] int bottleId, [FromBody] BottleCoordinatesModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var bottle = await db.GetBottleAsync(bottleId);
+                var user = await userManager.GetUserAsync(HttpContext.User);
+                if (bottle == null || bottle.UserId != user.Id)
+                {
+                    return BadRequest();
+                }
+                var oldLat = bottle.Lat;
+                var oldLng = bottle.Lng;
+                bottle.Lat = model.Lat;
+                bottle.Lng = model.Lng;
+                var bottleModel = db.GetBottleModel(bottle);
+                await WebSocketController.OnChangeCoordinatesBottle(bottleId, oldLat, oldLng, model.Lat, model.Lng);
+                db.SaveChanges();
+                return Ok(bottleModel);
             }
             return BadRequest();
         }
