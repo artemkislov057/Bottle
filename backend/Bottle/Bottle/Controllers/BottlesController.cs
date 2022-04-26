@@ -62,7 +62,7 @@ namespace Bottle.Controllers
                 return BadRequest();
             }
             bottle.PickingUp++;
-            if (bottle.PickingUp >= bottle.MaxPickingUp)
+            if (user.Type == 1 && bottle.PickingUp >= bottle.MaxPickingUp)
             {
                 bottle.Active = false;
                 await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
@@ -89,6 +89,10 @@ namespace Bottle.Controllers
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 var bottle = new Models.DataBase.Bottle(data, user);
                 if (user.Type == 2)
+                {
+                    bottle.MaxPickingUp = -1;
+                }
+                else
                 {
                     bottle.MaxPickingUp = data.MaxPickingUp;
                 }
