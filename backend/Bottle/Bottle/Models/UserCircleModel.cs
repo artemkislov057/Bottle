@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Models
 {
-    public class CoordinatesModel
+    public class UserCircleModel
     {
         public decimal Lat { get; set; }
         public decimal Lng { get; set; }

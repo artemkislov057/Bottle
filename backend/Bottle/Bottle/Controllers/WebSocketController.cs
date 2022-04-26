@@ -67,7 +67,7 @@ namespace Bottle.Controllers
             return Ok(Enum.GetValues<WebSocketRequestModel.EventType>().ToDictionary(v => v));
         }
 
-        public static async Task EchoWebSocketsUser(string id, object model)
+        public static async Task EchoWebSocketsUser(string id, WebSocketRequestModel model)
         {
             if (Clients.TryGetValue(id, out var webSocketClients))
             {
@@ -163,14 +163,65 @@ namespace Bottle.Controllers
             }
         }
 
+        public static async Task OnChangeBottle(BottleModel bottle)
+        {
+            var recipientWebSockets = await GetRecipientWebSockets(bottle);
+            foreach (var ws in recipientWebSockets)
+            {
+                await ws.Echo(new WebSocketRequestModel
+                {
+                    EventNumber = WebSocketRequestModel.EventType.ChangeBottle,
+                    Model = bottle
+                });
+            }
+        }
+
+        public static async Task OnChangeCoordinatesBottle(int bottleId, decimal oldLat, decimal oldLng, decimal newLat, decimal newLng)
+        {
+            var recipientWebSockets = (await GetRecipientWebSockets(oldLat, oldLng))
+                                            .Concat(await GetRecipientWebSockets(newLat, newLng))
+                                            .Distinct();
+            foreach (var ws in recipientWebSockets)
+            {
+                await ws.Echo(new WebSocketRequestModel
+                {
+                    EventNumber = WebSocketRequestModel.EventType.ChangeBottleCoordinates,
+                    Model = new
+                    {
+                        bottleId,
+                        lat = newLat,
+                        lng = newLng
+                    }
+                });
+            }
+        }
+
+        public static async Task OnDeleteBottle(int bottleId, decimal lat, decimal lng)
+        {
+            var recipientWebSockets = await GetRecipientWebSockets(lat, lng);
+            foreach (var ws in recipientWebSockets)
+            {
+                await ws.Echo(new WebSocketRequestModel
+                {
+                    EventNumber = WebSocketRequestModel.EventType.DeleteBottle,
+                    Model = new { bottleId }
+                });
+            }
+        }
+
         private static async Task<IEnumerable<WebSocketUser>> GetRecipientWebSockets(BottleModel model)
+        {
+            return await GetRecipientWebSockets(model.Lat, model.Lng);
+        }
+
+        private static async Task<IEnumerable<WebSocketUser>> GetRecipientWebSockets(decimal lat, decimal lng)
         {
             var allWebSockets = Clients.SelectMany(c => c.Value);
             return await Task.Run(() =>
             {
                 return allWebSockets.Where(ws =>
                 {
-                    return ws.Coordinates != null && BottlesController.IsPointInCircle(ws.Coordinates.Lat, ws.Coordinates.Lng, model.Lat, model.Lng, ws.Coordinates.Radius);
+                    return ws.Circle != null && BottlesController.IsPointInCircle(ws.Circle.Lat, ws.Circle.Lng, lat, lng, ws.Circle.Radius);
                 });
             });
         }

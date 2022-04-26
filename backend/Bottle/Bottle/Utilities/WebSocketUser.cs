@@ -24,12 +24,12 @@ namespace Bottle.Utilities
         public readonly int BufferSize = 1024 * 4;
         public readonly string id;
 
-        public CoordinatesModel Coordinates { get; set; }
+        public UserCircleModel Circle { get; set; }
 
         public event Action<string> SendMessage;
         public event Action<WebSocketCloseStatus> ClientClosedConnection;
 
-        public async Task Echo(object model)
+        public async Task Echo(WebSocketRequestModel model)
         {
             var message = JsonConvert.SerializeObject(model, jsonSerializerSettings);
             await Echo(message);
@@ -65,7 +65,7 @@ namespace Bottle.Utilities
 
         public void SetCoordinates(string model)
         {
-            Coordinates = JsonConvert.DeserializeObject<CoordinatesModel>(model, jsonSerializerSettings);
+            Circle = JsonConvert.DeserializeObject<UserCircleModel>(model, jsonSerializerSettings);
         }
 
         private readonly WebSocket webSocket;
