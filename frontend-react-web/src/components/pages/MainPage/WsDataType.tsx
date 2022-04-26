@@ -18,6 +18,7 @@ export type WsDataType = {
         active: boolean,
         maxPickingUp: number,
         pickingUp: number,
-        userId: string
+        userId: string,
+        bottleId: number
     }    
 }

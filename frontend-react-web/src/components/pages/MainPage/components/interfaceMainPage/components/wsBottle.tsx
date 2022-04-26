@@ -61,13 +61,13 @@ export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {
             }
             
         }
-        if(data.eventNumber === 5 || data.eventNumber === 6) {
+        if(data.eventNumber === 5 || data.eventNumber === 6 || data.eventNumber === 9) {
             let deleteIndex = -1;
             bottlesData.bottleOnMap.forEach((e, index) => {
-                if(e.data?.id === data.model?.id) {
+                if(e.data?.id === data.model?.id || (data.model?.bottleId && e.data?.id === data.model?.bottleId)) {
                     deleteIndex = index;
                     return;
-                }
+                }                
             });
             if(deleteIndex !== -1) {
                 let tempBottles = bottlesData.bottleOnMap.slice();
@@ -77,7 +77,7 @@ export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {
 
             deleteIndex = -1;
             bottlesData.constBotMap.forEach((e, index) => {
-                if(e.data?.id === data.model?.id) {
+                if(e.data?.id === data.model?.id || (data.model?.bottleId && e.data?.id === data.model?.bottleId)) {
                     deleteIndex = index;
                     return;
                 }

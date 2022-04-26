@@ -111,6 +111,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         // console.log(data)
         if(data?.titleName) {
             map.on('click', async (e : LeafletMouseEvent) => {
+                map.removeEventListener('click');
                 let provider = new OpenStreetMapProvider();
 
                 let pos = e.latlng;
@@ -118,7 +119,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                 // setCurrentBottles([...currentBottles, {coordinates:pos, data: {...data, address:addressPlace[0].label}}])
                 // console.log(addressPlace[0].label);
 
-                map.removeEventListener('click');
+                
 
                 // console.log(data);
                 let responseCreate = await fetch(`${apiUrl}/api/bottles`, {
@@ -146,7 +147,6 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
                     for (let urlPhoto of data.content) {
                         // console.log(urlPhoto)
                         let formData = new FormData();
-                        //@ts-ignore
                         formData.append('file', urlPhoto);
     
                         await fetch(`${apiUrl}/api/bottles/${bottleData.id}/content`, {
