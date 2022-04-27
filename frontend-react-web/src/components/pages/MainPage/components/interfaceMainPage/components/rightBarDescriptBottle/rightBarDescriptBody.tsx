@@ -26,7 +26,7 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         async function getPhotos() {
-            console.log(props.data)
+            // console.log(props.data)
             if(!props.data || !props.data.contentIds || !props.data.isContentLoaded) {
                 setPhotosContent([''])
                 return;
@@ -84,21 +84,24 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         setAddress(props.data.address.split(',').slice(0,2).toString());
-        calculateTime();
+        calculateTime(props.data);
         let interval = setInterval(() => {            
-            calculateTime();
+            calculateTime(props.data);
         }, 10000);//
         
         return () => clearInterval(interval);
     }, [props.data]);
 
-    function calculateTime() {
+    function calculateTime(data: BottleRequestType) {
         let offset = new Date().getTimezoneOffset();
-        let endTime = new Date(props.data.endTime).getTime() / 1000 + (-offset * 60);        
+
+        let endTime = new Date(data.endTime).getTime() / 1000 + (-offset * 60);        
         let delta = endTime - new Date().getTime() / 1000;
 
-        console.log(new Date());
-        
+        if(delta > data.lifeTime) {
+            delta -= -offset * 60;
+        }
+
         setTimeLife(convertTime(delta));
     }
     
