@@ -14,6 +14,7 @@ import otherMarker from './markerIcons/markerOtherIcon.svg';
 import sportMarker from './markerIcons/markerSportIcon.svg';
 import acquainMarker from './markerIcons/markerAcquaintanceIcon.svg';
 
+import { MapModal } from "../questModal/questModal";
 import { ContextForSearch } from "../../contextForSearch";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { DataBottleDescType } from "../../DataBottleDescriptType";
@@ -24,8 +25,7 @@ import { BottleRequestType } from "../../BottleRequestType";
  
 
 type TProps = {
-    address: string,
-    latLng: L.LatLng    
+    setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>> 
 }
 
 type FuckTs = {
@@ -38,7 +38,7 @@ type searchMarkerType = {
     position: LatLng
 }
 
-export const AddMarkersOnMap:React.FC = React.memo((props) => {
+export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     let temp : FuckTs = {
         latLng: new LatLng(0,0),
         data: {}
@@ -111,54 +111,16 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         // console.log(data)
         if(data?.titleName) {
             map.on('click', async (e : LeafletMouseEvent) => {
-                map.removeEventListener('click');
                 let provider = new OpenStreetMapProvider();
-
                 let pos = e.latlng;
                 let addressPlace = await provider.search({query:`${pos.lat}, ${pos.lng}`});
-                // setCurrentBottles([...currentBottles, {coordinates:pos, data: {...data, address:addressPlace[0].label}}])
-                // console.log(addressPlace[0].label);
-
-                
-
-                // console.log(data);
-                let responseCreate = await fetch(`${apiUrl}/api/bottles`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        lat: pos.lat,
-                        lng: pos.lng,
-                        title: data.titleName,                
-                        geoObjectName: null,
-                        address: addressPlace[0].label,
-                        description: data.description,
-                        category: data.category,//
-                        lifeTime: data.timeLife,
-                        maxPickingUp: data.countPick,
-                        contentItemsCount: data.content?.length,
-                    }),
-                    credentials: 'include',
-                    headers: {
-                        'Content-type': 'application/json'
-                    }
-                });
-                let bottleData = await responseCreate.json() as BottleRequestType;                
-                // console.log(bottleData)
-                if(data.content) {
-                    for (let urlPhoto of data.content) {
-                        // console.log(urlPhoto)
-                        let formData = new FormData();
-                        formData.append('file', urlPhoto);
-    
-                        await fetch(`${apiUrl}/api/bottles/${bottleData.id}/content`, {
-                            method: 'POST',
-                            body: formData,
-                            credentials: "include",                           
-                        });
-                    }
-                }                
-
-                setData(initObj);
-            })            
+                let localAddress = addressPlace[0].label.split(',').slice(0,2).toString();
+                props.setQuestModal(<MapModal 
+                        quest={`Вы точно хотите поставить бутылку по адресу: ${localAddress}?`}
+                        onClickNoButton={onClickNoCreateButton} 
+                        onClickYesButton={() => onClickYesCreateButton(data, pos, addressPlace[0].label)} 
+                    />);
+            })
         }
     }, [data]);
 
@@ -174,6 +136,56 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
         getSelfInfo();
     }, []);
 
+    function onClickYesCreateButton(data: DataBottleDescType, locate: LatLng, address: string) {
+        map.removeEventListener('click');
+        props.setQuestModal(<></>);
+        sendCreateBottleRequest(data, locate, address);
+    }
+
+    function onClickNoCreateButton() {
+        props.setQuestModal(<></>);
+    }
+
+    async function sendCreateBottleRequest(requestata: DataBottleDescType, pos: LatLng, address: string) {
+        let responseCreate = await fetch(`${apiUrl}/api/bottles`, {
+            method: 'POST',
+            body: JSON.stringify({
+                lat: pos.lat,
+                lng: pos.lng,
+                title: requestata.titleName,                
+                geoObjectName: null,//
+                address: address,
+                description: requestata.description,
+                category: requestata.category,//
+                lifeTime: requestata.timeLife,
+                maxPickingUp: requestata.countPick,
+                contentItemsCount: requestata.content?.length,
+            }),
+            credentials: 'include',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+        
+        if(requestata.content) {
+            let bottleData = await responseCreate.json() as BottleRequestType;                
+            console.log(bottleData)
+            for (let urlPhoto of data.content) {
+                // console.log(urlPhoto)
+                let formData = new FormData();
+                formData.append('file', urlPhoto);
+
+                await fetch(`${apiUrl}/api/bottles/${bottleData.id}/content`, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: "include",                           
+                });
+            }
+        }
+
+        setData(initObj);
+    }
+
     
     // useEffect(() => {// при обновлении стр
     //     setCurrentBottles(bottlesOnMap);
@@ -181,7 +193,7 @@ export const AddMarkersOnMap:React.FC = React.memo((props) => {
     // }, [bottlesOnMap]);
     
     //icon={L.icon({iconUrl: marker, iconSize:[50,50]})}
-    return <React.Fragment>                   
+    return <React.Fragment>        
         {searchResultMarker}
         {bottlesOnMap.map(marker => {            
                 if(marker.data?.title) {

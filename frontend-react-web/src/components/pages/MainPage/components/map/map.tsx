@@ -10,8 +10,11 @@ import { GeoJSON } from "react-leaflet";
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
 
+type TProps = {
+    setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>>
+}
 
-export const MapMainPage:React.FC = React.memo((props) => {  
+export const MapMainPage:React.FC<TProps> = React.memo((props) => {  
     
     return <MapContainer center={[56.85, 60.6]} zoom={13} zoomControl={false} >        
         <TileLayer
@@ -21,7 +24,7 @@ export const MapMainPage:React.FC = React.memo((props) => {
             accessToken='pk.eyJ1IjoiZGltYXNpa2J1cmRpbiIsImEiOiJja3VyNm5vNzEwb2N1Mm5xdnVmY2F2NmZkIn0.m48LWgVP-vrcXmP0r-oiBQ'
         />
         <ZoomControl position="bottomright"></ZoomControl>
-        <AddMarkersOnMap ></AddMarkersOnMap>
+        <AddMarkersOnMap setQuestModal={props.setQuestModal}/>
         {/* {props.children} */}
     </MapContainer>
     

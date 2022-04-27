@@ -84,10 +84,11 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         setAddress(props.data.address.split(',').slice(0,2).toString());
+
         calculateTime(props.data);
         let interval = setInterval(() => {            
             calculateTime(props.data);
-        }, 10000);//
+        }, 10000);
         
         return () => clearInterval(interval);
     }, [props.data]);
@@ -101,7 +102,7 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
         if(delta > data.lifeTime) {
             delta -= -offset * 60;
         }
-
+        console.log(delta)
         setTimeLife(convertTime(delta));
     }
     

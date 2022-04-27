@@ -13,7 +13,8 @@ import { ContextForSearch } from "./contextForSearch";
 
 export const MainPage:React.FC = React.memo(() => {
     let wsEv : MessageEvent<any>;
-    const [wsEvent, setWsEvent] = useState(wsEv);  
+    const [wsEvent, setWsEvent] = useState(wsEv);
+    const [questModal, setQuestModal] = useState(<></>);
 
     useEffect(() => {
         WebSockets();
@@ -36,7 +37,7 @@ export const MainPage:React.FC = React.memo(() => {
                 openMap={openMainPage}
                 openLeftMainBar={openLeftMainBar}
                 >
-            <MapMainPage />
+            <MapMainPage setQuestModal={setQuestModal}/>
         </InterfaceButtonMainPage>
 
     const [interfaceMainPageContainer, setInterfaceMainPage] = useState(interfaceMapContainer);
@@ -65,6 +66,7 @@ export const MainPage:React.FC = React.memo(() => {
             <WsEventContext.Provider value={wsEvent}>
                 {interfaceMainPageContainer}
                 {chatPageContainer}
+                {questModal}
                 {backgroundGray}
             </WsEventContext.Provider>            
         </ContextForSearch.Provider>    

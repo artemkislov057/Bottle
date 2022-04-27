@@ -1,0 +1,44 @@
+.map-modal-container {
+    z-index: 430;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.map-modal-data-container {
+    cursor: auto;
+    z-index: 650;
+    width: 300px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: #212121;
+    color: #CDCDCD;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+.map-modal-data-container-addres {
+    text-align: center;
+}
+
+.map-modal-data-container-buttons {
+    display: flex;
+    gap: 20px;    
+}
+
+.map-modal-data-container-button {
+    width: 40px;
+    height: 25px;
+    border: none;
+    border-radius: 5px;
+}
+

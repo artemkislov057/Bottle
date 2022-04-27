@@ -10,7 +10,6 @@ import { RightBarDescrBody } from "./rightBarDescriptBody";
 import icon from './categoryIconTusovki.svg';
 import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 
-const tempLine = 'Описание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описаниеОписание описание'
 
 type TProps = {
     setSelfState: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -27,7 +26,7 @@ export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
     }
 
     if(props.onClickOpenEdit) {
-        console.log(props.data)
+        // console.log(props.data)
         return <div className="right-bar-map-popup-bottle">
             <RightBarHeader title="Записка" onClick={onClickBackToMap} />
             <RightBarDescrBody

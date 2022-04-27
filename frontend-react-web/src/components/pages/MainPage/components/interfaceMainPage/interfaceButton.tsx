@@ -218,12 +218,12 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             <SelectCategory currentCategory={currentFilterCategory} setCategory={setcurrentFilterCategory}/>
         </div>
         
-        <select className="filter-select-mainPage">            
+        {/* <select className="filter-select-mainPage">            
             <option className="aaaa">Все</option>
             <option>Тусовки</option>
             <option>Продажи</option>
         </select>        
-        
+         */}
         <div className="interfaceButton-search-field-with-otherButton">        
             <button className="open-other-container-button" onClick={onClickOpenLeftBar}></button>
             {/* <SearchAddressControl /> */}
@@ -231,7 +231,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
         </div>       
         {/* <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button> */}
-        <button className="create-bottle-button-mainPage" onClick={tempLogin}>+</button>
+        <button className="create-bottle-button-mainPage" onClick={tempLogin} onMouseOver={(e) => console.log('наводится')} onMouseOut={() => console.log('уводится')}>+</button>
 
         {leftbarState}
         <ContextForCreateBottleMarker.Provider 
