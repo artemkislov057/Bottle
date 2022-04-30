@@ -5,7 +5,8 @@ import { ModalInput } from "./moadlInput";
 
 type TProps = {
     title: string,
-    submitButtonName: string
+    submitButtonName: string,
+    onClickCloseModal: Function
 }
 
 export const SignModal:React.FC<TProps> = React.memo((props) => {
@@ -19,14 +20,16 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
         } else {
             setInputs(init1);
         }
+        // let modal = document.querySelector('.sign-modal-container') as HTMLElement;
+        // modal.focus();
 
     }, [props.title])
 
     return <div className="sign-modal-container-back">
-        <div className="sign-modal-container">
+        <div className="sign-modal-container" >
             <div className="sign-modal-header-container">
                 <div className="sign-modal-header-title">{props.title}</div>
-                <div className="sign-modal-header-close-button"></div>
+                <div className="sign-modal-header-close-button" onClick={() => props.onClickCloseModal()}></div>
             </div>
             <div className="sign-modal-body-container">
                 <div className="sign-modal-body-social-container">
@@ -37,7 +40,7 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
                 <div className="sign-modal-body-info-container">
                     <div className="sign-modal-body-info-inputs-container">
                         {inputs.map((input, i) =>                         
-                                <ModalInput key={input} labelName={input} />
+                                <ModalInput key={input} labelName={input} id={i} />
                             )}
                     </div>
                     <button className="sign-modal-body-info-submit-button">{props.submitButtonName}</button>

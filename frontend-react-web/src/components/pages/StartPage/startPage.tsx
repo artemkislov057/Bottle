@@ -10,11 +10,15 @@ export const StartPage:React.FC = React.memo(() => {
     const [modal, setModal] = useState(<></>);    
 
     function onClickSignIn() {
-        setModal(<SignModal title="Вход" submitButtonName="Войти" /> );
+        setModal(<SignModal title="Вход" submitButtonName="Войти" onClickCloseModal={closeModal}/> );
     }
 
     function onClickSignUp() {
-        setModal(<SignModal title="Регистрация" submitButtonName="Зарегистрироваться" /> );
+        setModal(<SignModal title="Регистрация" submitButtonName="Зарегистрироваться" onClickCloseModal={closeModal} /> );
+    }
+
+    function closeModal() {
+        setModal(<></>);
     }
 
     return <div className="start-page">
