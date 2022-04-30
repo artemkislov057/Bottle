@@ -1,0 +1,119 @@
+.sign-modal-container-back {
+    z-index: 10;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(77, 77, 77, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sign-modal-container {
+    position: relative;
+    z-index: 10;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;    
+    width: 600px;
+    min-height: 300px;
+    padding: 20px 25px;
+    background: #212121;
+    gap: 10px;
+}
+
+.sign-modal-header-container {
+    display: flex;
+    justify-content: center;    
+}
+
+.sign-modal-header-title {
+    color: rgba(213, 220, 223, 1);
+    font-size: 28px;    
+}
+
+.sign-modal-header-close-button {
+    width: 15px;
+    height: 15px;
+    background: url('deletePhotoImage.svg') 50% 50% no-repeat;
+    background-size: 15px;
+
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.sign-modal-body-container {
+    height: 100%;
+    width: 100%;
+    padding: 10px 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 100px;
+}
+
+.sign-modal-body-social-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 50px;
+}
+
+.sign-modal-body-social {
+    width: 215px;
+    height: 60px;
+    border-radius: 10px;
+    border: none;
+}
+
+.sign-modal-body-central-line {    
+    position: absolute;
+    height: 100%;
+    width: 2px;
+    background-color: rgba(118, 106, 200, 1);
+}
+
+.sign-modal-body-info-container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+}
+
+.sign-modal-body-info-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: rgba(213, 220, 223, 0.8);    
+}
+
+.sign-modal-body-info-input-input {
+    width: 195px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    background: #D5DCDF;
+    box-shadow: inset 0px 6px 10px rgba(0, 0, 0, 0.25);
+    padding: 0 10px;
+}
+
+.sign-modal-body-info-inputs-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+.sign-modal-body-info-submit-button {
+    width: 160px;
+    height: 45px;
+    border: none;
+    border-radius: 10px;
+    color: rgba(213, 220, 223, 1);
+    background-color: rgba(118, 106, 200, 1);
+}
