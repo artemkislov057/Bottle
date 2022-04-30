@@ -1,0 +1,23 @@
+.start-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #212121;
+    height: 100vh;
+    width: 100%;
+}
+
+.start-page-header-container {    
+    flex: 3;
+    /* background-color: aquamarine; */
+}
+
+.start-page-body-container {
+    flex: 2;
+    /* background-color: blueviolet; */
+}
+
+.start-page-footer-container {
+    flex: 3;
+    /* background-color: tomato; */
+}

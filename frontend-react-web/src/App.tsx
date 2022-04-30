@@ -2,6 +2,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import './App.css';
 import { MainPage } from './components/pages/MainPage/mainPage';
+import { StartPage } from 'components/pages/StartPage/startPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,7 +15,8 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <MainPage></MainPage>
+      <StartPage />
+      {/* <MainPage></MainPage> */}
     </QueryClientProvider>    
   );
 }
