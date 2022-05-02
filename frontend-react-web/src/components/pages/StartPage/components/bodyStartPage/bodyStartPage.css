@@ -1,7 +1,8 @@
 .start-page-body-container {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin: 0 5%;
     /* gap: 200px; */
 }
 
