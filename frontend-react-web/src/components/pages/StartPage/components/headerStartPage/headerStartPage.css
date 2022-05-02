@@ -1,6 +1,7 @@
 .start-page-header-container {
     position: relative;
     display: flex;
+    z-index: 2;
 }
 
 .start-page-header-sign-container {
@@ -13,20 +14,12 @@
 
 .start-page-header-wave-first {
     z-index: 5;
-    position: absolute;
+    /* position: absolute;     */
     width: 100%;
     height: 100%;
     
-    background: url('headerWaveNew1.svg') no-repeat ;
-    background-size: contain;
-}
+    background: url('headerWaveNew1.svg')  50% 50% no-repeat ; 
+    background-size: 100% 100%;
 
-/* .start-page-header-wave-second {
-    margin-top: 50px;
-    z-index: 1;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: url('headerWave2.svg') no-repeat ;
-    background-size: contain;
-} */
+    /* background-color: brown; */
+}
