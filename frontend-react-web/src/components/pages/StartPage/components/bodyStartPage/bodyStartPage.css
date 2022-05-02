@@ -4,22 +4,36 @@
     align-items: center;
     justify-content: space-between;
     margin: 0 5%;
+    padding: 10px 0;
     /* gap: 200px; */
     /* background-color: #d50082; */
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,300&display=swap');
 
 .start-page-body-title-container {
     display: flex;
     flex-direction: column;
     height: 100%;
-    justify-content: space-between;
+    /* justify-content: space-evenly; */
+    font-family: 'Poppins';    
+    justify-content: center;
+    gap: 10px;
 }
 
 .start-page-body-title-name {
-    font-size: 90px;
+    /* font-size: 90px;
     padding: 0;
     margin: 0;
-    color: rgba(213, 220, 223, 1);
+    color: rgba(213, 220, 223, 1); */
+    /* width: 100%; */
+    /* height: 80%; */
+    width: 300px;
+    height: 70px;
+    margin: 0;
+    padding: 0;
+    background: url('bodyTitle.svg') 50% 50% no-repeat;
+    background-size: 100% 100%;
 }
 
 .start-page-body-title-description {
@@ -31,7 +45,8 @@
 .start-page-body-button {
     width: 360px;
     height: 100px;
-    background: inherit
+    background: inherit;
+    font-size: 30px;
 }
 
 .start-page-body-button {
@@ -45,8 +60,8 @@
     border-image:linear-gradient(94.85deg, #6B11DF 0.71%, #8F46EC 100%);
     border-image-slice: 1;
     margin: 10px 20px;
-    font-family: 'Montserrat', sans-serif;
-    text-transform: uppercase;
+    font-family: 'Poppins', 'Montserrat', sans-serif;
+    /* text-transform: uppercase; */
     overflow: hidden;
     letter-spacing: 2px;
     transition: .8s cubic-bezier(.165, .84, .44, 1);
