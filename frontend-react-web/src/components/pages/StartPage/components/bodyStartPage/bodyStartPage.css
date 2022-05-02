@@ -55,7 +55,7 @@
     display: inline-block;
     position: relative;
     padding: 15px 30px;
-    border: 1px solid;
+    border: 2px solid;
     /* border-image: linear-gradient(180deg, #ff3000, #ed0200, #ff096c, #d50082); */
     border-image:linear-gradient(94.85deg, #6B11DF 0.71%, #8F46EC 100%);
     border-image-slice: 1;

@@ -20,6 +20,11 @@
     
     background: url('headerWaveNew1.svg')  50% 50% no-repeat ; 
     background-size: 100% 100%;
-
+    transition: 0.5s;
     /* background-color: brown; */
+}
+
+.start-page-header-wave-first:hover {
+    transform: scale(1.1);
+    transition: 0.5s;
 }
