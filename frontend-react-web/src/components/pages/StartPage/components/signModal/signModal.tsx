@@ -6,24 +6,29 @@ import { ModalInput } from "./moadlInput";
 type TProps = {
     title: string,
     submitButtonName: string,
-    onClickCloseModal: Function
+    onClickCloseModal: Function,
+    onSubmit: Function,    
 }
 
 export const SignModal:React.FC<TProps> = React.memo((props) => {
-    let init1 = ["Логин, Email, телефон", "Пароль"];
-    let init2 = ["Логин, Email, телефон", "Пароль", "Повторите пароль"];
-    const [inputs, setInputs] = useState(init1);
+    const [currentTypeModal, setCurrentTypeModal] = useState('');
+    const [loginData, setLoginData] = useState('');
+    const [passwordData, setPasswordDate] = useState('');
+    const [secondPasswordData, setSecondPasswordDate] = useState('');
 
-    useEffect(() => {
-        if(props.title === 'Регистрация') {
-            setInputs(init2);            
-        } else {
-            setInputs(init1);
-        }
+    useEffect(() => {       
+        setCurrentTypeModal(props.title);
         // let modal = document.querySelector('.sign-modal-container') as HTMLElement;
         // modal.focus();
 
-    }, [props.title])
+    }, [props.title]);
+
+    function checkData(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if(secondPasswordData && passwordData === secondPasswordData) {
+            props.onSubmit({email: loginData, password: passwordData});
+        }        
+    }
 
     return <div className="sign-modal-container-back">
         <div className="sign-modal-container" >
@@ -31,7 +36,7 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
                 <div className="sign-modal-header-title">{props.title}</div>
                 <div className="sign-modal-header-close-button" onClick={() => props.onClickCloseModal()}></div>
             </div>
-            <div className="sign-modal-body-container">
+            <form className="sign-modal-body-container" id="sign-modal-body-container" onSubmit={(e) => checkData(e)}>
                 <div className="sign-modal-body-social-container">
                     <button className="sign-modal-body-social google">Google</button>
                     <button className="sign-modal-body-social vk">VK</button>
@@ -39,13 +44,17 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
                 <div className="sign-modal-body-central-line"></div>
                 <div className="sign-modal-body-info-container">
                     <div className="sign-modal-body-info-inputs-container">
-                        {inputs.map((input, i) =>                         
-                                <ModalInput key={input} labelName={input} id={i} />
-                            )}
+                        <ModalInput labelName={"Email"} id={"Email"} value={loginData} setValue={setLoginData} />
+                        <ModalInput labelName={"Пароль"} id={"Пароль"} type={'password'} value={passwordData} setValue={setPasswordDate}/>
+                        {
+                            currentTypeModal === 'Регистрация' 
+                                ? <ModalInput labelName={"Повторите пароль"} id={"Повторите пароль"} type={'password'} value={secondPasswordData} setValue={setSecondPasswordDate} />
+                                : null
+                        }                       
                     </div>
-                    <button className="sign-modal-body-info-submit-button">{props.submitButtonName}</button>
+                    <button type="submit" form="sign-modal-body-container" className="sign-modal-body-info-submit-button">{props.submitButtonName}</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 })

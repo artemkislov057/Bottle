@@ -10,18 +10,13 @@
 }
 
 .start-page-header-container {
-    /* min-height: 303px; */
     flex: 2 ;
-    /* background-color: aquamarine; */
 }
 
 .start-page-body-container {
     flex: 3;
-    /* background-color: blueviolet; */
 }
 
 .start-page-footer-container {
-    /* background-color: burlywood; */
     flex: 2;
-    /* background-color: tomato; */
 }

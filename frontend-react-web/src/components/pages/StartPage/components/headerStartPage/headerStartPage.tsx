@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import './headerStartPage.css';
 import ic from './headerWaveNew1.svg';
 // import ic from './fuuuuuuuuck.png';
+import {Link} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 type TProps = {
-    onClickSignUp: Function
+    onClickSignUp: Function,
+    toMainPage: Function
 }
 
 export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
@@ -35,7 +38,7 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
             setVioletMarker(<div className="start-page-header-wave-first-marker right"></div>);
         }
     }
-
+    
     return <div className="start-page-header-container">
         <div className="start-page-header-wave-first-help-container" onMouseOver={() => onHovered()} onMouseOut={() => onBlur()}>
             <div className="start-page-header-wave-first-help a" onMouseOver={() => createMarker('left')} onMouseOut={() => deleteMarker('left')}>
@@ -48,7 +51,7 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
         <div className="start-page-header-wave-first" ></div>
     
         <div className="start-page-header-sign-container">
-            <button className="start-page-header-exit-button">
+            <button className="start-page-header-exit-button" onClick={() => props.toMainPage()}>
                 exit
             </button>
             <div className="start-page-header-sign-container-central-line"></div>

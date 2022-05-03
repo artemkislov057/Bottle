@@ -80,7 +80,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                 }
             }
 
-            items.sort((x,y) => _compareTime(x.dialogInfo.lastMessage?.dateTime, y.dialogInfo.lastMessage?.dateTime));
+            items?.sort((x,y) => _compareTime(x.dialogInfo.lastMessage?.dateTime, y.dialogInfo.lastMessage?.dateTime));
             setChatUsers(items);
         }
 
