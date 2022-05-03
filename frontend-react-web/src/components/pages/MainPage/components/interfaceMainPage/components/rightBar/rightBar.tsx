@@ -102,7 +102,7 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
         return <div className="right-bar-map">
             <RightBarHeader onClick={onClickBackToMapButton} title='Редактировать записку'/>
             <RightBarBody onSubmit={saveChangeData} setBottleData={setBottleData} bottleData={bottleData}/>
-            <RightBarFooter title="Выбрать адрес" onClick={findPlaceForBottle} saveChangeFunc={findPlaceForBottle}/>
+            <RightBarFooter title="Выбрать адрес" onClick={findPlaceForBottle} onClickSecondButton={findPlaceForBottle} secondTitle='Сохранить'/>
         </div>
     }
 

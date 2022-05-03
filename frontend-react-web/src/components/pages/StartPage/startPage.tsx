@@ -45,8 +45,38 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         
     }
 
-    function onSubmitSignIn(data: {email: string, password: string}) {
+    async function onSubmitSignIn(data: {email: string, password: string}) {
+        closeModal();
+        let type = data.email.includes('@') ? 'email' : 'nickname';
+        let responseData;
+        if(type === 'email') {
+            responseData = {
+                email: data.email,
+                password: data.password
+            }
+        } else {
+            responseData = {
+                nickname: data.email,
+                password: data.password
+            }
+        }
         
+        let response = await fetch(`${apiUrl}/api/account/login`, {
+            method: 'POST',
+            body: JSON.stringify(responseData),
+            credentials: 'include',
+            headers: {
+                "content-type": 'application/json'
+            }
+        });
+        
+        if(response.ok) {
+            toMainPage();
+            console.log('вошли')
+        } else {
+            navigate('/');
+            console.log('не вошли жопа')
+        }
     }
 
     function onClickSignIn() {

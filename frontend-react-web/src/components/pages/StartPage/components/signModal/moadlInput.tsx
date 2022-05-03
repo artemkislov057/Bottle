@@ -12,7 +12,7 @@ export const ModalInput:React.FC<TProps> = React.memo((props) => {
     return <div className="sign-modal-body-info-input-container">
         <label htmlFor={`body-info-input-input-${props.id}`} className="sign-modal-body-info-input-label">{props.labelName}</label>
         <input 
-            type={props.type || 'email'} 
+            type={props.labelName === "Email, nickname" ? 'text' : props.type || 'email'} 
             id={`body-info-input-input-${props.id}`} 
             className="sign-modal-body-info-input-input" 
             value={props.value}

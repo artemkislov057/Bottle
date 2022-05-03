@@ -25,6 +25,10 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
 
     function checkData(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        if(currentTypeModal === 'Вход') {
+            props.onSubmit({email: loginData, password: passwordData});
+            return;
+        }
         if(secondPasswordData && passwordData === secondPasswordData) {
             props.onSubmit({email: loginData, password: passwordData});
         }        
@@ -44,13 +48,17 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
                 <div className="sign-modal-body-central-line"></div>
                 <div className="sign-modal-body-info-container">
                     <div className="sign-modal-body-info-inputs-container">
-                        <ModalInput labelName={"Email"} id={"Email"} value={loginData} setValue={setLoginData} />
+                        {
+                            currentTypeModal === 'Вход' 
+                                ? <ModalInput labelName={"Email, nickname"} id={"Email"} value={loginData} setValue={setLoginData} />
+                                : <ModalInput labelName={"Email"} id={"Email"} value={loginData} setValue={setLoginData} />
+                        }
                         <ModalInput labelName={"Пароль"} id={"Пароль"} type={'password'} value={passwordData} setValue={setPasswordDate}/>
                         {
                             currentTypeModal === 'Регистрация' 
                                 ? <ModalInput labelName={"Повторите пароль"} id={"Повторите пароль"} type={'password'} value={secondPasswordData} setValue={setSecondPasswordDate} />
                                 : null
-                        }                       
+                        }
                     </div>
                     <button type="submit" form="sign-modal-body-container" className="sign-modal-body-info-submit-button">{props.submitButtonName}</button>
                 </div>

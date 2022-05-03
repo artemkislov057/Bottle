@@ -6,6 +6,7 @@ import { RightBarHeader } from "../rightBar/header";
 import { ProfileBody } from "./profileBody";
 import { RightBarFooter } from "../rightBar/footer";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
+import { useNavigate } from "react-router-dom";
 
 type TProps = {
     setStateRightProfileBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -13,6 +14,7 @@ type TProps = {
 }
 
 export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
+    let navigator = useNavigate();
     let init : {info: UserInfoType, avatar: string}
     const [selfInfo, setSelfInfo] = useState(init);
     const [changedData, setChangedData] = useState({nickName: '', email: ''});
@@ -74,10 +76,23 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
         props.setStateRightProfileBar(<></>);
         props.openLeftBar();
     }
+
+    async function onClickLogoutButton() {
+        let response = await fetch(`${apiUrl}/api/account/logout`, {
+            method: "POST",
+            credentials: 'include'
+        });
+        if(response.ok) {
+            navigator('/');
+        } else {
+            navigator('/mainPage');
+        }
+        
+    }
     
     return <div className="right-bar-profile-map">
         <RightBarHeader title="Мой профиль" onClick={onClickBackButton} />
         <ProfileBody data={selfInfo} changedData={changedData} setChangedData={setChangedData}/>
-        <RightBarFooter title="Сохранить" onClick={saveChanges} />
+        <RightBarFooter title="Выйти" onClick={onClickLogoutButton} onClickSecondButton={saveChanges} secondTitle='Сохранить'/>
     </div>
 })
