@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import './startPage.css';
 
 import { HeaderStartPage } from "./components/headerStartPage/headerStartPage";
@@ -7,18 +7,29 @@ import { FooterStartPage } from "./components/footerStartPage/footerStartPage";
 import { SignModal } from "./components/signModal/signModal";
 import { useNavigate } from "react-router-dom";
 import { apiUrl } from "components/connections/apiUrl";
+import { ContextLogin } from "loginContext";
 
 type TProps = {
+    isLogin: boolean
 }
 
 export const StartPage:React.FC<TProps> = React.memo((props) => {
     const navigate = useNavigate();
-    const [modal, setModal] = useState(<></>);    
-
+    const [modal, setModal] = useState(<></>);
+    const loginData = useContext(ContextLogin);
+        
     function toMainPage() {
         navigate('/mainPage');
         // window.history.replaceState({}, document.title)
     }
+
+    useEffect(() => {
+        console.log(loginData.isLogin)
+        if(loginData.isLogin) {
+            toMainPage();
+        }
+    }, [loginData.isLogin])
+    
 
     async function onSubmitSignUp(data: {email: string, password: string}) {
         closeModal();
@@ -36,6 +47,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
             }
         });
         if(response.ok) {
+            loginData.setIsLogin(true);
             toMainPage();
             console.log('зарегались')
         } else {
@@ -71,6 +83,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         });
         
         if(response.ok) {
+            loginData.setIsLogin(true);
             toMainPage();
             console.log('вошли')
         } else {

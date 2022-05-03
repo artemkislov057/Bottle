@@ -7,7 +7,7 @@ import { RightBarProfile } from "./components/rightBarProfile/rightBarProfile";
 import { RightBarMyBottles } from "./components/rightBarMyBottles/rightBarMyBottles";
 import { ContextForCreateBottleMarker } from "../../contextForCreateBottleMarker";
 import { BottleRequestType } from "../../BottleRequestType";
-import { ws } from "components/connections/ws";
+// import { ws } from "components/connections/ws";
 import { WsDataType } from "../../WsDataType";
 import { wsBottle } from "./components/wsBottle";
 import { SelectCategory } from "./components/selectCategory/selectCategory";

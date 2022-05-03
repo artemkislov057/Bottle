@@ -4,7 +4,7 @@ import './chatPage.css';
 import { LeftBar } from "../interfaceMainPage/components/leftBar/leftBar";
 import { LeftBarChat } from "./components/leftBar/leftBarChatPage";
 import { MessageAreaChat } from "./components/rightArea/rightArea";
-import { ws } from "components/connections/ws";
+// import { ws } from "components/connections/ws";
 import { WsDialogType } from "../../WsDialogType";
 import { UserInfoType } from "../../UserInfoType";
 import { WsGetMessageType } from "../../WsGetMessageType";

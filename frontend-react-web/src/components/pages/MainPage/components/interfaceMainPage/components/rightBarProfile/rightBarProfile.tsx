@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './rightBarProfile.css';
 
 import { apiUrl } from "components/connections/apiUrl";
@@ -7,6 +7,7 @@ import { ProfileBody } from "./profileBody";
 import { RightBarFooter } from "../rightBar/footer";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 import { useNavigate } from "react-router-dom";
+import { ContextLogin } from "loginContext";
 
 type TProps = {
     setStateRightProfileBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -18,6 +19,7 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
     let init : {info: UserInfoType, avatar: string}
     const [selfInfo, setSelfInfo] = useState(init);
     const [changedData, setChangedData] = useState({nickName: '', email: ''});
+    const loginData = useContext(ContextLogin);
 
     useEffect(() => {
         async function getInformation() {
@@ -83,6 +85,7 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
             credentials: 'include'
         });
         if(response.ok) {
+            loginData.setIsLogin(false);
             navigator('/');
         } else {
             navigator('/mainPage');
