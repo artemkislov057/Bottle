@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 type TProps = {
     onClickSignUp: Function,
+    onClickSignIn: Function,
     toMainPage: Function
 }
 
@@ -38,7 +39,7 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
             setVioletMarker(<div className="start-page-header-wave-first-marker right"></div>);
         }
     }
-    
+
     return <div className="start-page-header-container">
         <div className="start-page-header-wave-first-help-container" onMouseOver={() => onHovered()} onMouseOut={() => onBlur()}>
             <div className="start-page-header-wave-first-help a" onMouseOver={() => createMarker('left')} onMouseOut={() => deleteMarker('left')}>
@@ -51,8 +52,8 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
         <div className="start-page-header-wave-first" ></div>
     
         <div className="start-page-header-sign-container">
-            <button className="start-page-header-exit-button" onClick={() => props.toMainPage()}>
-                exit
+            <button className="start-page-header-exit-button" onClick={() => props.onClickSignIn()}>
+                sign in
             </button>
             <div className="start-page-header-sign-container-central-line"></div>
             <button className="start-page-header-sign-button" onClick={() => props.onClickSignUp()}>

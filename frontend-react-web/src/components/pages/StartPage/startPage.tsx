@@ -92,7 +92,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     }
 
     return <div className="start-page">
-        <HeaderStartPage onClickSignUp={onClickSignIn} toMainPage={toMainPage}/>        
+        <HeaderStartPage onClickSignUp={onClickSignUp} toMainPage={toMainPage} onClickSignIn={onClickSignIn}/>        
         <BodyStartPage onClickBegin={onClickSignUp}/>
         <FooterStartPage />
         {modal}
