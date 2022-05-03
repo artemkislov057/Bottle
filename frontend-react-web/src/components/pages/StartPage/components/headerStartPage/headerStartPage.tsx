@@ -43,13 +43,16 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
     return <div className="start-page-header-container">
         <div className="start-page-header-wave-first-help-container" onMouseOver={() => onHovered()} onMouseOut={() => onBlur()}>
             <div className="start-page-header-wave-first-help a" onMouseOver={() => createMarker('left')} onMouseOut={() => deleteMarker('left')}>
-                {pinkMarker}
+                
             </div>
             <div className="start-page-header-wave-first-help b" onMouseOver={() => createMarker('right')} onMouseOut={() => deleteMarker('right')}>
-                {violetMarker}
+                
             </div>
         </div>
-        <div className="start-page-header-wave-first" ></div>
+        <div className="start-page-header-wave-first" >
+            {pinkMarker}
+            {violetMarker}
+        </div>
     
         <div className="start-page-header-sign-container">
             <button className="start-page-header-exit-button" onClick={() => props.onClickSignIn()}>
