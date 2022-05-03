@@ -161,3 +161,32 @@
     width: 12%;
     height: 98%;
 }
+
+.start-page-footer-wave-first-marker {
+    width: 40px;
+    height: 60px;
+    position: absolute;
+
+    opacity: 0;    
+    transition: .5s;
+}
+
+.start-page-footer-wave-first-marker.left {
+    left: 14%;
+    top: -24%;
+    background: url('../markersIcon/greenMarker.svg') 50% 50% no-repeat;
+    background-size: 40px 60px;    
+}
+
+.start-page-footer-wave-first-marker.right {
+    right: 25%;
+    top: -25%;
+    background: url('../markersIcon/blueMarker.svg') 50% 50% no-repeat;
+    background-size: 40px 60px;
+}
+
+.start-page-footer-wave-first-marker.left.show,
+.start-page-footer-wave-first-marker.right.show {
+    opacity: 1;
+    transition: .5s;
+}
