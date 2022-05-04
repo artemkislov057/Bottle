@@ -8,6 +8,10 @@ html, body {
     height: 100%;
 }
 
+.main-page {
+    position: relative;
+}
+
 .background-gray {
     position: fixed;
     left: 0;

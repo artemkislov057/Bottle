@@ -78,7 +78,7 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
         setInterfaceMainPage(interfaceMapContainer);
     }
     
-    return <>
+    return <div className="main-page">
         <ContextForSearch.Provider value={[latLngForSearch, setLatLng]}>
             <WsEventContext.Provider value={wsEvent}>
                 {interfaceMainPageContainer}
@@ -87,5 +87,5 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
                 {backgroundGray}
             </WsEventContext.Provider>            
         </ContextForSearch.Provider>    
-    </>
+    </div>
 })

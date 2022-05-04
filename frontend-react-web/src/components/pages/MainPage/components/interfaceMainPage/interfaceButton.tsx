@@ -183,7 +183,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         props.backgroundState(<></>);
     }
 
-    function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>>) {
+    function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>> = null) {
         for(let e of leftRightBarsStates) {
             if(e !== currentBar) {
                 e(<></>);
@@ -202,6 +202,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         }).then(res => res.json().then(res => {
             console.log(res);
             let result = res as {dialogId : number};
+            closeOtherBars()
             props.openChat(result.dialogId);
         }))
     }

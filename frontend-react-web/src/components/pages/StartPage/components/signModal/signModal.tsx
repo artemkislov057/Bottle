@@ -38,7 +38,7 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
 
     function successLoginGoogle(e: GoogleLoginResponse | GoogleLoginResponseOffline) {
         let data = e as GoogleLoginResponse;       
-            props.onSubmitGoogle({provider: 0, providerId: data.googleId, token: data.accessToken, email: data.profileObj.email})
+            props.onSubmitGoogle({provider: 0, externalUserId: data.googleId, token: data.accessToken, email: data.profileObj.email})
     }
     
 

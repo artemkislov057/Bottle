@@ -57,15 +57,14 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         
     }
 
-    async function onSubmitSignUpGoogle(data: {provider: number, providerId: string, token: string, email: string}) {
+    async function onSubmitSignUpGoogle(data: {provider: number, externalUserId: string, token: string, email: string}) {
         closeModal();
-        console.log(data)
         let response = await fetch(`${apiUrl}/api/account/external-register`, {
             method: 'POST',
             body: JSON.stringify({
                 externalLogin: {
                     provider: data.provider,
-                    providerId: data.providerId,
+                    externalUserId: data.externalUserId,
                     accessToken: data.token,
                     rememberMe: true
                 },
@@ -89,13 +88,13 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         
     }
 
-    async function onSubmitSignInGoogle(data: {provider: number, providerId: string, token: string, email: string}) {
+    async function onSubmitSignInGoogle(data: {provider: number, externalUserId: string, token: string, email: string}) {
         closeModal();
         let response = await fetch(`${apiUrl}/api/account/external-login`, {
             method: 'POST',
             body: JSON.stringify({
                 provider: data.provider,
-                providerId: data.providerId,
+                externalUserId: data.externalUserId,
                 accessToken: data.token,
             }),
             credentials: 'include',
