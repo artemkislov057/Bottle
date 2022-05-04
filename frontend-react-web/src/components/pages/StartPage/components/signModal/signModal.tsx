@@ -54,7 +54,12 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
                     <GoogleLogin
                         clientId={process.env.REACT_APP_GOOGLE_API_KEY}
                         render={renderProps => (
-                            <button className="sign-modal-body-social google" onClick={renderProps.onClick} disabled={renderProps.disabled}>{props.title === 'Вход' ? "Sign in with Google" : "Sign up with Google"}</button>
+                            <div className="sign-modal-body-social google" onClick={renderProps.onClick}>
+                                <div className="sign-modal-body-social-icon google"></div>
+                                <div className="sign-modal-body-social-text google">{props.title === 'Вход' ? "Sign in with Google" : "Sign up with Google"}</div>
+                                {/* <button className="sign-modal-body-social google" onClick={renderProps.onClick} disabled={renderProps.disabled}>{props.title === 'Вход' ? "Sign in with Google" : "Sign up with Google"}</button> */}
+                            </div>
+                            
                           )}
                         onSuccess={e => successLoginGoogle(e)}
                         // onFailure={responseGoogle}
@@ -62,7 +67,12 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
                         // isSignedIn={true}
                     />
                     
-                    <button className="sign-modal-body-social vk">VK</button>
+                    {/* <button className="sign-modal-body-social vk">VK</button> */}
+                    <div className="sign-modal-body-social vk">
+                        <div className="sign-modal-body-social-icon vk"></div>
+                        <div className="sign-modal-body-social-text vk">{props.title === 'Вход' ? "Sign in with VK" : "Sign up with VK"}</div>
+                        {/* <button className="sign-modal-body-social google" onClick={renderProps.onClick} disabled={renderProps.disabled}>{props.title === 'Вход' ? "Sign in with Google" : "Sign up with Google"}</button> */}
+                    </div>
                 </div>
                 <div className="sign-modal-body-central-line"></div>
                 <div className="sign-modal-body-info-container">

@@ -65,11 +65,36 @@
     gap: 40px;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,300&display=swap');
+
 .sign-modal-body-social {
-    width: 215px;
+    width: 185px;
     height: 60px;
-    border-radius: 10px;
+    border-radius: 10px;    
     border: none;
+    background: rgba(213, 220, 223, 1);
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    gap: 10px;
+
+    font-family: 'Poppins';
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.sign-modal-body-social-icon {
+    width: 35px;
+    height: 35px;
+    background-size: 35px 35px;
+}
+
+.sign-modal-body-social-icon.google {
+    background: url('googleIcon.svg') 50% 50% no-repeat;
+}
+
+.sign-modal-body-social-icon.vk {
+    background: url('vkIcon.svg') 50% 50% no-repeat;
 }
 
 .sign-modal-body-central-line {    
