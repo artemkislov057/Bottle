@@ -159,13 +159,13 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var externalProvider = ExternalProviderUser.GetProvider(model.ExternalLogin.Provider);
-                var isAuthorize = await externalProvider.CheckAuthorizeAsync(model.ExternalLogin.ProviderId, model.ExternalLogin.AccessToken);
+                var isAuthorize = await externalProvider.CheckAuthorizeAsync(model.ExternalLogin.ExternalUserId, model.ExternalLogin.AccessToken);
                 if (isAuthorize)
                 {
-                    var user = db.Users.FirstOrDefault(u => u.Provider == model.ExternalLogin.Provider && u.ProviderId == model.ExternalLogin.ProviderId);
+                    var user = db.Users.FirstOrDefault(u => u.Provider == model.ExternalLogin.Provider && u.ExternalUserId == model.ExternalLogin.ExternalUserId);
                     if (user == null)
                     {
-                        user = new User { Provider = model.ExternalLogin.Provider, ProviderId = model.ExternalLogin.ProviderId, UserName = model.Nickname, Sex = model.Sex };
+                        user = new User { Provider = model.ExternalLogin.Provider, ExternalUserId = model.ExternalLogin.ExternalUserId, UserName = model.Nickname, Sex = model.Sex };
                         if (model.CommercialData == null)
                         {
                             user.Type = 1;
@@ -202,10 +202,10 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var externalProvider = ExternalProviderUser.GetProvider(model.Provider);
-                var isAuthorize = await externalProvider.CheckAuthorizeAsync(model.ProviderId, model.AccessToken);
+                var isAuthorize = await externalProvider.CheckAuthorizeAsync(model.ExternalUserId, model.AccessToken);
                 if (isAuthorize)
                 {
-                    var user = db.Users.FirstOrDefault(u => u.Provider != null && u.ProviderId == model.ProviderId);
+                    var user = db.Users.FirstOrDefault(u => u.Provider != null && u.ExternalUserId == model.ExternalUserId);
                     if (user == null)
                     {
                         return NotFound();
