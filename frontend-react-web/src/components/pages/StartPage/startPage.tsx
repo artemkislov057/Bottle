@@ -57,6 +57,63 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         
     }
 
+    async function onSubmitSignUpGoogle(data: {provider: number, providerId: string, token: string, email: string}) {
+        closeModal();
+        console.log(data)
+        let response = await fetch(`${apiUrl}/api/account/external-register`, {
+            method: 'POST',
+            body: JSON.stringify({
+                externalLogin: {
+                    provider: data.provider,
+                    providerId: data.providerId,
+                    accessToken: data.token,
+                    rememberMe: true
+                },
+                nickname: data.email.split('@')[0],
+                email: data.email,
+                sex: "?",                
+            }),
+            credentials: 'include',
+            headers: {
+                "content-type": 'application/json'
+            }
+        });
+        if(response.ok) {
+            loginData.setIsLogin(true);
+            toMainPage();
+            console.log('зарегались')
+        } else {
+            navigate('/');
+            console.log('жопа1');
+        }
+        
+    }
+
+    async function onSubmitSignInGoogle(data: {provider: number, providerId: string, token: string, email: string}) {
+        closeModal();
+        let response = await fetch(`${apiUrl}/api/account/external-login`, {
+            method: 'POST',
+            body: JSON.stringify({
+                provider: data.provider,
+                providerId: data.providerId,
+                accessToken: data.token,
+            }),
+            credentials: 'include',
+            headers: {
+                "content-type": 'application/json'
+            }
+        });
+        if(response.ok) {
+            loginData.setIsLogin(true);
+            toMainPage();
+            console.log('login google')
+        } else {
+            navigate('/');
+            console.log('жопа2')
+        }
+        
+    }
+
     async function onSubmitSignIn(data: {email: string, password: string}) {
         closeModal();
         let type = data.email.includes('@') ? 'email' : 'nickname';
@@ -93,11 +150,11 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     }
 
     function onClickSignIn() {
-        setModal(<SignModal title="Вход" submitButtonName="Войти" onClickCloseModal={closeModal} onSubmit={onSubmitSignIn} /> );
+        setModal(<SignModal title="Вход" submitButtonName="Войти" onClickCloseModal={closeModal} onSubmit={onSubmitSignIn} onSubmitGoogle={onSubmitSignInGoogle} /> );
     }
 
     function onClickSignUp() {
-        setModal(<SignModal title="Регистрация" submitButtonName="Зарегистрироваться" onClickCloseModal={closeModal} onSubmit={onSubmitSignUp} /> );
+        setModal(<SignModal title="Регистрация" submitButtonName="Зарегистрироваться" onClickCloseModal={closeModal} onSubmit={onSubmitSignUp} onSubmitGoogle={onSubmitSignUpGoogle}/> );
     }
 
     function closeModal() {

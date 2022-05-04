@@ -16,8 +16,7 @@ const queryClient = new QueryClient({
 })
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
-
+  const [isLogin, setIsLogin] = useState(false);  
   useEffect(() => {
     async function getUser() {
       try {

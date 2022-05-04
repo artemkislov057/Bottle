@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './signModal.css';
+import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from "react-google-login";
 
 import { ModalInput } from "./moadlInput";
 
@@ -7,14 +8,15 @@ type TProps = {
     title: string,
     submitButtonName: string,
     onClickCloseModal: Function,
-    onSubmit: Function,    
+    onSubmit: Function,
+    onSubmitGoogle: Function,
 }
 
 export const SignModal:React.FC<TProps> = React.memo((props) => {
     const [currentTypeModal, setCurrentTypeModal] = useState('');
     const [loginData, setLoginData] = useState('');
     const [passwordData, setPasswordDate] = useState('');
-    const [secondPasswordData, setSecondPasswordDate] = useState('');
+    const [secondPasswordData, setSecondPasswordDate] = useState('');    
 
     useEffect(() => {       
         setCurrentTypeModal(props.title);
@@ -34,6 +36,12 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
         }        
     }
 
+    function successLoginGoogle(e: GoogleLoginResponse | GoogleLoginResponseOffline) {
+        let data = e as GoogleLoginResponse;       
+            props.onSubmitGoogle({provider: 0, providerId: data.googleId, token: data.accessToken, email: data.profileObj.email})
+    }
+    
+
     return <div className="sign-modal-container-back">
         <div className="sign-modal-container" >
             <div className="sign-modal-header-container">
@@ -42,7 +50,18 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
             </div>
             <form className="sign-modal-body-container" id="sign-modal-body-container" onSubmit={(e) => checkData(e)}>
                 <div className="sign-modal-body-social-container">
-                    <button className="sign-modal-body-social google">Google</button>
+                    {/* <button className="sign-modal-body-social google">Google</button> */}
+                    <GoogleLogin
+                        clientId={process.env.REACT_APP_GOOGLE_API_KEY}
+                        render={renderProps => (
+                            <button className="sign-modal-body-social google" onClick={renderProps.onClick} disabled={renderProps.disabled}>{props.title === 'Вход' ? "Sign in with Google" : "Sign up with Google"}</button>
+                          )}
+                        onSuccess={e => successLoginGoogle(e)}
+                        // onFailure={responseGoogle}
+                        cookiePolicy={'single_host_origin'}
+                        // isSignedIn={true}
+                    />
+                    
                     <button className="sign-modal-body-social vk">VK</button>
                 </div>
                 <div className="sign-modal-body-central-line"></div>
