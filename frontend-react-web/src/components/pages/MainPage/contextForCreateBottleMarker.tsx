@@ -26,5 +26,7 @@ export const ContextForCreateBottleMarker = React.createContext({
         data: null || initData,
         setData: a,
         bottlesOnMap: b,
-        openEditRightBar: (data: BottleRequestType) => {return}
+        openEditRightBar: (data: BottleRequestType) => {return},
+        startCreateMode: (data: DataBottleDescType, map: L.Map) => {return},
+        exitCreateMode: () => null,
 });

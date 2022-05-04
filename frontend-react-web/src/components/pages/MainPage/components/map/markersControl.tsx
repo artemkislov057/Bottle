@@ -48,7 +48,7 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     const [latLngForSearch] = useContext(ContextForSearch);//координаты при поиске
     const [searchResultMarker, setSearchMarker] = useState(<></>);//маркер при поиске
 
-    const {data, bottlesOnMap, setData, openDescriptionBar, openEditRightBar} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
+    const {data, bottlesOnMap, setData, openDescriptionBar, openEditRightBar, startCreateMode, exitCreateMode} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
     const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]); //созданные бутылки
     const [selfId, setSelfId] = useState('-1');
     
@@ -110,7 +110,9 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     useEffect(() => { // создание бутылки
         // console.log(data)
         if(data?.titleName) {
-            map.on('click', async (e : LeafletMouseEvent) => {
+            let currentData = data;
+            startCreateMode(currentData, map);
+            map.on('click', async (e : LeafletMouseEvent) => {                
                 let provider = new OpenStreetMapProvider();
                 let pos = e.latlng;
                 let addressPlace = await provider.search({query:`${pos.lat}, ${pos.lng}`});
@@ -118,7 +120,7 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
                 props.setQuestModal(<MapModal 
                         quest={`Вы точно хотите поставить бутылку по адресу: ${localAddress}?`}
                         onClickNoButton={onClickNoCreateButton} 
-                        onClickYesButton={() => onClickYesCreateButton(data, pos, addressPlace[0].label)} 
+                        onClickYesButton={() => onClickYesCreateButton(currentData, pos, addressPlace[0].label)} 
                     />);
             })
         }
@@ -139,6 +141,7 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     function onClickYesCreateButton(data: DataBottleDescType, locate: LatLng, address: string) {
         map.removeEventListener('click');
         props.setQuestModal(<></>);
+        exitCreateMode();
         sendCreateBottleRequest(data, locate, address);
     }
 
@@ -146,20 +149,20 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
         props.setQuestModal(<></>);
     }
 
-    async function sendCreateBottleRequest(requestata: DataBottleDescType, pos: LatLng, address: string) {
+    async function sendCreateBottleRequest(requestdata: DataBottleDescType, pos: LatLng, address: string) {
         let responseCreate = await fetch(`${apiUrl}/api/bottles`, {
             method: 'POST',
             body: JSON.stringify({
                 lat: pos.lat,
                 lng: pos.lng,
-                title: requestata.titleName,                
+                title: requestdata.titleName,                
                 geoObjectName: null,//
                 address: address,
-                description: requestata.description,
-                category: requestata.category,//
-                lifeTime: requestata.timeLife,
-                maxPickingUp: requestata.countPick,
-                contentItemsCount: requestata.content?.length,
+                description: requestdata.description,
+                category: requestdata.category,//
+                lifeTime: requestdata.timeLife,
+                maxPickingUp: requestdata.countPick,
+                contentItemsCount: requestdata.content?.length,
             }),
             credentials: 'include',
             headers: {
@@ -167,7 +170,7 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
             }
         });
         
-        if(requestata.content) {
+        if(requestdata.content) {
             let bottleData = await responseCreate.json() as BottleRequestType;                
             console.log(bottleData)
             for (let urlPhoto of data.content) {
@@ -210,7 +213,7 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
                             } 
                         }}
                         icon={L.icon({iconUrl: markerIcons.get(marker.data.category), iconSize:[50,50]})}
-                        />
+                    />
                 }
                     
                 return null;

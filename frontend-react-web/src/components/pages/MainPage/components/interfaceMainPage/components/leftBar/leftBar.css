@@ -1,6 +1,6 @@
 .left-bar-map {
-    position: fixed;    
-    width: 400px;
+    position: fixed;
+    width: 400px;    
     height: 100%;
     display: flex;
     flex-direction: column;

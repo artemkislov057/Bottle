@@ -16,7 +16,8 @@ import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 type TProps = {
     setStateRightBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
     disableBackgroundGray: Function,
-    changeBottleData?: BottleRequestType
+    changeBottleData?: BottleRequestType,
+    currentBottleData?: DataBottleDescType
 }
 
 export const RightBar:React.FC<TProps> = React.memo((props) => {
@@ -97,6 +98,11 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
 
         getBottleData();
     }, [props.changeBottleData]);
+
+    useEffect(() => {
+        if(!props.currentBottleData) return;
+        setBottleData(props.currentBottleData);
+    }, [props.currentBottleData])
 
     if(props.changeBottleData) {
         return <div className="right-bar-map">

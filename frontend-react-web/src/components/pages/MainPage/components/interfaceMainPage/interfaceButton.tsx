@@ -13,6 +13,10 @@ import { wsBottle } from "./components/wsBottle";
 import { SelectCategory } from "./components/selectCategory/selectCategory";
 import { WsEventContext } from "../../contextWsEvents";
 import { apiUrl } from "components/connections/apiUrl";
+import { Select } from "./components/mainComponents/select";
+import { CreateButton } from "./components/mainComponents/createButton";
+import { Toolbar } from "./components/mainComponents/toolbar";
+import { ExitCreateButton } from "./components/mainComponents/exitCreateModeButton";
 
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 
@@ -42,6 +46,12 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
 
     const [bottlesOnMap, setBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
     const [constBottlesOnMap, setConstBottlesOnMap] = useState([{data: initObj, coordinates: new LatLng(null, null)}]);
+
+    const [select, setSelect] = useState(<Select currentCategory={currentFilterCategory} setCategory={setcurrentFilterCategory} />);
+    const [toolbar, setToolbar] = useState(<Toolbar onClick={onClickOpenLeftBar} withOtherButton={true}/>);
+    const [createButton, setCreateButton] = useState(<CreateButton onClick={() => onClickOpenRightBar()} />);
+    const [exitCreateButton, setExitCreateButton] = useState(<></>);
+
 
     useEffect(() => { // при обновлении стр получение всех бутылок
         if(!props.children) return;
@@ -119,7 +129,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     function onClickOpenLeftBar() {
         closeOtherBars(setLeftBar);
         enableBackgroundGray();
-        setLeftBar(<LeftBar 
+        setLeftBar(<LeftBar
             setStateLeftBar={setLeftBar} 
             onClickCreateButton={onClickOpenRightBar}
             onClickProfileInfo={onClickProfileInfofromLeft}
@@ -130,10 +140,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         />)
     }
 
-    function onClickOpenRightBar(changeBottleData?: BottleRequestType) {
+    function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
         closeOtherBars(setRightBar);
         enableBackgroundGray();
-        setRightBar(<RightBar setStateRightBar={setRightBar} disableBackgroundGray={disableBackgroundGray} changeBottleData={changeBottleData} />);            
+        setRightBar(<RightBar setStateRightBar={setRightBar} disableBackgroundGray={disableBackgroundGray} changeBottleData={changeBottleData} currentBottleData={currentData}/>);            
     }
 
     function onClickProfileInfofromLeft() {
@@ -196,6 +206,34 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         }))
     }
 
+    function hideMainComponents() {
+        setSelect(<></>);
+        setToolbar(<Toolbar onClick={onClickOpenLeftBar} withOtherButton={false}/>);
+        setCreateButton(<></>);
+    }
+
+    function showMainComponents() {
+        setSelect(<Select currentCategory={currentFilterCategory} setCategory={setcurrentFilterCategory} />);
+        setToolbar(<Toolbar onClick={onClickOpenLeftBar} withOtherButton={true}/>);
+        setCreateButton(<CreateButton onClick={() => onClickOpenRightBar()} />);
+    }
+
+    function startBottleCreateMode(data: DataBottleDescType, map: L.Map) {
+        hideMainComponents();
+        setExitCreateButton(<ExitCreateButton onClick={() => backToCreateBottle(data, map)} setSelf={setExitCreateButton} />);
+    }
+
+    function backToCreateBottle(data: DataBottleDescType, map: L.Map) {
+        map.removeEventListener('click');
+        exitBottleCreateMode();
+        onClickOpenRightBar(null, data);
+    }
+
+    function exitBottleCreateMode() {
+        showMainComponents();
+        setExitCreateButton(<></>);
+    }
+
     function tempLogin() {
         fetch(`${apiUrl}/api/account/login`, {
             method: 'POST',
@@ -214,24 +252,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     return <div className="interface-button-container">
-        <div className="select-category-mainPage-input">
-            <SelectCategory currentCategory={currentFilterCategory} setCategory={setcurrentFilterCategory}/>
-        </div>
-        
-        {/* <select className="filter-select-mainPage">            
-            <option className="aaaa">Все</option>
-            <option>Тусовки</option>
-            <option>Продажи</option>
-        </select>        
-         */}
-        <div className="interfaceButton-search-field-with-otherButton">        
-            <button className="open-other-container-button" onClick={onClickOpenLeftBar}></button>
-            {/* <SearchAddressControl /> */}
-            <HelpSearchContainer />
-            <button type="submit" form="interfaceButton-search-container-form" className="search-address-container-button"></button>
-        </div>       
-        {/* <button className="create-bottle-button-mainPage" onClick={onClickOpenRightBar}>+</button> */}
-        <button className="create-bottle-button-mainPage" onClick={tempLogin} onMouseOver={(e) => console.log('наводится')} onMouseOut={() => console.log('уводится')}>+</button>
+        {select}
+        {toolbar}
+        {createButton}
+        {exitCreateButton}
 
         {leftbarState}
         <ContextForCreateBottleMarker.Provider 
@@ -240,7 +264,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 data: dataBottleDescription, 
                 setData: setDataBottleDesc,
                 bottlesOnMap: bottlesOnMap,
-                openEditRightBar: onClickOpenRightBar }}>
+                openEditRightBar: onClickOpenRightBar,
+                startCreateMode: startBottleCreateMode,
+                exitCreateMode: exitBottleCreateMode
+            }}>
             {rightbarState}
             {props.children} {/*map*/}
         </ContextForCreateBottleMarker.Provider>

@@ -20,7 +20,7 @@ export const RightBarBody:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         props.setBottleData({...props.bottleData, category: currentCategory});
-    }, [currentCategory])
+    }, [currentCategory]);
 
     return <form id="right-bar-map-body-form" className="right-bar-map-body" onSubmit={(e) => { e.preventDefault(); props.onSubmit() }}>
         <BottleNameContainer bottleData={props.bottleData} setBottleData={props.setBottleData}/>

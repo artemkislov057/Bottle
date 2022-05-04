@@ -22,7 +22,7 @@ type TProps = {
     onClickMyBottles: Function,
     onClickChat: Function,
     onClickMap: Function
-    closeChat?: Function
+    closeChat?: Function,
 }
 
 export const LeftBar : React.FC<TProps> = React.memo((props) => {
@@ -90,7 +90,7 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
         closeLeftBar();
     }
 
-    return <div className="left-bar-map">
+    return <div className={`left-bar-map`}>
         <div className="left-bar-map-header" >
             <InfoUser avatarUrl={userInfo.avatar} nameUser={userInfo.name} onClick={onClickProfileInfo}/>
             <UserRating rating={userInfo.rating}/>
