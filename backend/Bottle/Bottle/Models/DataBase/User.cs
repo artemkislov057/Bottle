@@ -14,7 +14,7 @@ namespace Bottle.Models.DataBase
         public string Sex { get; set; }
         public int Type { get; set; }
         public ExternalProvider? Provider { get; set; }
-        public string ProviderId { get; set; }
+        public string ExternalUserId { get; set; }
 
         [ForeignKey("Type")]
         public UserType UserType { get; set; }

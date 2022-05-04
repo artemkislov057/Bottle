@@ -62,7 +62,7 @@ namespace Bottle.Controllers
                 return BadRequest();
             }
             bottle.PickingUp++;
-            if (bottle.PickingUp >= bottle.MaxPickingUp)
+            if (user.Type == 1 && bottle.PickingUp >= bottle.MaxPickingUp)
             {
                 bottle.Active = false;
                 await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
@@ -89,6 +89,10 @@ namespace Bottle.Controllers
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 var bottle = new Models.DataBase.Bottle(data, user);
                 if (user.Type == 2)
+                {
+                    bottle.MaxPickingUp = -1;
+                }
+                else
                 {
                     bottle.MaxPickingUp = data.MaxPickingUp;
                 }
@@ -137,7 +141,7 @@ namespace Bottle.Controllers
             }
             var bottle = await db.GetBottleAsync(bottleId);
             var user = await userManager.GetUserAsync(User);
-            if (bottle == null || bottle.UserId != user.Id || bottle.IsContentLoaded)
+            if (bottle == null || bottle.UserId != user.Id)
             {
                 return BadRequest();
             }
@@ -149,6 +153,12 @@ namespace Bottle.Controllers
             };
             db.BottleContent.Add(bottleContent);
             db.SaveChanges();
+            if (bottle.IsContentLoaded)
+            {
+                bottle.ContentItemsCount++;
+                await WebSocketController.OnChangeBottle(db.GetBottleModel(bottle));
+                return Ok();
+            }
             var contentCount = db.BottleContent.Count(bc => bc.BottleId == bottle.Id);
             if (contentCount >= bottle.ContentItemsCount)
             {
@@ -166,6 +176,22 @@ namespace Bottle.Controllers
             if (content == null)
                 return BadRequest();
             return File(content.BinaryValue, content.ContentType);
+        }
+
+        [HttpDelete("{bottle-id}/content/{content-id}")]
+        public async Task<IActionResult> DeleteContentAsync([FromRoute(Name = "bottle-id")] int bottleId, [FromRoute(Name = "content-id")] int contentId)
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            var bottle = await db.GetBottleAsync(bottleId);
+            var content = db.BottleContent.FirstOrDefault(bc => bc.BottleId == bottleId && bc.Id == contentId);
+            if (bottle != null && content != null && bottle.UserId == user.Id && bottle.IsContentLoaded)
+            {
+                db.BottleContent.Remove(content);
+                db.SaveChanges();
+                await WebSocketController.OnChangeBottle(db.GetBottleModel(bottle));
+                return Ok();
+            }
+            return BadRequest();
         }
 
         /// <summary>
@@ -265,8 +291,24 @@ namespace Bottle.Controllers
             if (model.Title != null) bottle.Title = model.Title;
             if (model.Description != null) bottle.Description = model.Description;
             if (model.Category != null) bottle.Category = model.Category;
-            //if (model.LifeTime != null) bottle.EndTime = bottle.Created + TimeSpan.FromSeconds((double)model.LifeTime);
-            //if (model.MaxPickingUp != null) bottle.MaxPickingUp = (int)model.MaxPickingUp;
+            if (model.LifeTime != null)
+            {
+                var timeSpan = TimeSpan.FromSeconds((double)model.LifeTime);
+                if (bottle.Created + timeSpan > DateTime.UtcNow) bottle.EndTime = bottle.Created + timeSpan;
+            }
+            if (model.MaxPickingUp != null && user.Type == 1)
+            {
+                if (model.MaxPickingUp > bottle.PickingUp)
+                {
+                    bottle.MaxPickingUp = (int)model.MaxPickingUp;
+                }
+                else
+                {
+                    bottle.MaxPickingUp = bottle.PickingUp;
+                    bottle.Active = false;
+                    await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
+                }
+            }
             var bottleModel = db.GetBottleModel(bottle);
             await WebSocketController.OnChangeBottle(bottleModel);
             db.SaveChanges();

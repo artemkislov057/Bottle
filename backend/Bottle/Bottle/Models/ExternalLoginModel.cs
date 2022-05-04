@@ -11,7 +11,7 @@ namespace Bottle.Models
         [Required]
         public ExternalProvider Provider { get; set; }
         [Required]
-        public string ProviderId { get; set; }
+        public string ExternalUserId { get; set; }
         [Required]
         public string AccessToken { get; set; }
         public bool RememberMe { get; set; } = false;

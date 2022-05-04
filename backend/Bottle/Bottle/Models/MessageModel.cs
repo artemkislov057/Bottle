@@ -1,14 +1,11 @@
 ﻿using Bottle.Models.DataBase;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Bottle.Models
 {
     public class MessageModel
     {
         public int Id { get; set; }
+        public string MessageType { get; set; }
         public string Value { get; set; }
         public System.DateTime DateTime { get; set; }
         public int DialogId { get; set; }
@@ -22,6 +19,7 @@ namespace Bottle.Models
         public MessageModel(Message message)
         {
             Id = message.Id;
+            MessageType = message.MessageType;
             Value = message.Value;
             DateTime = message.DateTime;
             DialogId = message.DialogId;

@@ -30,6 +30,7 @@ namespace Bottle.Utilities
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Models.DataBase.Bottle> Bottles { get; set; }
         public DbSet<BottleContent> BottleContent { get; set; }
+        public DbSet<MessageContent> MessageContent { get; set; }
 
         public User GetUser(string id)
         {
