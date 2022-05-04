@@ -2,10 +2,12 @@
 using Bottle.Models.DataBase;
 using Bottle.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,7 +48,35 @@ namespace Bottle.Controllers
                 db.SaveChanges();
                 var recipientId = user.Id == dialog.RecipientId ? dialog.BottleOwnerId : dialog.RecipientId;
                 var messageModel = new MessageModel(message);
-                await WebSocketController.OnSendMessage(recipientId.ToString(), messageModel);
+                await WebSocketController.OnSendMessage(recipientId, messageModel);
+                return Ok(messageModel);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("{dialog-id}/content")]
+        public async Task<IActionResult> SendContentAsync([FromRoute(Name = "dialog-id")] int dialogId, IFormFile file)
+        {
+            var dialog = db.GetDialog(dialogId);
+            if (dialog == null || !dialog.Active || file == null)
+                return BadRequest();
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            byte[] data = null;
+            using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+            {
+                data = binaryReader.ReadBytes((int)file.Length);
+            }
+            var messageContent = new MessageContent { BinaryData = data };
+            db.MessageContent.Add(messageContent);
+            db.SaveChanges();
+            if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
+            {
+                var message = new Message { DialogId = dialogId, SenderId = user.Id, MessageType = file.ContentType, Value = messageContent.Id.ToString(), DateTime = DateTime.UtcNow };
+                db.Messages.Add(message);
+                db.SaveChanges();
+                var recipientId = user.Id == dialog.RecipientId ? dialog.BottleOwnerId : dialog.RecipientId;
+                var messageModel = new MessageModel(message);
+                await WebSocketController.OnSendMessage(recipientId, messageModel);
                 return Ok(messageModel);
             }
             return BadRequest();
@@ -75,6 +105,21 @@ namespace Bottle.Controllers
                 if (length == null)
                     return Ok(messages.Select(m => new MessageModel(m)));
                 return Ok(messages.OrderByDescending(m => m.Id).Skip(skipMessageCount).Take(length.Value).Reverse().Select(m => new MessageModel(m)));
+            }
+            return BadRequest();
+        }
+
+        [HttpGet("content/{content-id}")]
+        public async Task<IActionResult> GetMessageContentAsync([FromRoute(Name = "content-id")] int contentId)
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            var content = db.MessageContent.FirstOrDefault(c => c.Id == contentId);
+            if (content == null) return BadRequest();
+            var message = db.Messages.FirstOrDefault(m => m.Value == contentId.ToString());
+            var dialog = db.Dialogs.FirstOrDefault(d => d.Id == message.DialogId);
+            if (dialog.RecipientId == user.Id || dialog.BottleOwnerId == user.Id)
+            {
+                return File(content.BinaryData, message.MessageType);
             }
             return BadRequest();
         }
