@@ -85,7 +85,7 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
                 {chatPageContainer}
                 {questModal}
                 {backgroundGray}
-            </WsEventContext.Provider>            
+            </WsEventContext.Provider>
         </ContextForSearch.Provider>    
     </div>
 })
