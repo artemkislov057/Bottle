@@ -50,11 +50,28 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
         setData(bottleData);
     }
 
-    function saveChangeData() {
-        console.log('save change');
-        //методами с сервака сохранять данные и закрывать попап
-        // setBottleData(initObj);
-        // ...
+    async function saveChangeData() {
+        let response = await fetch(`${apiUrl}/api/bottles/${props.changeBottleData.id}/change`, {
+            method: 'POST',
+            body: JSON.stringify({
+                geoObjectName: "string",
+                address: bottleData.address,
+                title: bottleData.titleName,
+                description: bottleData.description,
+                category: bottleData.category,
+                lifeTime: bottleData.timeLife.toFixed(0),
+                maxPickingUp: bottleData.countPick
+            }),
+            credentials: "include",            
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+
+        if(response.ok) {
+            console.log('save change');
+            onClickBackToMapButton();
+        }
     }
 
     function changeLocateBottle() {
@@ -83,6 +100,11 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
             let offset = new Date().getTimezoneOffset();
             let endTime = new Date(data.endTime).getTime() / 1000 + (-offset * 60);        
             let delta = endTime - new Date().getTime() / 1000; // inSec
+
+            if(delta > data.lifeTime) {
+                delta -= -offset * 60;
+            }
+
             setBottleData({
                 address: data.address,
                 bottleId: data.id,
@@ -108,7 +130,7 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
         return <div className="right-bar-map">
             <RightBarHeader onClick={onClickBackToMapButton} title='Редактировать записку'/>
             <RightBarBody onSubmit={saveChangeData} setBottleData={setBottleData} bottleData={bottleData}/>
-            <RightBarFooter title="Выбрать адрес" onClick={findPlaceForBottle} onClickSecondButton={findPlaceForBottle} secondTitle='Сохранить'/>
+            <RightBarFooter title="Выбрать адрес" onClick={changeLocateBottle} onClickSecondButton={findPlaceForBottle} secondTitle='Сохранить'/>
         </div>
     }
 
