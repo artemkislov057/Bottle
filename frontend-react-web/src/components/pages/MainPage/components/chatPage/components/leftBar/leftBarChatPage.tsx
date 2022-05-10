@@ -66,7 +66,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                         lastMess = 'Фотография';
                     }
                     if(lastMess.length > 20) {
-                        e.lastMessage.value = `${e.lastMessage.value.substring(0,20)}...`;
+                        lastMess = `${e.lastMessage.value.substring(0,20)}...`;
                     }
                     e.lastMessage.value = lastMess;
                 }
