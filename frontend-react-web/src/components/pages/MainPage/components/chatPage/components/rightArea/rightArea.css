@@ -142,6 +142,21 @@
     background: linear-gradient(268.61deg, #454647 0.52%, #252626 100.55%);
 }
 
+.chat-page-message-container-message.image {
+    background: none;
+    border-radius: 10px;
+    padding: 0;
+}
+
+.chat-page-message-container-message.image .chat-page-message-container-message-time {
+    bottom: 0;
+    right: 10px;
+}
+
+.chat-page-message-container-message-value-image {
+    border-radius: 10px;
+}
+
 .chat-page-message-toolBar-area {
     flex: 1;
     display: flex;

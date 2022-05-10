@@ -3,5 +3,6 @@ export type WsGetMessageType = {
     dialogId: number
     id: number
     senderId: string
-    value: string
+    value: string,
+    messageType: "image/jpeg"
 }

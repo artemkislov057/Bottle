@@ -19,7 +19,7 @@ type TProps = {
 
 
 export const MessageArea:React.FC<TProps> = React.memo((props) => {
-    let init : Array<{type: string, value:string, time: string, messId: number}>;
+    let init : Array<{from: string, value:string, time: string, messId: number, photoUrl: string}>;
     const [messages, setMessages] = useState(init);    
 
     useEffect(() => {
@@ -35,7 +35,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             });
             let allMessages = await responseMessages.json() as WsGetMessageType[];
 
-            let items : [{type: string, value:string, time: string, messId: number}];
+            let items : [{from: string, value:string, time: string, messId: number, photoUrl: string}];
             for(let e of allMessages) {
                 let messFrom = '';
                 if(e.senderId === selfId) {
@@ -51,10 +51,19 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
                 let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
                 time = currentTime.toLocaleTimeString().slice(0, -3);
 
+                let urlPhoto = '';
+                if(e.messageType) {
+                    let getPhotoResponse = await fetch(`${apiUrl}/api/dialogs/content/${e.value}`, {
+                        credentials: "include"
+                    });
+                    let blobPhoto = await getPhotoResponse.blob();
+                    urlPhoto = URL.createObjectURL(blobPhoto);
+                }
+
                 if(items) {
-                    items.push({time: time, type: messFrom, value: e.value, messId: e.id});
+                    items.push({time: time, from: messFrom, value: e.value, messId: e.id, photoUrl: urlPhoto});
                 } else {
-                    items = [{time: time, type: messFrom, value: e.value, messId: e.id}];
+                    items = [{time: time, from: messFrom, value: e.value, messId: e.id, photoUrl: urlPhoto}];
                 }
             }
             // console.log(allMessages)
@@ -73,21 +82,43 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
         if(!messages) return
         let allMessages = document.querySelectorAll('.chat-page-message-container-message');
         allMessages[allMessages.length - 1].scrollIntoView();
+
+        // let messageContainer = document.querySelector('.chat-page-message-container-scroll');
+        // messageContainer.scrollIntoView();
+        
     },[messages]);
 
     useEffect(() => {  
         let newMessage = props.newMessage;
 
+        async function setMessageWithPhoto(data: WsGetMessageType, time: string) {
+            let getPhotoResponse = await fetch(`${apiUrl}/api/dialogs/content/${data.value}`, {
+                credentials: "include"
+            });
+            let blobPhoto = await getPhotoResponse.blob();
+            let urlPhoto = URL.createObjectURL(blobPhoto);
+
+            if(messages) {
+                setMessages([...messages, {messId:data?.id, time: time, from:'partner', value: data?.value, photoUrl: urlPhoto}]);
+            } else {
+                setMessages([{messId: data?.id, time: time, from:'partner', value: data?.value, photoUrl: urlPhoto}]);
+            }
+        }
+
         let currentTime = new Date(newMessage?.dateTime);
         let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
         time = currentTime.toLocaleTimeString().slice(0, -3);
-        
-        if(messages) {
-            setMessages([...messages, {messId:newMessage?.id, time: time, type:'partner', value: newMessage?.value}]);
+
+        if(newMessage?.messageType) {
+            setMessageWithPhoto(newMessage, time);
         } else {
-            setMessages([{messId:newMessage?.id, time: time, type:'partner', value: newMessage?.value}]);
+            if(messages) {
+                setMessages([...messages, {messId:newMessage?.id, time: time, from:'partner', value: newMessage?.value, photoUrl: ''}]);
+            } else {
+                setMessages([{messId:newMessage?.id, time: time, from:'partner', value: newMessage?.value, photoUrl: ''}]);
+            }
         }
-        
+
     }, [props.newMessage])
 
     async function onSendMessage(value: string) {
@@ -106,10 +137,38 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
             time = currentTime.toLocaleTimeString().slice(0, -3);
             if(messages)
-                setMessages([...messages, {messId:collbackData.id, time: time, type:'self', value:value}]);
-            else setMessages([{messId:collbackData.id, time: time, type:'self', value:value}]);
+                setMessages([...messages, {messId:collbackData.id, time: time, from:'self', value:value, photoUrl: ''}]);
+            else setMessages([{messId:collbackData.id, time: time, from:'self', value:value, photoUrl: ''}]);
             props.setUpdateDialogsInfo(!props.updateDialogsInfo);
             // console.log(value, 'отправилось')
+        }
+    }
+
+    async function onSendPhoto(value: File) {
+        let formData = new FormData();
+        formData.append('file', value);
+        
+        let response = await fetch(`${apiUrl}/api/dialogs/${props.currentDialogData.dialogInfo.id}/content`, {
+            method: 'POST',
+            body: formData,
+            credentials: "include"
+        });
+
+        let collbackData = await response.json() as WsGetMessageType;
+
+        let currentTime = new Date(collbackData.dateTime);
+        let time = `${currentTime.getHours()}:${currentTime.getMinutes()}`;
+        time = currentTime.toLocaleTimeString().slice(0, -3);
+
+        let fr = new FileReader();
+        fr.readAsDataURL(value);
+        fr.onload = e => {
+            let urlPhoto = e.target.result.toString();
+            
+            if(messages)
+                setMessages([...messages, {messId:collbackData.id, time: time, from:'self', value: collbackData.value, photoUrl: urlPhoto}]);
+            else setMessages([{messId:collbackData.id, time: time, from:'self', value: collbackData.value, photoUrl: urlPhoto}]);
+            props.setUpdateDialogsInfo(!props.updateDialogsInfo);
         }
     }
 
@@ -118,11 +177,11 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             <div className="chat-page-message-container-HELP">
                 <div className="chat-page-message-container">
                     {messages?.map(message => 
-                        <Message key={`${message.messId} ${props.currentDialogData.dialogInfo.id}`} messageFrom={message.type} value={message.value} time={message.time}/>    
+                        <Message key={`${message.messId} ${props.currentDialogData.dialogInfo.id}`} messageFrom={message.from} value={message.value} time={message.time} urlPhoto={message.photoUrl}/>    
                         )}                    
                 </div>
             </div>
         </div>
-        <ToolBarMessageArea onSubmit={onSendMessage}/>
+        <ToolBarMessageArea onSubmit={onSendMessage} onSendPhoto={onSendPhoto}/>
     </div>
 })

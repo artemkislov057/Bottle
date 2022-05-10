@@ -8,7 +8,8 @@ export type WsDialogType = {
         dialogId: number
         id: number
         senderId: string
-        value: string
+        value: string,
+        messageType: string
     } | null 
     recipientId: string
 }

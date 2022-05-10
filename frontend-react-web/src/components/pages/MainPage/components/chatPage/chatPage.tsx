@@ -29,6 +29,7 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     const wsEvent = useContext(WsEventContext);
         
     useEffect(() => {
+        // console.log(wsEvent)
         if(!wsEvent)return
         let data = JSON.parse(wsEvent.data) as WsAnswer;
         if(data.eventNumber === 1) { //new message

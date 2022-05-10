@@ -61,9 +61,14 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
                 let userAvatar = URL.createObjectURL(userAvatarBlob);
                 
                 if(e.lastMessage) {
-                    if(e.lastMessage.value.length > 20) {
+                    let lastMess = e.lastMessage.value;
+                    if(e.lastMessage.messageType) {
+                        lastMess = 'Фотография';
+                    }
+                    if(lastMess.length > 20) {
                         e.lastMessage.value = `${e.lastMessage.value.substring(0,20)}...`;
                     }
+                    e.lastMessage.value = lastMess;
                 }
                 
 
