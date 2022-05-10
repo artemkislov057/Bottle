@@ -333,7 +333,7 @@ namespace Bottle.Controllers
                 if (model.GeoObjectName != null) bottle.GeoObjectName = model.GeoObjectName;
                 if (model.Address != null) bottle.Address = model.Address;
                 var bottleModel = db.GetBottleModel(bottle);
-                await WebSocketController.OnChangeCoordinatesBottle(bottleId, oldLat, oldLng, model.Lat, model.Lng);
+                await WebSocketController.OnChangeCoordinatesBottle(bottleId, oldLat, oldLng, model);
                 db.SaveChanges();
                 return Ok(bottleModel);
             }
