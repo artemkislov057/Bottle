@@ -9,5 +9,7 @@ namespace Bottle.Models
     {
         public decimal Lat { get; set; }
         public decimal Lng { get; set; }
+        public string GeoObjectName { get; set; }
+        public string Address { get; set; }
     }
 }
