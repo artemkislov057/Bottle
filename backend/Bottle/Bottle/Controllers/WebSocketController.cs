@@ -176,10 +176,10 @@ namespace Bottle.Controllers
             }
         }
 
-        public static async Task OnChangeCoordinatesBottle(int bottleId, decimal oldLat, decimal oldLng, decimal newLat, decimal newLng)
+        public static async Task OnChangeCoordinatesBottle(int bottleId, decimal oldLat, decimal oldLng, BottleCoordinatesModel newBottleCoordinates)
         {
             var recipientWebSockets = (await GetRecipientWebSockets(oldLat, oldLng))
-                                            .Concat(await GetRecipientWebSockets(newLat, newLng))
+                                            .Concat(await GetRecipientWebSockets(newBottleCoordinates.Lat, newBottleCoordinates.Lng))
                                             .Distinct();
             foreach (var ws in recipientWebSockets)
             {
@@ -189,8 +189,11 @@ namespace Bottle.Controllers
                     Model = new
                     {
                         bottleId,
-                        lat = newLat,
-                        lng = newLng
+                        lat = newBottleCoordinates.Lat,
+                        lng = newBottleCoordinates.Lng,
+                        address = newBottleCoordinates.Address,
+                        geoObjectName = newBottleCoordinates.GeoObjectName
+
                     }
                 });
             }
