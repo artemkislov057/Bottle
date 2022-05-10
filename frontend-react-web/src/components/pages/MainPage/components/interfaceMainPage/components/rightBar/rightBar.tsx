@@ -51,27 +51,57 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
     }
 
     async function saveChangeData() {
-        let response = await fetch(`${apiUrl}/api/bottles/${props.changeBottleData.id}/change`, {
-            method: 'POST',
-            body: JSON.stringify({
-                geoObjectName: "string",
-                address: bottleData.address,
-                title: bottleData.titleName,
-                description: bottleData.description,
-                category: bottleData.category,
-                lifeTime: bottleData.timeLife.toFixed(0),
-                maxPickingUp: bottleData.countPick
-            }),
-            credentials: "include",            
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
+        let responseGetBottleInfo = await fetch(`${apiUrl}/api/bottles/${bottleData.bottleId}`, {
+            credentials: 'include'
+        })
 
-        if(response.ok) {
-            console.log('save change');
-            onClickBackToMapButton();
-        }
+        let bottleInfo = await responseGetBottleInfo.json() as BottleRequestType;
+        if(bottleInfo) {
+            let response = await fetch(`${apiUrl}/api/bottles/${props.changeBottleData.id}/change`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    geoObjectName: "string",
+                    address: bottleData.address,
+                    title: bottleData.titleName,
+                    description: bottleData.description,
+                    category: bottleData.category,
+                    lifeTime: bottleData.timeLife.toFixed(0),
+                    maxPickingUp: bottleData.countPick
+                }),
+                credentials: "include",            
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            });
+    
+            if(bottleData.content) {
+                if(bottleInfo.contentIds) {
+                    for(let e of bottleInfo?.contentIds) {
+                        await fetch(`${apiUrl}/api/bottles/${bottleData.bottleId}/content/${e}`, {
+                            method: 'DELETE',
+                            credentials: "include",                           
+                        });
+                    }
+                }
+                
+
+                for(let e of bottleData.content) {
+                    let formData = new FormData();
+                    formData.append('file', e);
+    
+                    await fetch(`${apiUrl}/api/bottles/${bottleData.bottleId}/content`, {
+                        method: 'POST',
+                        body: formData,
+                        credentials: "include",                           
+                    });
+                }
+            }
+    
+            if(response.ok) {
+                console.log('save change');
+                onClickBackToMapButton();
+            }
+        }        
     }
 
     function changeLocateBottle() {

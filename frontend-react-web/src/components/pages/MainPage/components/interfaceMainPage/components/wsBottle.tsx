@@ -63,7 +63,7 @@ export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {
             
         }
         if(data.eventNumber === 7) {            
-            let oldBottle = bottlesData.bottleOnMap.filter(bottle => bottle.data.id === data.model.id)[0];
+            let oldBottle = bottlesData.bottleOnMap.filter(bottle => bottle.data?.id === data.model?.id)[0];
             let indexBotMap = bottlesData.bottleOnMap.indexOf(oldBottle);
             console.log(bottlesData.bottleOnMap);
             console.log(indexBotMap)

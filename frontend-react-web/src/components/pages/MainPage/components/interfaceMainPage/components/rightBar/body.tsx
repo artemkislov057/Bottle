@@ -15,7 +15,6 @@ type TProps = {
 }
 
 export const RightBarBody:React.FC<TProps> = React.memo((props) => {
-    // сделать, чтобы все инпуты были заполнены текущей инфой, сделать, чтобы картинки уже отображались(мб выше сделать запрос на картинки), далее либо удалять старую и сохранять новую бутылку, либо ждать артема
     const [currentCategory, setCurrentCategory] = useState('Все категории');
 
     useEffect(() => {
