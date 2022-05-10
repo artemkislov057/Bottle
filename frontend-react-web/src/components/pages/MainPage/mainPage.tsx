@@ -24,22 +24,28 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
     const [questModal, setQuestModal] = useState(<></>);
     const navigator = useNavigate();
     const loginData = useContext(ContextLogin);
-    const WS = new Ws();
-    const ws = WS.ws;
+    // const WS = new Ws();
+    // const ws = WS.ws;
+    let WS;
+    let ws;
     
     
     useEffect(() => {
         if(loginData.isLogin) {
             // WebSockets();
+            WS = new Ws();
+            ws = WS.ws;
             WS.WebSokets();
+
+            ws.onmessage = (e) => {
+                setWsEvent(e);
+            }
         } else {
             navigator('/');
         }
     }, []);
 
-    ws.onmessage = (e) => {
-        setWsEvent(e);        
-    }
+    
 
     const [latLngForSearch, setLatLng] = useState(new L.LatLng(0,0));
     const [backgroundGray, setBackgroundGray] = useState(<></>);
