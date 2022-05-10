@@ -1,5 +1,5 @@
 import { LatLng, LeafletMouseEvent } from "leaflet";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Marker, useMap } from "react-leaflet";
 import marker from '../../../../../marker_siniy.svg';
 import L from 'leaflet';
@@ -20,6 +20,7 @@ import { OpenStreetMapProvider } from "leaflet-geosearch";
 import { DataBottleDescType } from "../../DataBottleDescriptType";
 import { UserInfoType } from '../../UserInfoType';
 import { BottleRequestType } from "../../BottleRequestType";
+import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
 
 
  
@@ -49,6 +50,7 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     const [searchResultMarker, setSearchMarker] = useState(<></>);//маркер при поиске
 
     const {data, bottlesOnMap, setData, openDescriptionBar, openEditRightBar, startCreateMode, exitCreateMode} = useContext(ContextForCreateBottleMarker); //информация бутылки, которая будет создана
+    const {currentLatLng, changeCoord} = useContext(CurrentCoordinationsContext);
     const [currentBottles, setCurrentBottles] = useState([{coordinates: new LatLng(null, null), data: data}]); //созданные бутылки
     const [selfId, setSelfId] = useState('-1');
     
@@ -72,6 +74,18 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     markerIcons.set('Все категории', otherMarker);
 
     let map = useMap();
+
+    let onDragEnd = () => {
+        console.log(map.getCenter());
+        let latlng = map.getCenter();
+        changeCoord(latlng.lat, latlng.lng);
+        map.removeEventListener('dragend');
+        map.on('dragend', onDragEnd);
+    }
+
+    map.on('dragend', onDragEnd)    
+
+
 
     useEffect(() => { // ставит маркер при поиске по адресу
         if(latLngForSearch.lat !== 0 && latLngForSearch.lng !== 0) {

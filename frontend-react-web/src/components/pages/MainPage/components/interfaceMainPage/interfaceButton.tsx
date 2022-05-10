@@ -22,6 +22,7 @@ import { DataBottleDescType } from "../../DataBottleDescriptType";
 
 import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBarDescriptBottle";
 import { LatLng } from "leaflet";
+import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
 
 type TProps = {    
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -51,12 +52,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [toolbar, setToolbar] = useState(<Toolbar onClick={onClickOpenLeftBar} withOtherButton={true}/>);
     const [createButton, setCreateButton] = useState(<CreateButton onClick={() => onClickOpenRightBar()} />);
     const [exitCreateButton, setExitCreateButton] = useState(<></>);
+    const {currentLatLng} = useContext(CurrentCoordinationsContext);
 
 
     useEffect(() => { // при обновлении стр получение всех бутылок
         if(!props.children) return;
         async function getAllBottles() {
-            let res = await fetch(`${apiUrl}/api/bottles`, {
+            let res = await fetch(`${apiUrl}/api/bottles?radius=100&lat=${currentLatLng.lat}&lng=${currentLatLng.lng}`, {
                 credentials: 'include'
             })
             let bottles = await res.json() as Array<BottleRequestType>;
@@ -100,7 +102,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         getAllBottles();
 
         return () => setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}])
-    }, [props.children]);//
+    }, [props.children, currentLatLng]);//
 
     useEffect(() => {
         if(!currentFilterCategory) return;
@@ -233,24 +235,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     function exitBottleCreateMode() {
         showMainComponents();
         setExitCreateButton(<></>);
-    }
-
-    function tempLogin() {
-        fetch(`${apiUrl}/api/account/login`, {
-            method: 'POST',
-            body: JSON.stringify({
-                "nickname": "Man",
-                "password": "000",
-                "email": "aaa",
-                "sex": 'false',
-                commercialData: null
-            }),
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-    }
+    }    
 
     return <div className="interface-button-container">
         {select}

@@ -5,7 +5,7 @@ import { ChatPage } from "./components/chatPage/chatPage";
 // import { WebSockets, ws } from "components/connections/ws";
 import { Ws } from "components/connections/ws";
 import { WsDataType } from "./WsDataType";
-import L from 'leaflet';
+import L, { LatLng } from 'leaflet';
 import './mainPage.css';
 import { WsEventContext } from "./contextWsEvents";
 
@@ -13,6 +13,7 @@ import { WsEventContext } from "./contextWsEvents";
 import { ContextForSearch } from "./contextForSearch";
 import { useNavigate } from "react-router-dom";
 import { ContextLogin } from "loginContext";
+import { CurrentCoordinationsContext } from "./changeCoordinationContext";
 
 type TProps = {
     isLogin: boolean
@@ -26,8 +27,8 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
     const loginData = useContext(ContextLogin);
     // const WS = new Ws();
     // const ws = WS.ws;
-    let WS;
-    let ws;
+    let WS: Ws;
+    let ws: WebSocket;
     
     
     useEffect(() => {
@@ -43,10 +44,9 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
         } else {
             navigator('/');
         }
-    }, []);
-
+    }, []);    
     
-
+    const [currentLatLng, setCurrentLatLng] = useState(new LatLng(56.85, 60.6));
     const [latLngForSearch, setLatLng] = useState(new L.LatLng(0,0));
     const [backgroundGray, setBackgroundGray] = useState(<></>);
     
@@ -64,6 +64,12 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
         </InterfaceButtonMainPage>
 
     const [interfaceMainPageContainer, setInterfaceMainPage] = useState(interfaceMapContainer);
+
+    function updateWsCoordinates(lat: number, lng: number) {
+        console.log(lat, lng)
+        setCurrentLatLng(new LatLng(lat, lng));
+        WS.updateCoordinates(lat, lng);
+    }
 
     function openChatPage(dialogId? : number) {
         setBackgroundGray(<></>)
@@ -85,13 +91,15 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
     }
     
     return <div className="main-page">
-        <ContextForSearch.Provider value={[latLngForSearch, setLatLng]}>
-            <WsEventContext.Provider value={wsEvent}>
-                {interfaceMainPageContainer}
-                {chatPageContainer}
-                {questModal}
-                {backgroundGray}
-            </WsEventContext.Provider>
-        </ContextForSearch.Provider>    
+        <CurrentCoordinationsContext.Provider value={{currentLatLng: currentLatLng, changeCoord: updateWsCoordinates}}>
+            <ContextForSearch.Provider value={[latLngForSearch, setLatLng]}>
+                <WsEventContext.Provider value={wsEvent}>
+                    {interfaceMainPageContainer}
+                    {chatPageContainer}
+                    {questModal}
+                    {backgroundGray}
+                </WsEventContext.Provider>
+            </ContextForSearch.Provider>
+        </CurrentCoordinationsContext.Provider>        
     </div>
 })

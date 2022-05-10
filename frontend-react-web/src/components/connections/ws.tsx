@@ -28,4 +28,12 @@ export class Ws {
             }))
         }
     }
+
+    updateCoordinates(lat: number, lng: number) {
+        this.ws.send(JSON.stringify({
+            lat: lat,
+            lng: lng,
+            radius: 100
+        }))
+    }
 }
