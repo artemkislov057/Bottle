@@ -71,6 +71,7 @@ export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {
             bottlesData.bottleOnMap[changeIndex].data.lat = info.lat;
             bottlesData.bottleOnMap[changeIndex].data.lng = info.lng;
             bottlesData.bottleOnMap[changeIndex].coordinates = new LatLng(info.lat, info.lng);
+            bottlesData.bottleOnMap[changeIndex].data.address = info.address;
         }
         
         changeIndex = -1;
@@ -85,6 +86,7 @@ export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {
             bottlesData.constBotMap[changeIndex].data.lat = info.lat;
             bottlesData.constBotMap[changeIndex].data.lng = info.lng;
             bottlesData.constBotMap[changeIndex].coordinates = new LatLng(info.lat, info.lng);
+            bottlesData.constBotMap[changeIndex].data.address = info.address;
         }            
 
         if((changeIndex !== -1 && bottlesData.currentCategory === bottlesData.bottleOnMap[changeIndex].data.category) || bottlesData.currentCategory === 'Все категории')

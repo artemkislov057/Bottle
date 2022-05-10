@@ -109,8 +109,8 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
 
                 let onClickYes = () => onClickYesCreateButton(currentData, pos, addressPlace[0].label);
                 for(let e of bottlesOnMap) {
-                    if(e.data.id === data.bottleId) {
-                        onClickYes = () => onClickYesChangeCoordinates(e.data.id, pos);
+                    if(e.data?.id === data.bottleId) {
+                        onClickYes = () => onClickYesChangeCoordinates(e.data.id, pos, addressPlace[0].label);
                     }
                 }
 
@@ -147,20 +147,21 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
         props.setQuestModal(<></>);
     }
 
-    function onClickYesChangeCoordinates(id: number, coordinates: LatLng) {
+    function onClickYesChangeCoordinates(id: number, coordinates: LatLng, address: string) {
         map.removeEventListener('click');
         props.setQuestModal(<></>);
         exitCreateMode();
         console.log('change');
-        changeLocate(id, coordinates)
+        changeLocate(id, coordinates, address)
     }
 
-    async function changeLocate(id: number, coordinates: LatLng) {
+    async function changeLocate(id: number, coordinates: LatLng, address: string) {
         let response = await fetch(`${apiUrl}/api/bottles/${id}/change-coordinates`, {
             method: 'POST',
             body: JSON.stringify({
                 lat: coordinates.lat,
-                lng: coordinates.lng
+                lng: coordinates.lng,
+                address: address
             }),
             credentials: 'include',
             headers: {
