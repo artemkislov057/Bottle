@@ -25,117 +25,125 @@ type data = {
 }
 
 export const wsBottle = (bottlesData : data, e: MessageEvent<any>) => {    
-    // ws.onmessage = (e) => {
-        if(!e) return
-        console.log(e)
-        let data = JSON.parse(e.data) as WsDataType;
-        let info = data.model;
-        if(data.eventNumber === 3) {
-            // let currentBottleData: BottleRequestType = {
-            //     active: info.active,
-            //     contentIds: info.contentIds,
-            //     contentItemsCount: info.contentItemsCount,
-            //     created: info.created,
-            //     endTime: info.endTime,
-            //     geoObjectName: info.geoObjectName,
-            //     id: info.id,
-            //     isContentLoaded: info.isContentLoaded,
-            //     lat: info.lat,
-            //     lifeTime: info.lifeTime,
-            //     lng: info.lng,
-            //     maxPickingUp: info.maxPickingUp,
-            //     pickingUp: info.pickingUp,
-            //     title: info.title,
-            //     userId: info.userId,
-            //     address: info.address,
-            //     category: info.category,
-            //     description: info.description
-            // }
-            // let coord = new LatLng(data.model.lat, data.model.lng);
-            // let newBottle = {coordinates: coord, data: currentBottleData};
-            let newBottle = createBottleObject(data);
-            if(!bottlesData.bottleOnMap.includes(newBottle)) {
-                console.log('yes')
-                if(bottlesData.currentCategory === newBottle.data.category || bottlesData.currentCategory === 'Все категории')
-                    bottlesData.setBotMap([...bottlesData.bottleOnMap, newBottle]);
-                bottlesData.setConstBottle([...bottlesData.constBotMap, newBottle]);
-            }
-            
-        }
-        if(data.eventNumber === 7) {            
-            let oldBottle = bottlesData.bottleOnMap.filter(bottle => bottle.data?.id === data.model?.id)[0];
-            let indexBotMap = bottlesData.bottleOnMap.indexOf(oldBottle);
-            console.log(bottlesData.bottleOnMap);
-            console.log(indexBotMap)
-            let tempBotMap = bottlesData.bottleOnMap.slice();
-            tempBotMap.splice(indexBotMap, 1);
-            console.log(tempBotMap);
+    if(!e) return;
+    console.log(e);
 
-            let indexConstBottle = bottlesData.constBotMap.indexOf(oldBottle);
-            let tempConstBottle = bottlesData.bottleOnMap.slice();
-            tempConstBottle.splice(indexConstBottle, 1)
-
-            // bottlesData.setBotMap(tempBotMap);
-            // bottlesData.setConstBottle(tempConstBottle);
-
-            let newBottle = createBottleObject(data);
+    let data = JSON.parse(e.data) as WsDataType;
+    let info = data.model;
+    if(data.eventNumber === 3) {
+        let newBottle = createBottleObject(data);
+        if(!bottlesData.bottleOnMap.includes(newBottle)) {
+            console.log('yes')
             if(bottlesData.currentCategory === newBottle.data.category || bottlesData.currentCategory === 'Все категории')
-                    bottlesData.setBotMap([...tempBotMap, newBottle]);
-                bottlesData.setConstBottle([...tempConstBottle, newBottle]);
-        }
+                bottlesData.setBotMap([...bottlesData.bottleOnMap, newBottle]);
+            bottlesData.setConstBottle([...bottlesData.constBotMap, newBottle]);
+        }            
+    }
+    if(data.eventNumber === 7) { // change bottle information   
+        let oldBottle = bottlesData.bottleOnMap.filter(bottle => bottle.data?.id === info?.id)[0];
+        let indexBotMap = bottlesData.bottleOnMap.indexOf(oldBottle);
+        console.log(bottlesData.bottleOnMap);
+        console.log(indexBotMap)
+        let tempBotMap = bottlesData.bottleOnMap.slice();
+        tempBotMap.splice(indexBotMap, 1);
+        console.log(tempBotMap);
 
-        if(data.eventNumber === 5 || data.eventNumber === 6 || data.eventNumber === 9) {
-            let deleteIndex = -1;
-            bottlesData.bottleOnMap.forEach((e, index) => {
-                if(e.data?.id === data.model?.id || (data.model?.bottleId && e.data?.id === data.model?.bottleId)) {
-                    deleteIndex = index;
-                    return;
-                }                
-            });
-            if(deleteIndex !== -1) {
-                let tempBottles = bottlesData.bottleOnMap.slice();
-                tempBottles.splice(deleteIndex, 1);
-                bottlesData.setBotMap(tempBottles);    
-            }            
+        let indexConstBottle = bottlesData.constBotMap.indexOf(oldBottle);
+        let tempConstBottle = bottlesData.constBotMap.slice();
+        tempConstBottle.splice(indexConstBottle, 1)            
 
-            deleteIndex = -1;
-            bottlesData.constBotMap.forEach((e, index) => {
-                if(e.data?.id === data.model?.id || (data.model?.bottleId && e.data?.id === data.model?.bottleId)) {
-                    deleteIndex = index;
-                    return;
-                }
-            });
-            if(deleteIndex === -1) return;
-            let tempBottles = bottlesData.constBotMap.slice();
-            tempBottles.splice(deleteIndex, 1);
-            bottlesData.setConstBottle(tempBottles);
-        }
+        let newBottle = createBottleObject(data);
+        if(bottlesData.currentCategory === newBottle.data.category || bottlesData.currentCategory === 'Все категории')
+                bottlesData.setBotMap([...tempBotMap, newBottle]);
+            bottlesData.setConstBottle([...tempConstBottle, newBottle]);
+    }
 
-        function createBottleObject(data: WsDataType) {
-            let info = data.model;
-            let currentBottleData: BottleRequestType = {
-                active: info.active,
-                contentIds: info.contentIds,
-                contentItemsCount: info.contentItemsCount,
-                created: info.created,
-                endTime: info.endTime,
-                geoObjectName: info.geoObjectName,
-                id: info.id,
-                isContentLoaded: info.isContentLoaded,
-                lat: info.lat,
-                lifeTime: info.lifeTime,
-                lng: info.lng,
-                maxPickingUp: info.maxPickingUp,
-                pickingUp: info.pickingUp,
-                title: info.title,
-                userId: info.userId,
-                address: info.address,
-                category: info.category,
-                description: info.description
+    if(data.eventNumber === 8) { // change bottle location           
+        let changeIndex = -1;
+        bottlesData.bottleOnMap.forEach((e, index) => {
+            if(e.data?.id === info?.bottleId) {
+                changeIndex = index;
+                return;
             }
-            let coord = new LatLng(data.model.lat, data.model.lng);
-            let newBottle = {coordinates: coord, data: currentBottleData}
-            return newBottle;
+        });
+
+        if(changeIndex !== -1) {
+            bottlesData.bottleOnMap[changeIndex].data.lat = info.lat;
+            bottlesData.bottleOnMap[changeIndex].data.lng = info.lng;
+            bottlesData.bottleOnMap[changeIndex].coordinates = new LatLng(info.lat, info.lng);
         }
-    // }
+        
+        changeIndex = -1;
+        bottlesData.constBotMap.forEach((e, index) => {
+            if(e.data?.id === info?.bottleId) {
+                changeIndex = index;
+                return;
+            }
+        });
+
+        if(changeIndex !== -1) {
+            bottlesData.constBotMap[changeIndex].data.lat = info.lat;
+            bottlesData.constBotMap[changeIndex].data.lng = info.lng;
+            bottlesData.constBotMap[changeIndex].coordinates = new LatLng(info.lat, info.lng);
+        }            
+
+        if((changeIndex !== -1 && bottlesData.currentCategory === bottlesData.bottleOnMap[changeIndex].data.category) || bottlesData.currentCategory === 'Все категории')
+            bottlesData.setBotMap(bottlesData.bottleOnMap.slice());
+        bottlesData.setConstBottle(bottlesData.constBotMap.slice());
+    }
+
+    if(data.eventNumber === 5 || data.eventNumber === 6 || data.eventNumber === 9) { // bottle picked-up / delete / end TL
+        let deleteIndex = -1;
+        bottlesData.bottleOnMap.forEach((e, index) => {
+            if(e.data?.id === info?.id || (info?.bottleId && e.data?.id === info?.bottleId)) {
+                deleteIndex = index;
+                return;
+            }
+        });
+        if(deleteIndex !== -1) {
+            let tempBottles = bottlesData.bottleOnMap.slice();
+            tempBottles.splice(deleteIndex, 1);
+            bottlesData.setBotMap(tempBottles);    
+        }            
+
+        deleteIndex = -1;
+        bottlesData.constBotMap.forEach((e, index) => {
+            if(e.data?.id === info?.id || (info?.bottleId && e.data?.id === info?.bottleId)) {
+                deleteIndex = index;
+                return;
+            }
+        });
+        
+        if(deleteIndex === -1) return;        
+        let tempBottles = bottlesData.constBotMap.slice();
+        tempBottles.splice(deleteIndex, 1);
+        bottlesData.setConstBottle(tempBottles);
+    }
+
+    function createBottleObject(data: WsDataType) {
+        let info = data.model;
+        let currentBottleData: BottleRequestType = {
+            active: info.active,
+            contentIds: info.contentIds,
+            contentItemsCount: info.contentItemsCount,
+            created: info.created,
+            endTime: info.endTime,
+            geoObjectName: info.geoObjectName,
+            id: info.id,
+            isContentLoaded: info.isContentLoaded,
+            lat: info.lat,
+            lifeTime: info.lifeTime,
+            lng: info.lng,
+            maxPickingUp: info.maxPickingUp,
+            pickingUp: info.pickingUp,
+            title: info.title,
+            userId: info.userId,
+            address: info.address,
+            category: info.category,
+            description: info.description
+        }
+        let coord = new LatLng(info.lat, info.lng);
+        let newBottle = {coordinates: coord, data: currentBottleData}
+        return newBottle;
+    }
 }

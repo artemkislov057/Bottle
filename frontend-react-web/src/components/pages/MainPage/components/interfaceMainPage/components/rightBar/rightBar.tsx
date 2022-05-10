@@ -105,9 +105,10 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
     }
 
     function changeLocateBottle() {
-        console.log('change locate')
-        //хранить в каждой бутылке bool стейт для маркера - dragable, при нажатии разрешать двигать маркер, сделать кнопку сохранения позиции и => сохр изменений
-        // ...
+        console.log('change locate and save data')
+        saveChangeData()
+        onSubmitBottleDataForm();
+        
     }
 
     useEffect(() => {

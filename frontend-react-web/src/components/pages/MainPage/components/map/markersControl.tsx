@@ -71,17 +71,6 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     markerIcons.set('Прочее', otherMarker);
     markerIcons.set('Все категории', otherMarker);
 
-        
-    // useMapEvent('click', (e) => {
-    //     if(coord.length < 2) {
-    //         console.log('first')
-    //         setCoord([...coord, {latLng: e.latlng, data:tempData1}])
-    //     } else {
-    //         console.log('second')
-    //         setCoord([...coord, {latLng: e.latlng, data:tempData2}])
-    //     }
-    // })
-
     let map = useMap();
 
     useEffect(() => { // ставит маркер при поиске по адресу
@@ -117,10 +106,19 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
                 let pos = e.latlng;
                 let addressPlace = await provider.search({query:`${pos.lat}, ${pos.lng}`});
                 let localAddress = addressPlace[0].label.split(',').slice(0,2).toString();
+
+                let onClickYes = () => onClickYesCreateButton(currentData, pos, addressPlace[0].label);
+                for(let e of bottlesOnMap) {
+                    if(e.data.id === data.bottleId) {
+                        onClickYes = () => onClickYesChangeCoordinates(e.data.id, pos);
+                    }
+                }
+
+
                 props.setQuestModal(<MapModal 
                         quest={`Вы точно хотите поставить бутылку по адресу: ${localAddress}?`}
                         onClickNoButton={onClickNoCreateButton} 
-                        onClickYesButton={() => onClickYesCreateButton(currentData, pos, addressPlace[0].label)} 
+                        onClickYesButton={onClickYes} 
                     />);
             })
         }
@@ -147,6 +145,30 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
 
     function onClickNoCreateButton() {
         props.setQuestModal(<></>);
+    }
+
+    function onClickYesChangeCoordinates(id: number, coordinates: LatLng) {
+        map.removeEventListener('click');
+        props.setQuestModal(<></>);
+        exitCreateMode();
+        console.log('change');
+        changeLocate(id, coordinates)
+    }
+
+    async function changeLocate(id: number, coordinates: LatLng) {
+        let response = await fetch(`${apiUrl}/api/bottles/${id}/change-coordinates`, {
+            method: 'POST',
+            body: JSON.stringify({
+                lat: coordinates.lat,
+                lng: coordinates.lng
+            }),
+            credentials: 'include',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
+
+        setData(initObj);
     }
 
     async function sendCreateBottleRequest(requestdata: DataBottleDescType, pos: LatLng, address: string) {
