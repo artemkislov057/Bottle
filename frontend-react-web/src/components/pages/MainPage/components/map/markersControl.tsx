@@ -235,26 +235,28 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
     //icon={L.icon({iconUrl: marker, iconSize:[50,50]})}
     return <React.Fragment>        
         {searchResultMarker}
-        {bottlesOnMap.map(marker => {            
-                if(marker.data?.title) {
-                    // console.log(marker)
-                    return <Marker 
-                        key={marker.coordinates.toString()} 
-                        position={marker.coordinates} 
-                        eventHandlers={{click: (e) => {
-                                if(selfId === marker.data.userId) {                                    
-                                    openDescriptionBar(marker?.data, openEditRightBar)
-                                } else {
-                                    openDescriptionBar(marker?.data)
-                                }
-                            } 
-                        }}
-                        icon={L.icon({iconUrl: markerIcons.get(marker.data.category), iconSize:[50,50]})}
-                    />
-                }
-                    
-                return null;
-            }
-        )}
+        {            
+            bottlesOnMap.map(marker => {            
+                    if(marker.data?.title) {
+                        // console.log(marker)
+                        // console.log(bottlesOnMap)
+                        return <Marker 
+                            key={marker.coordinates.toString()} 
+                            position={marker.coordinates} 
+                            eventHandlers={{click: (e) => {
+                                    if(selfId === marker.data.userId) {                                    
+                                        openDescriptionBar(marker?.data, openEditRightBar)
+                                    } else {
+                                        openDescriptionBar(marker?.data)
+                                    }
+                                } 
+                            }}
+                            icon={L.icon({iconUrl: markerIcons.get(marker.data.category), iconSize:[50,50]})}
+                        />
+                    }
+                        
+                    return null;
+            })
+        }
     </React.Fragment>
 })

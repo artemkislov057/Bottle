@@ -117,6 +117,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             
             let bottles = await res.json() as Array<BottleRequestType>;
             if(bottles.length < 1) {
+                setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}]);
+                setConstBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}]);
                 return
             }
             console.log(bottles)
@@ -144,13 +146,14 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 }
                 if (newBottles[0] === null) {
                     newBottles = [{coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}];
-                } else {                    
+                } else {
                     newBottles.push({coordinates: new LatLng(e.lat, e.lng), data: currentBottleData});
                 }
             }
             setConstBottlesOnMap(newBottles);
-            setBottlesOnMap(newBottles);
+            setBottlesOnMap(newBottles);           
         }
+        
         console.log('update coord')
         getAllBottles();
 
