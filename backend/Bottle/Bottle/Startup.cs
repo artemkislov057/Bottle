@@ -113,7 +113,7 @@ namespace Bottle
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseCors(builder => builder.WithOrigins("http://127.0.0.1:5500", "https://127.0.0.1:5500", "http://localhost:8080", "http://192.168.0.107:8080", "http://localhost:3000")
+            app.UseCors(builder => builder.WithOrigins("http://127.0.0.1:5500", "https://127.0.0.1:5500", "http://localhost:8080", "http://192.168.0.107:8080", "http://localhost:3000", "https://booble-note.ru", "http://booble-note.ru")
                                           .AllowAnyHeader()
                                           .AllowAnyMethod()
                                           .AllowCredentials());
