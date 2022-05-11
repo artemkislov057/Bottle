@@ -68,7 +68,8 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
     function updateWsCoordinates(lat: number, lng: number) {
         console.log(lat, lng)
         setCurrentLatLng(new LatLng(lat, lng));
-        WS.updateCoordinates(lat, lng);
+        if(WS)
+            WS.updateCoordinates(lat, lng);
     }
 
     function openChatPage(dialogId? : number) {

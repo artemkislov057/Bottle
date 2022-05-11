@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import './interfaceButton.css';
 import { LeftBar } from "./components/leftBar/leftBar";
 import { RightBar } from "./components/rightBar/rightBar";
@@ -60,7 +60,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         async function getAllBottles() {
             let res = await fetch(`${apiUrl}/api/bottles?radius=100&lat=${currentLatLng.lat}&lng=${currentLatLng.lng}`, {
                 credentials: 'include'
-            })
+            });
+            
             let bottles = await res.json() as Array<BottleRequestType>;
             if(bottles.length < 1) {
                 return
@@ -101,8 +102,63 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         console.log('update')
         getAllBottles();
 
-        return () => setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}])
-    }, [props.children, currentLatLng]);//
+        return () => {
+            setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}]);
+            setConstBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}]);
+        }
+    }, [props.children]);//
+
+    useEffect(() => {
+        if(!props.children) return;
+        async function getAllBottles() {
+            let res = await fetch(`${apiUrl}/api/bottles?radius=100&lat=${currentLatLng.lat}&lng=${currentLatLng.lng}`, {
+                credentials: 'include'
+            });
+            
+            let bottles = await res.json() as Array<BottleRequestType>;
+            if(bottles.length < 1) {
+                return
+            }
+            console.log(bottles)
+            let newBottles : [{data: BottleRequestType, coordinates: LatLng}] = [null];
+            for(let e of bottles) {
+                let currentBottleData: BottleRequestType = {
+                    active: e.active,
+                    created: e.created,
+                    endTime: e.endTime,
+                    geoObjectName: e.geoObjectName,
+                    isContentLoaded: e.isContentLoaded,
+                    lat: e.lat,
+                    lng: e.lng,
+                    maxPickingUp: e.maxPickingUp,
+                    userId: e.userId,
+                    address: e.address,
+                    contentIds: e.contentIds,
+                    contentItemsCount: e.contentIds?.length,
+                    pickingUp: e.pickingUp,
+                    description: e.description,
+                    lifeTime: e.lifeTime,
+                    title: e.title,
+                    id: e.id,
+                    category: e.category
+                }
+                if (newBottles[0] === null) {
+                    newBottles = [{coordinates: new LatLng(e.lat, e.lng), data: currentBottleData}];
+                } else {                    
+                    newBottles.push({coordinates: new LatLng(e.lat, e.lng), data: currentBottleData});
+                }
+            }
+            setConstBottlesOnMap(newBottles);
+            setBottlesOnMap(newBottles);
+        }
+        console.log('update coord')
+        getAllBottles();
+
+        // return () => {
+        //     setBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}]);
+        //     setConstBottlesOnMap([{data: initObj, coordinates: new LatLng(null, null)}]);
+        // }
+    }, [currentLatLng]);//
 
     useEffect(() => {
         if(!currentFilterCategory) return;
