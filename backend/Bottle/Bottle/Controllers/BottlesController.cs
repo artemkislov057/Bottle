@@ -294,7 +294,7 @@ namespace Bottle.Controllers
             if (model.LifeTime != null)
             {
                 var timeSpan = TimeSpan.FromSeconds((double)model.LifeTime);
-                if (bottle.Created + timeSpan > DateTime.UtcNow) bottle.EndTime = bottle.Created + timeSpan;
+                bottle.EndTime = bottle.Created + timeSpan;
             }
             if (model.MaxPickingUp != null && user.Type == 1)
             {
