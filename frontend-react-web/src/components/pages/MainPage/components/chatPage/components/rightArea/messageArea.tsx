@@ -79,14 +79,17 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
     }, [props.currentDialogData]);
 
     useEffect(() => {//scroll to last message
+        scrollToLastMessage();
+        // if(!messages) return
+        // let allMessages = document.querySelectorAll('.chat-page-message-container-message');
+        // allMessages[allMessages.length - 1].scrollIntoView();
+    },[messages]);
+
+    function scrollToLastMessage() {
         if(!messages) return
         let allMessages = document.querySelectorAll('.chat-page-message-container-message');
-        allMessages[allMessages.length - 1].scrollIntoView();
-
-        // let messageContainer = document.querySelector('.chat-page-message-container-scroll');
-        // messageContainer.scrollIntoView();
-        
-    },[messages]);
+        allMessages[allMessages.length - 1]?.scrollIntoView();
+    }
 
     useEffect(() => {  
         let newMessage = props.newMessage;
@@ -103,6 +106,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
             } else {
                 setMessages([{messId: data?.id, time: time, from:'partner', value: data?.value, photoUrl: urlPhoto}]);
             }
+            scrollToLastMessage();
         }
 
         let currentTime = new Date(newMessage?.dateTime);
@@ -169,6 +173,7 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
                 setMessages([...messages, {messId:collbackData.id, time: time, from:'self', value: collbackData.value, photoUrl: urlPhoto}]);
             else setMessages([{messId:collbackData.id, time: time, from:'self', value: collbackData.value, photoUrl: urlPhoto}]);
             props.setUpdateDialogsInfo(!props.updateDialogsInfo);
+            scrollToLastMessage();
         }
     }
 
@@ -176,9 +181,11 @@ export const MessageArea:React.FC<TProps> = React.memo((props) => {
         <div className="chat-page-message-container-scroll">
             <div className="chat-page-message-container-HELP">
                 <div className="chat-page-message-container">
-                    {messages?.map(message => 
-                        <Message key={`${message.messId} ${props.currentDialogData.dialogInfo.id}`} messageFrom={message.from} value={message.value} time={message.time} urlPhoto={message.photoUrl}/>    
-                        )}                    
+                    {messages?.map(message => {
+                        return <Message key={`${message.messId} ${props.currentDialogData.dialogInfo.id}`} messageFrom={message.from} value={message.value} time={message.time} urlPhoto={message.photoUrl}/>    
+                    }
+                        
+                        )}
                 </div>
             </div>
         </div>

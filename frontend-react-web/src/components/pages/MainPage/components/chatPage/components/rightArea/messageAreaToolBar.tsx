@@ -8,6 +8,11 @@ type TProps = {
 export const ToolBarMessageArea:React.FC<TProps> = React.memo((props) => {
     const [message, setMessage] = useState('');
 
+    function clearBufferInput() {
+        let inputField = document.getElementById('toolBar-data-button') as HTMLInputElement;
+        inputField.value = '';
+    }
+
     useEffect(() => {
         setMessage('')
     }, [props.onSubmit])
@@ -16,7 +21,7 @@ export const ToolBarMessageArea:React.FC<TProps> = React.memo((props) => {
         <div className="chat-page-message-toolBar">
             <div className="chat-page-message-toolBar-data-container">
                 <label className="chat-page-message-toolBar-data-helpLabel" htmlFor="toolBar-data-button"></label>
-                <input type={"file"} className="chat-page-message-toolBar-data-button" id="toolBar-data-button" onChange={e => props.onSendPhoto(e.target.files[0])}></input>
+                <input type={"file"} className="chat-page-message-toolBar-data-button" id="toolBar-data-button" onChange={e => {props.onSendPhoto(e.target.files[0]); clearBufferInput()} }></input>
             </div>
             <form id="message-toolBar-form" className="chat-page-message-toolBar-form"                
                 onSubmit={e => {
