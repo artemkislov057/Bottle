@@ -19,6 +19,10 @@
     background-color: #212121;
 }
 
+.chat-page-right-header {
+    box-shadow: -5px 4px 20px rgba(10, 39, 69, 0.15);
+}
+
 .chat-page-right-header-info {
     display: flex;
     flex: 1;
@@ -179,6 +183,7 @@
     /* margin-bottom: 10px; */
     
     background-color: #212121;
+    box-shadow: 0px 5px 5px rgba(14, 14, 14, 0.15);
 }
 
 .chat-page-message-toolBar-data-container {
@@ -214,6 +219,7 @@
     background-color: #454647;
 
     font-size: 15px;
+    box-shadow: inset 0px 5px 8px rgba(0, 0, 0, 0.25);
 }
 
 .chat-page-message-toolBar-send-button {
