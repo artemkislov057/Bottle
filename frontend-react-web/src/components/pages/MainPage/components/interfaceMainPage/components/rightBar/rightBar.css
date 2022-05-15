@@ -92,9 +92,14 @@
     width: 70%;
 }
 
+.right-bar-map-description-container {
+    height: 100%;
+}
+
 .right-bar-map-description-textArea {
     resize: none;
-    height: 250px;
+    min-height: 70px;
+    height: 100%;
     font-size: 16px;
     outline: none;
 
@@ -129,7 +134,11 @@
 
 .right-bar-map-setting-pick-count-input {
 
-} 
+}
+
+.right-bar-map-photos-container {    
+    
+}
 
 .right-bar-map-photos-add-buttons-container {
     display: flex;
