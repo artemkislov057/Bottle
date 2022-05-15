@@ -1,5 +1,9 @@
 .interface-button-container {
+    /* position: fixed; */
     z-index: 400;
+    width: 100%;
+    height: 100%;
+    display: flex;
 }
 
 .profile-button-mainPage,
@@ -8,7 +12,7 @@
 .chat-button-mainPage,
 .create-bottle-button-mainPage {
     position: fixed;
-    z-index: 400;    
+    z-index: 400;
 }
 
 .profile-button-mainPage,
@@ -140,4 +144,41 @@
     border: none;
 
     z-index: inherit;
+}
+
+@media screen and (max-width: 700px) {
+    .create-bottle-button-mainPage {
+        position: fixed !important;
+        top: auto;
+        left: 20px; 
+        bottom: 40px;
+        /* background: url('createBottleMobileIcon.svg') 50% 50% no-repeat;
+        background-size: 100% 100%; */
+
+    }
+
+    .interfaceButton-search-field-with-otherButton {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 90%;
+        left: 2%;
+    }
+
+    .select-category-mainPage-input {
+        /* display: none; */
+        left: 0;
+        top: 12%;
+        left: 20px;
+        width: 50px;
+        
+        background: url('categoryMobileIcon.svg') 50% 50% no-repeat;
+        background-size: 100%;
+    }
+
+    .select-category-checked-category-name {
+        color: transparent;
+    }
+
+    
 }

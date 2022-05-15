@@ -183,3 +183,25 @@
     from{transform: scale(1);}
     to{transform: scale(2);}
 }
+
+@media screen and (max-width: 700px) {
+    .right-bar-map-popup-bottle {
+        width: 100%;
+        color: #FFFFFF;
+        background-color: rgba(23, 23, 23, 1);
+    }
+
+    .right-bar-map-popup-body-title {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        font-size: 18px;        
+        /* background: transparent !important; */
+    }
+
+    /* .right-bar-map-popup-body-info,
+    .right-bar-map-popup-body-description {    
+        background-color: rgba(23, 23, 23, 1);
+    } */
+    
+}

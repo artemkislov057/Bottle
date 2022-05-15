@@ -87,3 +87,14 @@
     font-size: 14px;
     color: #D5DCDF99;
 }
+
+@media screen and (max-width: 700px) {
+    .right-bar-map-my-bottles {            
+        width: 100%;        
+    }
+
+    .right-bar-map-my-bottles-item-icon {
+        width: 45px;
+        height: 45px;
+    }
+}

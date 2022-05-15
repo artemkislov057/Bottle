@@ -7,8 +7,7 @@
     right: 0;
     z-index: 450;
     background-color: #212121;
-    color: #D5DCDF;
-    
+    color: #D5DCDF;    
 }
 
 .right-bar-profile-map-body {
@@ -105,3 +104,28 @@
     display: none;
 }
 
+@media screen and (max-width: 700px) {
+    .right-bar-profile-map {
+        width: 100%;;
+    }
+
+    .user-info-container-label-input {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 5px;
+    }
+
+    .user-info-container-label-input label {        
+        font-size: 14px;
+    }
+
+    .profile-map-body-user-info-container {
+        gap: 10px;
+    }
+
+    .profile-map-body-avatar {
+        max-width: 130px;
+        border-radius: 5px;
+    }
+}
