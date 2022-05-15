@@ -23,7 +23,8 @@ type TProps = {
     }>>,
     newMessage: WsGetMessageType,
     setUpdateDialogsInfo: React.Dispatch<React.SetStateAction<boolean>>,
-    updateDialogsInfo: boolean
+    updateDialogsInfo: boolean,
+    backToChatsList?: Function
 }
 
 export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
@@ -40,7 +41,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
     // const [rateModal, setRateModal] = useState(<></>);
     const rateModal = useRef(<></>);
     let init :{value: number, id: number};
-    const [rateValue, setRateValue] = useState(init);
+    const [rateValue, setRateValue] = useState(init);    
 
     useEffect(() => {
         if(props.currentDialogData) {
@@ -64,8 +65,9 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                                 return closeDialog(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
                             }
                             return ratePartner(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
-                        }
-                    } />
+                        }}
+                        onClickBackToChats={props.backToChatsList}
+                    />
                     <MessageArea 
                         currentDialogData={props.currentDialogData} 
                         newMessage={props.newMessage} 

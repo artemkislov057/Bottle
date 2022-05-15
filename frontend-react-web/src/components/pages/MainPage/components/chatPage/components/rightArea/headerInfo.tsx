@@ -4,7 +4,8 @@ import { UserRating } from "../../../interfaceMainPage/components/leftBar/userRa
 type TProps = {
     urlAvatar: string,
     name: string,
-    rating: number
+    rating: number,
+    onClickBack?: Function
 }
 
 export const HeaderInfoRight:React.FC<TProps> = React.memo((props) => {

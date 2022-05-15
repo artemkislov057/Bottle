@@ -19,6 +19,16 @@
     background-color: #212121;
 }
 
+.chat-page-right-header-back-button-mobile {
+    display: none;
+    width: 25px;
+    height: 15px;
+    background: url('toChatsListIcon.svg') 50% 50% no-repeat;
+    background-size: 25px 15px;
+
+    align-self: center;
+}
+
 .chat-page-right-header {
     box-shadow: -5px 4px 20px rgba(10, 39, 69, 0.15);
 }
@@ -52,6 +62,7 @@
 }
 
 .chat-page-right-header-exitButton {
+    
     height: 45px;
     width: 150px;
     border-radius: 10px;
@@ -60,6 +71,11 @@
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     color: #D5DCDFCC;
     background: #766AC8;
+    
+}
+
+.chat-page-right-header-exitButton::after {
+    content: 'Завершить диалог';
 }
 
 .chat-page-right-message-area,
@@ -160,6 +176,10 @@
 
 .chat-page-message-container-message-value-image {
     border-radius: 10px;
+    max-width: 400px;
+    min-width: 100px;
+    max-height: 500px;
+    min-height: 100px;
 }
 
 .chat-page-message-toolBar-area {
@@ -232,3 +252,61 @@
     background-size: 25px 25px;
 }
 
+@media screen and (max-width: 1200px) {    
+    .chat-page-message-container-message {
+        min-width: 50px;    
+        max-width: 350px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .chat-page-right-side,
+    .chat-page-right-side-empty {
+        /* flex: 0;
+        flex: none; */
+        width: 100%;
+        
+    }
+
+    .chat-page-message-container {
+        margin: 0 5%;
+    }
+
+    .chat-page-message-toolBar {
+        margin: 0 5% 0px 5%;
+        margin: 0;
+    }
+
+    .chat-page-message-container-message-value-image {
+        max-width: 250px;
+        min-width: 50px;
+        max-height: 300px;
+        min-height: 100px;
+    }
+
+    .chat-page-message-toolBar-area {
+        flex: 0;
+        align-items: flex-end;
+    }
+
+    .chat-page-right-header-back-button-mobile {
+        display: block; 
+    }
+
+    .chat-page-message-container-message {
+        min-width: 50px;    
+        max-width: 250px;
+    }
+
+    .chat-page-right-header-exitButton {
+        width: 25px;
+        height: 23px;
+        border: none;
+        background: url('deleteIcon.svg') 50% 50% no-repeat;
+        background-size: 25px 23px;        
+    }
+
+    .chat-page-right-header-exitButton::after {
+        content: '';
+    }
+}

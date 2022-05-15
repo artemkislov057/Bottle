@@ -6,6 +6,7 @@ import { StartPage } from 'components/pages/StartPage/startPage';
 import { Route, Link, BrowserRouter, Routes, Router, useNavigate } from 'react-router-dom';
 import { apiUrl } from 'components/connections/apiUrl';
 import { ContextLogin } from 'loginContext';
+import { ContextWindowResolution } from 'windoResolutionContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,7 +17,14 @@ const queryClient = new QueryClient({
 })
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);  
+  const [isLogin, setIsLogin] = useState(false);
+  const [currentWindowWidth, setCurrentWindowWidth] = useState(window.screen.availWidth);
+
+  window.addEventListener('resize', e => {
+    //@ts-ignore
+    setCurrentWindowWidth(e.currentTarget.screen.availWidth);
+  });
+
   useEffect(() => {
     async function getUser() {
       try {
@@ -38,12 +46,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ContextLogin.Provider value={{isLogin: isLogin, setIsLogin:setIsLogin}}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/mainPage' element={<MainPage isLogin={isLogin} />} />
-            <Route path='/' element={<StartPage isLogin={isLogin} />} />
-          </Routes>        
-        </BrowserRouter>
+        <ContextWindowResolution.Provider value={currentWindowWidth}>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/mainPage' element={<MainPage isLogin={isLogin} />} />
+              <Route path='/' element={<StartPage isLogin={isLogin} />} />
+            </Routes>        
+          </BrowserRouter>
+        </ContextWindowResolution.Provider>
       </ContextLogin.Provider>      
     </QueryClientProvider>    
   );

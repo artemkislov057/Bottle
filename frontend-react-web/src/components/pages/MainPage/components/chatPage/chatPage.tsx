@@ -9,6 +9,7 @@ import { WsDialogType } from "../../WsDialogType";
 import { UserInfoType } from "../../UserInfoType";
 import { WsGetMessageType } from "../../WsGetMessageType";
 import { WsEventContext } from "../../contextWsEvents";
+import { ContextWindowResolution } from "windoResolutionContext";
 
 type TProps = {
     openMainLeftBar: React.MutableRefObject<() => void>,
@@ -27,6 +28,23 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     const [newMessage, setNewMessage] = useState(newMessInit);
     const [updateDialogsInfo, setUpdateDialogsInfo] = useState(true);
     const wsEvent = useContext(WsEventContext);
+
+    const windowWidth = useContext(ContextWindowResolution);
+    const [currentWidth, setCurrentWidth] = useState(windowWidth);
+
+    const [mobileState, setMobileState] = useState(<div className="chat-page-main">
+                                                        <LeftBarChat 
+                                                            onClickOtherButton={props.openMainLeftBar.current} 
+                                                            setCurrentDialog={setCurrentDialog} 
+                                                            updateDialogsInfo={updateDialogsInfo} 
+                                                            openDialogId={props.openDialogId}
+                                                            mobileClass={'mobile'}
+                                                        />            
+                                                    </div>);
+
+    useEffect(() => {
+        setCurrentWidth(windowWidth)
+    }, [windowWidth]);
         
     useEffect(() => {
         // console.log(wsEvent)
@@ -51,18 +69,61 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
     useEffect(() => {
         console.log('меняется')
     }, [updateDialogsInfo])
+
+    function backToChatsList() {
+        setMobileState(<div className="chat-page-main">
+            <LeftBarChat 
+                onClickOtherButton={props.openMainLeftBar.current} 
+                setCurrentDialog={setCurrentDialog} 
+                updateDialogsInfo={updateDialogsInfo} 
+                openDialogId={props.openDialogId}
+                mobileClass={'mobile'}
+            />           
+        </div>)
+    }
+
+    useEffect(() => {
+        if(currentDialog) {
+            setMobileState(<div className="chat-page-main">
+                {/* <LeftBarChat 
+                    onClickOtherButton={props.openMainLeftBar.current} 
+                    setCurrentDialog={setCurrentDialog} 
+                    updateDialogsInfo={updateDialogsInfo} 
+                    openDialogId={props.openDialogId}
+                    mobileClass={'mobile'}
+                /> */}
+                <MessageAreaChat 
+                    currentDialogData={currentDialog} 
+                    setCurrentDialog={setCurrentDialog} 
+                    newMessage={newMessage} 
+                    updateDialogsInfo={updateDialogsInfo} 
+                    setUpdateDialogsInfo={setUpdateDialogsInfo}
+                    backToChatsList={backToChatsList}
+                />
+            </div>)
+        }
+    }, [currentDialog])
+
+    if(currentWidth < 701) {        
+        return <>
+            {mobileState}
+        </>
+    }
         
     return <div className="chat-page-main">
         <LeftBarChat 
             onClickOtherButton={props.openMainLeftBar.current} 
             setCurrentDialog={setCurrentDialog} 
             updateDialogsInfo={updateDialogsInfo} 
-            openDialogId={props.openDialogId}/>
+            openDialogId={props.openDialogId}
+            mobileClass=''
+        />
         <MessageAreaChat 
             currentDialogData={currentDialog} 
             setCurrentDialog={setCurrentDialog} 
             newMessage={newMessage} 
             updateDialogsInfo={updateDialogsInfo} 
-            setUpdateDialogsInfo={setUpdateDialogsInfo}/>
+            setUpdateDialogsInfo={setUpdateDialogsInfo}
+        />
     </div>
 })

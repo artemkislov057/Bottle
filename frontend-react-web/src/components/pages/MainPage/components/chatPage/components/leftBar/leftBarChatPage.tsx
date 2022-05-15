@@ -14,7 +14,8 @@ type TProps = {
     onClickOtherButton: Function,
     setCurrentDialog: React.Dispatch<React.SetStateAction<UserItem>>,
     updateDialogsInfo: boolean,
-    openDialogId?: number
+    openDialogId?: number,
+    mobileClass: string
 }
 
 type UserItem = {
@@ -106,7 +107,7 @@ export const LeftBarChat:React.FC<TProps> = React.memo((props) => {
         return date1 - date2 > 0 ? -1 : 0
     }
 
-    return <div className="chat-page-left-bar">
+    return <div className={`chat-page-left-bar ${props.mobileClass || ''}`}>
         <HeaderLeftBarChat onClickOtherButton={props.onClickOtherButton} searchValue={searchValue} setSearchValue={setSearchValue}/>{/*сделать поиск*/}
         <div className="chat-page-left-user-items">
             {chatUsers?.map(userItem => {
