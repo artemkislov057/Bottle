@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import './headerStartPage.css';
 import ic from './headerWaveNew1.svg';
 // import ic from './fuuuuuuuuck.png';
 import {Link} from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import { ContextWindowResolution } from "windoResolutionContext";
 
 type TProps = {
     onClickSignUp: Function,
@@ -14,6 +15,8 @@ type TProps = {
 export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
     const [pinkMarker, setPinkMarker] = useState(<div className="start-page-header-wave-first-marker left"></div>);
     const [violetMarker, setVioletMarker] = useState(<div className="start-page-header-wave-first-marker right"></div>);
+    const currentWindowWidth = useContext(ContextWindowResolution);
+
     function onHovered() {
         let wave = document.querySelector('.start-page-header-wave-first') as HTMLElement;
         wave.classList.add('hovered');
@@ -38,6 +41,17 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
         } else {
             setVioletMarker(<div className="start-page-header-wave-first-marker right"></div>);
         }
+    }
+
+    if(currentWindowWidth < 701) {
+        return <div className="start-page-header-container">
+            {/* <div className="start-page-header-wave-first-help-container">
+                <div className="start-page-header-wave-first-help a"></div>
+                <div className="start-page-header-wave-first-help b"></div>
+            </div> */}
+            <div className="start-page-header-wave-mobile second"></div>
+            <div className="start-page-header-wave-mobile first"></div>
+        </div>
     }
 
     return <div className="start-page-header-container">

@@ -117,3 +117,22 @@
     opacity: 1;
     transition: .5s;
 }
+
+.start-page-header-wave-mobile {
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.start-page-header-wave-mobile.first {
+    left: 0;
+    background: url('mobileWaveLeft.svg')  50% 50% no-repeat;
+    background-size: 100% 100%;
+}
+
+.start-page-header-wave-mobile.second {
+    right: 0;
+    background: url('mobileWaveRight.svg')  50% 50% no-repeat;
+    background-size: 100% 100%;
+}

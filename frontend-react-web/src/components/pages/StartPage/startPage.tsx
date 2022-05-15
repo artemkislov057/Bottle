@@ -8,6 +8,8 @@ import { SignModal } from "./components/signModal/signModal";
 import { useNavigate } from "react-router-dom";
 import { apiUrl } from "components/connections/apiUrl";
 import { ContextLogin } from "loginContext";
+import { ContextWindowResolution } from "windoResolutionContext";
+import { MobileSignModal } from "./components/mobileSignModal/mobileSignModal";
 
 type TProps = {
     isLogin: boolean
@@ -17,6 +19,9 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     const navigate = useNavigate();
     const [modal, setModal] = useState(<></>);
     const loginData = useContext(ContextLogin);
+    const currentWindowWidth = useContext(ContextWindowResolution);
+    const [mobileBodyState, setMobileBodyState] = useState(<BodyStartPage onClickBegin={onClickBeginMobile}/>);
+    const [mobileModal, setMobileModal] = useState(<></>);
         
     function toMainPage() {
         navigate('/mainPage');
@@ -158,6 +163,25 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
 
     function closeModal() {
         setModal(<></>);
+    }
+
+    function onClickBeginMobile() {
+        setMobileBodyState(<></>);
+        setMobileModal(<MobileSignModal
+            onClickSignIn={onSubmitSignIn}
+            onClickSignUp={onSubmitSignUp}
+            onClickSignInWithGoogle={onSubmitSignInGoogle}
+            onClickSignUpWithGoogle={onSubmitSignUpGoogle}
+        />)
+    }
+
+    if(currentWindowWidth < 701) {
+        return <div className="start-page">
+            <HeaderStartPage onClickSignUp={onClickSignUp} toMainPage={toMainPage} onClickSignIn={onClickSignIn}/>
+            {mobileBodyState}
+            {mobileModal}
+            <FooterStartPage />            
+        </div>
     }
 
     return <div className="start-page">

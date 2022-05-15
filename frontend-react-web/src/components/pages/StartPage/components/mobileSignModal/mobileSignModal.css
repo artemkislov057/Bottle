@@ -1,0 +1,105 @@
+.sign-modal-mobile-container {
+    display: flex;
+    /* background-color: aquamarine; */
+    flex-direction: column;
+
+    margin: 50px 30px;
+    /* padding: 50px 0; */
+    gap: 50px;
+}
+
+.sign-modal-mobile-header {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;    
+    align-items: center;
+}
+
+.sign-modal-mobile-header-central-line {
+    height: 30px;
+    width: 2px;
+    background-color: rgba(213, 220, 223, 1);
+}
+
+.sign-modal-mobile-header-button {
+    height: 35px;
+    border: none;
+    background: none;
+    color: rgba(213, 220, 223, 0.6);
+    font-size: 25px;
+}
+
+.sign-modal-mobile-header-button.active {
+    color: #766AC8;
+}
+
+.sign-modal-mobile-inputs {
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */
+    /* background-color: aqua; */
+    gap: 30px;
+    
+     
+}
+
+.sign-modal-mobile-input {
+    background: none;
+    border-bottom-color: #766AC8;
+    border-right: 0;
+    border-top: 0;
+    border-left: 0;
+    outline: none;
+    height: 30px;
+    color: #D5DCDF;;
+}
+
+.sign-modal-mobile-input::placeholder {
+    color: rgba(165, 105, 247, 0.5);
+}
+
+.sign-modal-mobile-submit-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;    
+    align-items: center;
+}
+
+.sign-modal-mobile-submit {
+    min-width: 200px;
+    max-width: 260px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(93.12deg, #766AC8 4.38%, #A968FC 100%);
+    color: #D5DCDF;
+    font-size: 20px;
+}
+
+.sign-modal-mobile-submit-buttons-text {
+    font-size: 16px;
+    color: rgba(213, 220, 223, 0.6);
+}
+
+.sign-modal-mobile-submit-social-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.sign-modal-mobile-submit-social-button {
+    border: none;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+}
+
+.sign-modal-mobile-submit-social-button.google {
+    background: url('signGoogleMobileIcon.svg') 50% 50% no-repeat;
+    background-size: 100%;
+}
+
+.sign-modal-mobile-submit-social-button.vk {
+    background: url('signVKMobileIcon.svg') 50% 50% no-repeat;
+    background-size: 100%;
+}

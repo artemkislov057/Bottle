@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { ContextWindowResolution } from "windoResolutionContext";
 import './footerStartPage.css';
 import a from './newFotterLeftWave.svg';
 
 export const FooterStartPage:React.FC = React.memo(() => {
     const [greenMarker, setGreenMarker] = useState(<div className="start-page-footer-wave-first-marker left"></div>);
     const [bluetMarker, setBlueMarker] = useState(<div className="start-page-footer-wave-first-marker right"></div>);
+    const currentWindowWidth = useContext(ContextWindowResolution);
     
     function onHoverLeftWave() {
         let leftWave = document.querySelector('.start-page-footer-wave-first') as HTMLElement;
@@ -32,6 +34,10 @@ export const FooterStartPage:React.FC = React.memo(() => {
         leftWave.classList.remove('hovered');
 
         setBlueMarker(<div className="start-page-footer-wave-first-marker right"></div>)
+    }
+
+    if(currentWindowWidth < 701) {
+        return <div className="start-page-footer-container"></div>
     }
 
     return <div className="start-page-footer-container">

@@ -20,3 +20,25 @@
 .start-page-footer-container {
     flex: 2;
 }
+
+@media screen and (max-width: 700px) {
+    .start-page {
+        /* gap: 40px; */
+    }
+
+    .start-page-header-container {
+        flex: 1 ;
+    }
+    
+    .start-page-body-container {
+        flex: 5;
+    }
+    
+    .start-page-footer-container {
+        flex: 1;
+    }
+
+    .sign-modal-mobile-container-help {
+        flex: 5;
+    }
+}
