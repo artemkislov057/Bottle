@@ -67,7 +67,7 @@
     transition: .8s cubic-bezier(.165, .84, .44, 1);
 }
 
-/* .start-page-body-button:before {
+.start-page-body-button:before {
     content: "";
     position: absolute;
     left: 0;
@@ -78,7 +78,7 @@
     color: white;
     background: linear-gradient(94.85deg, #6B11DF 0.71%, #8F46EC 100%);
     transition: .8s cubic-bezier(.165, .84, .44, 1);
-} */
+}
 
 .start-page-body-button:hover {
     background: rgba(255, 255, 255, 0);
