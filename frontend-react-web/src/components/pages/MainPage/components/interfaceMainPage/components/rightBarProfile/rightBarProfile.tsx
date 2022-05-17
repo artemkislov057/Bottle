@@ -19,6 +19,7 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
     let init : {info: UserInfoType, avatar: string}
     const [selfInfo, setSelfInfo] = useState(init);
     const [changedData, setChangedData] = useState({nickName: '', email: ''});
+    const [changedPassword, setChangedPassword] = useState({oldPassword: '', newPassword: ''});
     const loginData = useContext(ContextLogin);
 
     useEffect(() => {
@@ -51,9 +52,11 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
     }, []);
 
     async function saveChanges() {
-        if(!(changedData.email && changedData.nickName && (changedData.email !== selfInfo.info.email || changedData.nickName !== selfInfo.info.nickname))) {
+        if(!(changedData.email && changedData.nickName && (changedData.email !== selfInfo.info.email || changedData.nickName !== selfInfo.info.nickname)) && !changedPassword.oldPassword && !changedPassword.newPassword) {
             return
         }
+        
+        if(!(await changePassword())) return
 
         console.log('try save')
         fetch(`${apiUrl}/api/account`, {
@@ -72,6 +75,29 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
                 'Content-Type': 'application/json'
             }
         }).then(() => onClickBackButton());
+    }
+
+    async function changePassword() {
+        if(!(changedPassword.oldPassword && changedPassword.newPassword && changedPassword.oldPassword !== changedPassword.newPassword)) {
+            return true;
+        }
+        
+        let response = await fetch(`${apiUrl}/api/account/password`, {
+            method: "POST",
+            body: JSON.stringify({
+                currentPassword: changedPassword.oldPassword,
+                newPassword: changedPassword.newPassword
+            }),
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if(response.ok) {
+            console.log('pass changed')
+            return true
+        }
+        return false
     }
 
     function onClickBackButton() {
@@ -95,7 +121,7 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
     
     return <div className="right-bar-profile-map">
         <RightBarHeader title="Мой профиль" onClick={onClickBackButton} />
-        <ProfileBody data={selfInfo} changedData={changedData} setChangedData={setChangedData}/>
+        <ProfileBody data={selfInfo} changedData={changedData} setChangedData={setChangedData} passwordData={changedPassword} setChangedPassword={setChangedPassword}/>
         <RightBarFooter title="Выйти" onClick={onClickLogoutButton} onClickSecondButton={saveChanges} secondTitle='Сохранить'/>
     </div>
 })

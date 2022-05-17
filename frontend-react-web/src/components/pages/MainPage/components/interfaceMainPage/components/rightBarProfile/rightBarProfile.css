@@ -73,14 +73,17 @@
 
 .profile-map-body-user-info-container {
     display: flex;
-    height: 150px;
+    /* height: 150px; */
+    height: 100%;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 5%;
+    /* justify-content: space-between; */
 }
 
 .user-info-container-label-input {
     display: flex;
-    justify-content: space-between;    
+    justify-content: space-between;
+    align-items: center;
 }
 
 .user-info-container-label {
@@ -125,7 +128,33 @@
     }
 
     .profile-map-body-avatar {
-        max-width: 130px;
+        max-width: 100px;
         border-radius: 5px;
+    }
+
+    .right-bar-profile-map-body {
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+        padding: 25px;
+        gap: 15px;
+    }
+
+    .right-bar-profile-map-body .left-bar-map-header-rating {
+        height: 40px;
+        width: 40px;
+        font-size: 17px;
+    }
+
+    /* .right-bar-profile-map-body .profile-map-body-rating {
+        align-items: center !important;
+    } */
+
+    .right-bar-profile-map-body .profile-map-body-rating-stars {        
+        /* height: 20px; */
+    }
+
+    .right-bar-profile-map-body .rating-star {
+        background-size: 20px;
     }
 }

@@ -17,13 +17,22 @@ type TProps = {
     setChangedData: React.Dispatch<React.SetStateAction<{
         nickName: string;
         email: string;
+    }>>,
+    passwordData: {
+        oldPassword: string;
+        newPassword: string;
+    }
+    setChangedPassword: React.Dispatch<React.SetStateAction<{
+        oldPassword: string;
+        newPassword: string;
     }>>
 }
 
 export const ProfileBody:React.FC<TProps> = React.memo((props) => {
     const [nickName, setNickName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');//пустое поле
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
 
     function onChangeNickName(e: React.ChangeEvent<HTMLInputElement>) {
         setNickName(e.target.value);
@@ -35,8 +44,14 @@ export const ProfileBody:React.FC<TProps> = React.memo((props) => {
         props.setChangedData({email: e.target.value, nickName: props.changedData.nickName});
     }
     
-    function onChangePassword(e: React.ChangeEvent<HTMLInputElement>) {
-        setPassword(e.target.value);
+    function onChangeOldPassword(e: React.ChangeEvent<HTMLInputElement>) {
+        setOldPassword(e.target.value);
+        props.setChangedPassword({oldPassword: e.target.value, newPassword: props.passwordData.newPassword});
+    }
+
+    function onChangeNewPassword(e: React.ChangeEvent<HTMLInputElement>) {
+        setNewPassword(e.target.value);
+        props.setChangedPassword({oldPassword: props.passwordData.oldPassword, newPassword: e.target.value});
     }
 
     useEffect(() => {
@@ -53,7 +68,8 @@ export const ProfileBody:React.FC<TProps> = React.memo((props) => {
         <div className="profile-map-body-user-info-container">
             <InputLableContainerProfileBar labelName="Никнейм:" type="text" value={nickName} onChange={onChangeNickName}/>
             <InputLableContainerProfileBar labelName="Почта:" type="email" value={email} onChange={onChangeEmail}/>
-            <InputLableContainerProfileBar labelName="Пароль:" type="password" value={password} onChange={onChangePassword}/>
+            <InputLableContainerProfileBar labelName="Старый пароль:" type="password" value={oldPassword} onChange={onChangeOldPassword}/>
+            <InputLableContainerProfileBar labelName="Новый пароль:" type="password" value={newPassword} onChange={onChangeNewPassword}/>
         </div>
     </div>
 })
