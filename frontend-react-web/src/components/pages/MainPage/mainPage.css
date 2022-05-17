@@ -21,4 +21,16 @@ html, body {
     z-index: 430;
     background-color: rgba(0, 0, 0, 0.5);
     pointer-events: none;
+
+    opacity: 0;
+    animation: showBackground .3s forwards;
+}
+
+@keyframes showBackground {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
 }

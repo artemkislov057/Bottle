@@ -7,7 +7,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    opacity: 0;
+    animation: openModal .3s forwards;
 }
+
+/* .sign-modal-container-back.hide {
+    z-index: -5;
+    opacity: 1;
+    animation: closeModal .5s forwards;
+} */
 
 .sign-modal-container {
     position: absolute;
@@ -22,6 +31,16 @@
     gap: 5px;
     pointer-events: visible;
 }
+
+@keyframes openModal {
+    0% {opacity: 0;}
+    100% {opacity: 1;}    
+}
+
+/* @keyframes closeModal {
+    0% {opacity: 1;}
+    100% {opacity: 0; display: none;}
+} */
 
 .sign-modal-header-container {
     display: flex;

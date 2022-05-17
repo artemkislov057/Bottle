@@ -7,6 +7,21 @@
     z-index: 550;
 
     background-color: #212121;
+
+    transform: translateX(-100%);
+    opacity: 0;
+    animation: openLeftBar .3s forwards;
+}
+
+@keyframes openLeftBar {
+    0%{
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100%{
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .left-bar-map-header {   

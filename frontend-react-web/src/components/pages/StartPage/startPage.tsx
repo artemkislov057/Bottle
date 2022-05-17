@@ -18,6 +18,7 @@ type TProps = {
 export const StartPage:React.FC<TProps> = React.memo((props) => {
     const navigate = useNavigate();
     const [modal, setModal] = useState(<></>);
+    // const [modal, setModal] = useState(<div className="sign-modal-container-back hide"></div>);
     const loginData = useContext(ContextLogin);
     const currentWindowWidth = useContext(ContextWindowResolution);
     const [mobileBodyState, setMobileBodyState] = useState(<BodyStartPage onClickBegin={onClickBeginMobile}/>);
@@ -169,6 +170,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
 
     function closeModal() {
         setModal(<></>);
+        // setModal(<div className="sign-modal-container-back hide"></div>);
     }
 
     function onClickBeginMobile() {

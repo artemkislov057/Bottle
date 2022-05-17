@@ -8,6 +8,21 @@
     z-index: 450;
     color: #FFFFFF;
     background-color: #212121;
+
+    transform: translateX(100%);
+    opacity: 0;
+    animation: openPopupBar .3s forwards;    
+}
+
+@keyframes openPopupBar {
+    0%{
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100%{
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .right-bar-map-popup-body {

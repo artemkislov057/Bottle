@@ -8,7 +8,22 @@
     flex-direction: column;
     color: #D5DCDF;
     
-    background-color: #212121;    
+    background-color: #212121;
+
+    transform: translateX(100%);
+    opacity: 0;
+    animation: openRightBar .3s forwards;
+}
+
+@keyframes openRightBar {
+    0%{
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100%{
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .right-bar-map label{

@@ -7,7 +7,22 @@
     height: 100%;
     z-index: 450;
     color: #D5DCDF;
-    background-color: #212121;    
+    background-color: #212121;
+
+    transform: translateX(100%);
+    opacity: 0;
+    animation: openMyBottlesBar .3s forwards; 
+}
+
+@keyframes openMyBottlesBar {
+    0%{
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100%{
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .right-bar-map-my-bottles-items {
