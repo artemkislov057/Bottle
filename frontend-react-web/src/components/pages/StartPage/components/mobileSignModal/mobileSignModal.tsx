@@ -30,7 +30,13 @@ export const MobileSignModal:React.FC<TProps> = React.memo((props) => {
         }
         if(secondPasswordData && passwordData === secondPasswordData) {
             props.onClickSignUp({email: loginData, password: passwordData});
-        }        
+        } else {
+            let passInputs = document.querySelectorAll('.sign-modal-mobile-input.password');
+            for(let i = 0; i < passInputs.length; i++) {
+                let input = passInputs[i] as HTMLElement;
+                input.style.borderBottomColor = 'red';
+            }
+        }
     }
 
     return <div className="sign-modal-mobile-container-help">
@@ -45,7 +51,7 @@ export const MobileSignModal:React.FC<TProps> = React.memo((props) => {
                     type={currentActiveSection === 'signUp' ? 'email' : 'text'} 
                     className="sign-modal-mobile-input login" 
                     placeholder={currentActiveSection === 'signUp' ? 'Email' : 'Логин, email'}
-                    onChange={e => setLoginData(e.target.value)}
+                    onChange={e => {setLoginData(e.target.value); e.currentTarget.style.borderBottomColor = '#766AC8'}}
                     required
                 >
                 </input>
@@ -53,13 +59,13 @@ export const MobileSignModal:React.FC<TProps> = React.memo((props) => {
                     type={'password'} 
                     className="sign-modal-mobile-input password" 
                     placeholder="Пароль" 
-                    onChange={e => setPasswordDate(e.target.value)}
+                    onChange={e => {setPasswordDate(e.target.value); e.currentTarget.style.borderBottomColor = '#766AC8'}}
                     minLength={6}
                     required>
                 </input>
                 {
                     currentActiveSection === 'signUp' 
-                    ? <input type={'password'} className="sign-modal-mobile-input password" placeholder="Повторите пароль" onChange={e => setSecondPasswordDate(e.target.value)} required></input>
+                    ? <input type={'password'} className="sign-modal-mobile-input password" placeholder="Повторите пароль" onChange={e => {setSecondPasswordDate(e.target.value); e.currentTarget.style.borderBottomColor = '#766AC8'}} required></input>
                     : null
                 }
             </form>

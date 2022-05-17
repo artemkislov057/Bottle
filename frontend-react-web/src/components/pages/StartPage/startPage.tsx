@@ -152,11 +152,19 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
             // navigate('/');
             console.log('не вошли');
             let dataInputs =  document.querySelectorAll('.sign-modal-body-info-input-input');
-            for(let i = 0; i < dataInputs.length; i++) {
-                let input = dataInputs[i] as HTMLElement;
-                input.style.border = '2px solid red';
+            if(dataInputs) {
+                for(let i = 0; i < dataInputs.length; i++) {
+                    let input = dataInputs[i] as HTMLElement;
+                    input.style.border = '2px solid red';
+                }
+            }            
+
+            let mobileDataInputs = document.querySelectorAll('.sign-modal-mobile-input');
+            if(!mobileDataInputs) return;
+            for(let i = 0; i < mobileDataInputs.length; i++) {
+                let input = mobileDataInputs[i] as HTMLElement;
+                input.style.borderBottomColor = 'red';
             }
-            
         }
     }
 
