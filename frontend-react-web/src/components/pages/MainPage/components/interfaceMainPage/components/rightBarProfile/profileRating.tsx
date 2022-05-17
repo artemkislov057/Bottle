@@ -9,13 +9,16 @@ type TProps = {
 export const ProfileRatingContainer:React.FC<TProps> = React.memo((props) => {
     const [rateStars, setRateStars] = useState(Array<string>());
     useEffect(() => {
-        if(!props.rating) return
+        if(!props.rating) {
+            setRateStars(['empty','empty','empty','empty','empty'])
+            return
+        }
         let res = []
 
         if(Number.isInteger(props.rating)) {
             res = getStars(props.rating, false);            
         } else {
-            res = getStars(Math.floor(props.rating), true);            
+            res = getStars(Math.floor(props.rating), true);
         }
         
         setRateStars(res);
