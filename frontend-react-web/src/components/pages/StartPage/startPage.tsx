@@ -57,7 +57,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
             console.log('зарегались')
         } else {
             navigate('/');
-            console.log('жопа')
+            console.log('не зарегались')
         }
         
     }

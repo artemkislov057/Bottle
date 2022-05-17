@@ -46,9 +46,16 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
         let data = e as GoogleLoginResponse;       
             props.onSubmitGoogle({provider: 0, externalUserId: data.googleId, token: data.accessToken, email: data.profileObj.email})
     }
+
+    function closeModalOnClickOut(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        let event = e.target as HTMLElement;
+        if(event.classList.value === 'sign-modal-container-back') {
+            props.onClickCloseModal()
+        }
+    }
     
 
-    return <div className="sign-modal-container-back">
+    return <div className="sign-modal-container-back" onClick={e => closeModalOnClickOut(e)}>
         <div className="sign-modal-container" >
             <div className="sign-modal-header-container">
                 <div className="sign-modal-header-title">{props.title}</div>
