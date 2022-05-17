@@ -39,7 +39,6 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
-    
 }
 
 .chat-page-right-header-avatar {
@@ -265,7 +264,65 @@
         /* flex: 0;
         flex: none; */
         width: 100%;
-        
+        height: 100vh;
+
+        overflow-y: hidden;
+    }
+
+    .chat-page-right-header,
+    .chat-page-right-header-empty {
+        position: fixed;
+        display: flex;
+        width: 100%;
+        z-index: 600;
+        height: 70px;
+        justify-content: space-between;
+        gap: 0;
+        /* padding: 0 40px 0 10px; */
+        padding: 0;        
+        background-color: #212121;
+    }
+
+    .chat-page-right-header-info {
+        display: flex;
+        flex: none;
+    }
+
+    .chat-page-right-header-back-button-mobile {
+        display: block;
+        margin: 0 0 0 10px;
+        /* margin: 0 ; */
+    }
+
+    .chat-page-right-header-exitButton-container {
+        flex: 1;
+        flex: none;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: 15%;
+        margin-right: 10px;
+    }
+
+    .chat-page-right-header-exitButton {
+        width: 25px;
+        height: 23px;
+        border: none;
+        background: url('deleteIcon.svg') 50% 50% no-repeat;
+        background-size: 25px 23px;        
+    }
+
+    .chat-page-right-header-exitButton::after {
+        content: '';
+    }
+
+    .chat-page-right-message-area,
+    .chat-page-right-message-area-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: none;
+        height: 100vh;
     }
 
     .chat-page-message-container {
@@ -287,26 +344,23 @@
     .chat-page-message-toolBar-area {
         flex: 0;
         align-items: flex-end;
+
+        /* position: fixed; */
+        /* bottom: 0; */
     }
 
-    .chat-page-right-header-back-button-mobile {
-        display: block; 
-    }
+    /* .chat-page-message-toolBar {
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+    } */
+
+    
 
     .chat-page-message-container-message {
         min-width: 50px;    
         max-width: 250px;
     }
 
-    .chat-page-right-header-exitButton {
-        width: 25px;
-        height: 23px;
-        border: none;
-        background: url('deleteIcon.svg') 50% 50% no-repeat;
-        background-size: 25px 23px;        
-    }
-
-    .chat-page-right-header-exitButton::after {
-        content: '';
-    }
+    
 }

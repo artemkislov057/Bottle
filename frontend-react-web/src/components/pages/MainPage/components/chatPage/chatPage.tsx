@@ -84,14 +84,7 @@ export const ChatPage:React.FC<TProps> = React.memo((props) => {
 
     useEffect(() => {
         if(currentDialog) {
-            setMobileState(<div className="chat-page-main">
-                {/* <LeftBarChat 
-                    onClickOtherButton={props.openMainLeftBar.current} 
-                    setCurrentDialog={setCurrentDialog} 
-                    updateDialogsInfo={updateDialogsInfo} 
-                    openDialogId={props.openDialogId}
-                    mobileClass={'mobile'}
-                /> */}
+            setMobileState(<div className="chat-page-main">                
                 <MessageAreaChat 
                     currentDialogData={currentDialog} 
                     setCurrentDialog={setCurrentDialog} 
