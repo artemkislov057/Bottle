@@ -118,8 +118,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         
     }
 
-    async function onSubmitSignIn(data: {email: string, password: string}) {
-        closeModal();
+    async function onSubmitSignIn(data: {email: string, password: string}) {        
         let type = data.email.includes('@') ? 'email' : 'nickname';
         let responseData;
         if(type === 'email') {
@@ -144,12 +143,19 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         });
         
         if(response.ok) {
+            closeModal();
             loginData.setIsLogin(true);
             toMainPage();
-            console.log('вошли')
+            console.log('вошли');
         } else {
-            navigate('/');
-            console.log('не вошли жопа')
+            // navigate('/');
+            console.log('не вошли');
+            let dataInputs =  document.querySelectorAll('.sign-modal-body-info-input-input');
+            for(let i = 0; i < dataInputs.length; i++) {
+                let input = dataInputs[i] as HTMLElement;
+                input.style.border = '2px solid red';
+            }
+            
         }
     }
 

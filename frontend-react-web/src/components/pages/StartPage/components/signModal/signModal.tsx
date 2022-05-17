@@ -33,7 +33,13 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
         }
         if(secondPasswordData && passwordData === secondPasswordData) {
             props.onSubmit({email: loginData, password: passwordData});
-        }        
+        } else {
+            let passInputs = document.getElementById('body-info-input-input-Пароль');
+            let secPassInputs = document.getElementById('body-info-input-input-Повторите пароль');                        
+            passInputs.style.border = '2px solid red';
+            secPassInputs.style.border = '2px solid red';
+            
+        }
     }
 
     function successLoginGoogle(e: GoogleLoginResponse | GoogleLoginResponseOffline) {

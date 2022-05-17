@@ -16,7 +16,10 @@ export const ModalInput:React.FC<TProps> = React.memo((props) => {
             id={`body-info-input-input-${props.id}`} 
             className="sign-modal-body-info-input-input" 
             value={props.value}
-            onChange={e => props.setValue(e.target.value)}
+            onChange={e => {
+                props.setValue(e.target.value);
+                e.currentTarget.style.border = 'none'
+            }}
             required 
             minLength={props.type === 'password'? 6 : null}
             
