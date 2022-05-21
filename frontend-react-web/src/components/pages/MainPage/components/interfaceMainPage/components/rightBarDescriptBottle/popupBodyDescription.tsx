@@ -11,13 +11,15 @@ export const BodyDescription:React.FC<TProps> = React.memo((props) => {
 
     function scalePhoto(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         let event = e.target as HTMLElement;
-        let parent = event.parentElement.classList.add('scaled');
-        // event.classList.add('scaled');
+        // let parent = event.parentElement.classList.add('scaled');
+        //@ts-ignore
+        let curr = event.classList.add('scaled');
     }
 
     function blur(e: React.FocusEvent<HTMLDivElement>) {
         let event = e.target as HTMLElement;
-        let parent = event.classList.remove('scaled');
+        // let parent = event.classList.remove('scaled');
+        let curr = event.classList.remove('scaled');
     }
     
     useEffect(() => {
@@ -25,8 +27,10 @@ export const BodyDescription:React.FC<TProps> = React.memo((props) => {
             setContent(
                 <div className="right-bar-map-popup-body-description-content" onWheel={e => document.querySelector('.right-bar-map-popup-body-description-content').scrollLeft += e.deltaY / 4}>
                     {props.content.map((data, index) => 
-                        <div key={data+index} className="right-bar-map-popup-body-description-content-container" onClick={(e) => scalePhoto(e)} tabIndex={0} onBlur={(e) => blur(e)}>
-                            <img className="right-bar-map-popup-body-description-content-photo" src={data} alt="фотография" />
+                        <div key={data+index} className="right-bar-map-popup-body-description-content-container" 
+                            // onClick={(e) => scalePhoto(e)} tabIndex={0} onBlur={(e) => blur(e)}
+                        >
+                            <img className="right-bar-map-popup-body-description-content-photo" src={data} alt="фотография"  onClick={(e) => scalePhoto(e)} tabIndex={0} onBlur={(e) => blur(e)}/>
                         </div>   
                     )}     
                 </div>

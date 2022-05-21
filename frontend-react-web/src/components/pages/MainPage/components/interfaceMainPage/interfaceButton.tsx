@@ -22,6 +22,7 @@ import { DataBottleDescType } from "../../DataBottleDescriptType";
 
 import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBarDescriptBottle";
 import { LatLng } from "leaflet";
+import { CSSTransition } from "react-transition-group";
 import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
 
 type TProps = {    
@@ -32,7 +33,7 @@ type TProps = {
 }
 
 export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
-    const [leftbarState, setLeftBar] = useState(<></>);
+    const [leftbarState, setLeftBar] = useState(<></>);    
     const [rightbarState, setRightBar] = useState(<></>);
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
@@ -54,6 +55,20 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [exitCreateButton, setExitCreateButton] = useState(<></>);
     const {currentLatLng} = useContext(CurrentCoordinationsContext);
 
+    const [showLeftBar, setShowLeftBar] = useState(false);
+    const [showRightBar, setShowRightBar] = useState(false);
+    const [showProfileBar, setShowProfileBar] = useState(false);
+    const [showMyBottlesBar, setShowMyBottlesBar] = useState(false);
+    const [showPopupBar, setShowPopupBar] = useState(false);
+
+    
+
+    let showBarsDict: Map<React.Dispatch<React.SetStateAction<JSX.Element>>, React.Dispatch<React.SetStateAction<boolean>>> = new Map();
+    showBarsDict.set(setLeftBar, setShowLeftBar);
+    showBarsDict.set(setRightBar, setShowRightBar);
+    showBarsDict.set(setRightBarProfile, setShowProfileBar);
+    showBarsDict.set(setRightBarMyBottles, setShowMyBottlesBar);
+    showBarsDict.set(setRightBarPopup, setShowPopupBar);
 
     useEffect(() => { // при обновлении стр получение всех бутылок
         if(!props.children) return;
@@ -188,6 +203,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }, []);
 
     function onClickOpenLeftBar() {
+        setShowLeftBar(true);
         closeOtherBars(setLeftBar);
         enableBackgroundGray();
         setLeftBar(<LeftBar
@@ -198,32 +214,46 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             onClickChat={props.openChat}
             onClickMap={props.openMap}
             disableBackgroundGray={disableBackgroundGray}
+            setShowLeftBar={setShowLeftBar}
         />)
     }
 
     function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
+        setShowRightBar(true);
         closeOtherBars(setRightBar);
         enableBackgroundGray();
-        setRightBar(<RightBar setStateRightBar={setRightBar} disableBackgroundGray={disableBackgroundGray} changeBottleData={changeBottleData} currentBottleData={currentData}/>);            
+        setRightBar(<RightBar 
+            setStateRightBar={setRightBar} 
+            disableBackgroundGray={disableBackgroundGray} 
+            changeBottleData={changeBottleData} 
+            currentBottleData={currentData}
+            closeThis={closeRightBar}
+        />);
     }
 
     function onClickProfileInfofromLeft() {
+        setShowProfileBar(true);
         closeOtherBars(setRightBarProfile);
         setRightBarProfile(<RightBarProfile 
             setStateRightProfileBar={setRightBarProfile}
-            openLeftBar={onClickOpenLeftBar}/>)
+            openLeftBar={onClickOpenLeftBar}
+            closeThis={closeProfileBar}    
+        />)
     }
 
     function onClickMyBottles() {
+        setShowMyBottlesBar(true);
         closeOtherBars(setRightBarMyBottles);
         setRightBarMyBottles(<RightBarMyBottles 
             setRightBarMyBottles={setRightBarMyBottles}
             openLeftBar={onClickOpenLeftBar}
             openChangeRightBar={onClickOpenRightBar}
-            />)
+            closeThis={closeMyBottlesBar}
+        />)
     }    
     
     function onClickOpenPopup(data: BottleRequestType, onClickEdit?: Function) {
+        setShowPopupBar(true);
         closeOtherBars(setRightBarPopup);
         enableBackgroundGray();
         setRightBarPopup(<RightBarDescrBottle 
@@ -232,8 +262,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             onClickOpenDialog={openPartnerChat}
             disableBackgroundGray={disableBackgroundGray}
             onClickOpenEdit={onClickEdit}
-            />
-        )
+            closeThis={closePopupBar}
+        />)
     }
 
     function enableBackgroundGray() {
@@ -244,10 +274,29 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         props.backgroundState(<></>);
     }
 
+    function closeProfileBar() {
+        setShowProfileBar(false);
+    }
+
+    function closePopupBar() {
+        setShowPopupBar(false);
+    }
+
+    function closeMyBottlesBar() {
+        setShowMyBottlesBar(false);
+    }
+
+    function closeRightBar() {
+        setShowRightBar(false);
+    }
+
     function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>> = null) {
         for(let e of leftRightBarsStates) {
             if(e !== currentBar) {
-                e(<></>);
+                // e(<></>);
+                if(showBarsDict.get(e))
+                    showBarsDict.get(e)(false);
+                // setShowLeftBar(false)
             }
         }
     }
@@ -301,9 +350,15 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         {toolbar}
         {createButton}
         {exitCreateButton}
-
-        {leftbarState}
-        <ContextForCreateBottleMarker.Provider 
+        <CSSTransition
+            in={showLeftBar}
+            timeout={300}
+            classNames='show-left-bar'
+            unmountOnExit
+        >
+            {leftbarState}
+        </CSSTransition>                
+        <ContextForCreateBottleMarker.Provider
             value={{
                 openDescriptionBar: onClickOpenPopup, 
                 data: dataBottleDescription, 
@@ -312,12 +367,40 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 openEditRightBar: onClickOpenRightBar,
                 startCreateMode: startBottleCreateMode,
                 exitCreateMode: exitBottleCreateMode
-            }}>
-            {rightbarState}
+        }}>
+            <CSSTransition
+                in={showRightBar}
+                timeout={300}
+                classNames='show-right-bar'
+                unmountOnExit
+            >
+                {rightbarState}
+            </CSSTransition>            
             {props.children} {/*map*/}
         </ContextForCreateBottleMarker.Provider>
-        {rightbarProfileState}
-        {rightBarMyBottles}
-        {rightBarPopup}
+        <CSSTransition
+            in={showProfileBar}
+            timeout={300}
+            classNames='show-profile-bar'
+            unmountOnExit
+        >
+            {rightbarProfileState}
+        </CSSTransition>
+        <CSSTransition
+            in={showMyBottlesBar}
+            timeout={300}
+            classNames='show-myBottles-bar'
+            unmountOnExit
+        >
+            {rightBarMyBottles}
+        </CSSTransition>
+        <CSSTransition
+            in={showPopupBar}
+            timeout={300}
+            classNames='show-popup-bar'
+            unmountOnExit
+        >
+            {rightBarPopup}
+        </CSSTransition>
     </div>
 })

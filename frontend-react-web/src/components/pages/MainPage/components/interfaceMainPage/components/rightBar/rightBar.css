@@ -10,9 +10,9 @@
     
     background-color: #212121;
 
-    transform: translateX(100%);
+    /* transform: translateX(100%);
     opacity: 0;
-    animation: openRightBar .3s forwards;
+    animation: openRightBar .3s forwards; */
 }
 
 @keyframes openRightBar {

@@ -50,12 +50,33 @@
 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 
-    height: 0;
+    /* height: 0; */
     /* opacity: 0; */
     /* transform: translateY(-100%); */
-    animation: openSelect .5s forwards;
+    /* animation: openSelect .5s forwards; */
+}
 
+.show-category-list-enter {
+    height: 0;
+    opacity: 0;
+    /* transform: translateX(-100%); */
+}
 
+.show-category-list-enter-active {
+    height: 300px;
+    opacity: 1;
+    transition: all 0.3s;
+}
+
+.show-category-list-exit {
+    height: 300px;
+    opacity: 1;
+  }
+
+.show-category-list-exit-active {
+    height: 0;
+    opacity: 0;
+    transition: all 0.3s;
 }
 
 @keyframes openSelect {
@@ -82,7 +103,7 @@
     /* height: 0; */
     opacity: 0;
     /* transform: translateY(-100%); */
-    animation: openSelectItems 1s forwards;
+    animation: openSelectItems .5s forwards;
     
 }
 

@@ -23,6 +23,7 @@ type TProps = {
     onClickChat: Function,
     onClickMap: Function
     closeChat?: Function,
+    setShowLeftBar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const LeftBar : React.FC<TProps> = React.memo((props) => {
@@ -52,7 +53,8 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
 
 
     function closeLeftBar() {        
-        props.setStateLeftBar(<></>);        
+        // props.setStateLeftBar(<></>);
+        props.setShowLeftBar(false);
     }
 
     function closeLeftAndSendToMap() {

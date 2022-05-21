@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './selectCategory.css';
 import { CategoryList } from './categoryListContainer';
+import { CSSTransition } from 'react-transition-group';
 
 type TProps = {
     setCategory?: React.Dispatch<React.SetStateAction<string>>,
@@ -19,14 +20,16 @@ export const SelectCategory:React.FC<TProps> = React.memo((props) => {
 
     function onClickCategoryContainer() {
         if(categoryList.isOpen) {
-            setCategoryList({list: <></>, isOpen: false});
+            // setCategoryList({list: <></>, isOpen: false});
+            setCategoryList({list: categoryList.list, isOpen: false});
         } else {
             setCategoryList({list: <CategoryList changeCategory={changeCurrentCategory}/>, isOpen: true});
         }        
     }
 
     function onBlurCategoryContainer() {
-        setCategoryList({list: <></>, isOpen: false});
+        // setCategoryList({list: <></>, isOpen: false});
+        setCategoryList({list: categoryList.list, isOpen: false});
     }
 
     function changeCurrentCategory(current: string) {
@@ -41,6 +44,13 @@ export const SelectCategory:React.FC<TProps> = React.memo((props) => {
             <div className='select-category-checked-category-name'>{currentCategory}</div>
             <div className='select-category-checked-category-button'></div>
         </div>
-        {categoryList.list}
+        <CSSTransition
+            in={categoryList.isOpen}
+            timeout={300}
+            classNames='show-category-list'
+            unmountOnExit
+        >
+            {categoryList.list}
+        </CSSTransition>        
     </div>
 })

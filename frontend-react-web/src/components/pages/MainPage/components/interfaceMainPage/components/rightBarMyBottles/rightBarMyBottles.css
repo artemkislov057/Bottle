@@ -9,9 +9,9 @@
     color: #D5DCDF;
     background-color: #212121;
 
-    transform: translateX(100%);
+    /* transform: translateX(100%);
     opacity: 0;
-    animation: openMyBottlesBar .3s forwards; 
+    animation: openMyBottlesBar .3s forwards;  */
 }
 
 @keyframes openMyBottlesBar {

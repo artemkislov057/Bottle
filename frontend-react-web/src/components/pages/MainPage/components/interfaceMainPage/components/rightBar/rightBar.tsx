@@ -16,6 +16,7 @@ import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 type TProps = {
     setStateRightBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
     disableBackgroundGray: Function,
+    closeThis: Function,
     changeBottleData?: BottleRequestType,
     currentBottleData?: DataBottleDescType
 }
@@ -35,7 +36,8 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
     const [bottleData, setBottleData] = useState(initObj);
 
     function onClickBackToMapButton() {
-        props.setStateRightBar(<></>);
+        props.closeThis();
+        // props.setStateRightBar(<></>);
         props.disableBackgroundGray();
     }
 

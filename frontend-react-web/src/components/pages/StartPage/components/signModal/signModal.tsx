@@ -49,7 +49,7 @@ export const SignModal:React.FC<TProps> = React.memo((props) => {
 
     function closeModalOnClickOut(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         let event = e.target as HTMLElement;
-        if(event.classList.value === 'sign-modal-container-back') {
+        if(event.classList.value.includes('sign-modal-container-back')) {
             props.onClickCloseModal()
         }
     }

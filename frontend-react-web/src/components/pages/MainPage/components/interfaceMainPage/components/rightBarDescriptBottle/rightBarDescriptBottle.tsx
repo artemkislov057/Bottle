@@ -16,12 +16,14 @@ type TProps = {
     disableBackgroundGray: Function,
     data: BottleRequestType,
     onClickOpenDialog: Function,
-    onClickOpenEdit?: Function
+    onClickOpenEdit?: Function,
+    closeThis: Function
 }
 
 export const RightBarDescrBottle:React.FC<TProps> = React.memo((props) => {
     function onClickBackToMap() {
-        props.setSelfState(<></>);
+        // props.setSelfState(<></>);
+        props.closeThis();
         props.disableBackgroundGray()
     }
 

@@ -14,7 +14,8 @@ import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 type TProps = {
     setRightBarMyBottles: React.Dispatch<React.SetStateAction<JSX.Element>>,
     openLeftBar: Function,
-    openChangeRightBar: Function
+    openChangeRightBar: Function,
+    closeThis: Function
 }
 
 
@@ -64,7 +65,8 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
     }
 
     function onClickBackButton() {
-        props.setRightBarMyBottles(<></>);
+        // props.setRightBarMyBottles(<></>);
+        props.closeThis();
         props.openLeftBar();
     }
     

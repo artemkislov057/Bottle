@@ -8,8 +8,8 @@
     justify-content: center;
     align-items: center;
 
-    opacity: 0;
-    animation: openModal .3s forwards;
+    /* opacity: 0;
+    animation: openModal .3s forwards; */
 }
 
 /* .sign-modal-container-back.hide {
@@ -17,6 +17,28 @@
     opacity: 1;
     animation: closeModal .5s forwards;
 } */
+
+.modal-enter {
+    opacity: 0;
+}
+
+.modal-enter-active {
+    opacity: 1;
+    transition: all 0.3s;
+} 
+
+.modal-enter-done {
+    
+}
+
+.modal-exit {
+    opacity: 1;
+  }
+
+.modal-exit-active {
+    opacity: 0;
+    transition: opacity 300ms, transform 300ms;
+}
 
 .sign-modal-container {
     position: absolute;

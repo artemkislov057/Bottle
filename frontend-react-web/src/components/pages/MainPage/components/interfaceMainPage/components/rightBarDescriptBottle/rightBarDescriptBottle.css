@@ -9,16 +9,16 @@
     color: #FFFFFF;
     background-color: #212121;
 
-    transform: translateX(100%);
+    /* transform: translateX(100%);
     opacity: 0;
-    animation: openPopupBar .3s forwards;    
+    animation: openPopupBar .3s forwards;     */
 }
 
 @keyframes openPopupBar {
     0%{
         transform: translateX(100%);
         opacity: 0;
-    }
+    }    
     100%{
         transform: translateX(0);
         opacity: 1;
@@ -167,36 +167,46 @@
     max-width: 180px;
     max-height: 120px;
     border-radius: 10px;
+
     transition: .5s;
+
+    /* transform: scale(1); */
 }
 
 .right-bar-map-popup-body-description-content-photo.scaled {
-    position: absolute;
-    left: 0;
-    top: 40%;
-    /* top: 50%; */
-    /* animation-name: scaleImage; */
-    /* animation-duration: ; */
-    /* transform: scale(4); */
+    position: fixed;
+    /* left: -50%;
+    top: 40%; */
+    /* left: 50%;
+    top: 50%; */
     
-    transition: .5s;
+    /* transition: .5s; */
+    
+    transform: scale(4) translate(-50%, -50%);
+    /* animation: scaleImage .5s forwards;     */
 }
 
 .right-bar-map-popup-body-description-content-container.scaled {
-    position: fixed;
-    /* left: 0; */
-    /* transform: translateX(50%); */
-    left: 45%;
+    /* position: fixed; */
+
+    /* left: 45%;
     top: 40%;
-    /* animation-name: scaleImage; */
-    /* animation-duration: ; */
     transform: scale(4);
-    transition: .5s;
+    transition: .5s; */
+
+    /* scale: 1;
+    animation: scaleImage .5s forwards; */
 }
 
 @keyframes scaleImage {
-    from{transform: scale(1);}
-    to{transform: scale(2);}
+    0%{
+        transform: scale(1);
+        transform: translate(0,0);
+    }
+    100%{
+        transform: scale(4);
+        transform: translate(-50%, -50%);
+    }
 }
 
 @media screen and (max-width: 700px) {

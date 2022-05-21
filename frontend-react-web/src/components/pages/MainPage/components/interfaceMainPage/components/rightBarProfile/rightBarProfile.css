@@ -9,9 +9,9 @@
     background-color: #212121;
     color: #D5DCDF;
 
-    transform: translateX(100%);
+    /* transform: translateX(100%);
     opacity: 0;
-    animation: openProfileBar .3s forwards; 
+    animation: openProfileBar .3s forwards;  */
 }
 
 @keyframes openProfileBar {

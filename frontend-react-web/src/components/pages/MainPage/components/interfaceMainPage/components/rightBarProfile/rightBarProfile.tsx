@@ -12,6 +12,7 @@ import { ContextLogin } from "loginContext";
 type TProps = {
     setStateRightProfileBar: React.Dispatch<React.SetStateAction<JSX.Element>>,
     openLeftBar: Function
+    closeThis: Function
 }
 
 export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
@@ -101,7 +102,8 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
     }
 
     function onClickBackButton() {
-        props.setStateRightProfileBar(<></>);
+        // props.setStateRightProfileBar(<></>);
+        props.closeThis();
         props.openLeftBar();
     }
 

@@ -146,6 +146,44 @@
     z-index: inherit;
 }
 
+.show-right-bar-enter,
+.show-profile-bar-enter,
+.show-myBottles-bar-enter,
+.show-popup-bar-enter {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.show-right-bar-enter-active,
+.show-profile-bar-enter-active,
+.show-myBottles-bar-enter-active,
+.show-popup-bar-enter-active {
+    opacity: 1;
+    transform: translate(0);
+    transition: all 0.3s;
+} 
+
+.show-left-bar-enter-done {
+    
+}
+
+.show-right-bar-exit,
+.show-profile-bar-exit,
+.show-myBottles-bar-exit,
+.show-popup-bar-exit {
+    opacity: 1;
+    transform: translate(0);
+  }
+
+.show-right-bar-exit-active,
+.show-profile-bar-exit-active,
+.show-myBottles-bar-exit-active,
+.show-popup-bar-exit-active {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 300ms, transform 300ms;
+}
+
 @media screen and (max-width: 700px) {
     .create-bottle-button-mainPage {
         position: fixed !important;
@@ -178,7 +216,5 @@
 
     .select-category-checked-category-name {
         color: transparent;
-    }
-
-    
+    }    
 }

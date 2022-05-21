@@ -10,6 +10,7 @@ import { apiUrl } from "components/connections/apiUrl";
 import { ContextLogin } from "loginContext";
 import { ContextWindowResolution } from "windoResolutionContext";
 import { MobileSignModal } from "./components/mobileSignModal/mobileSignModal";
+import { CSSTransition } from "react-transition-group";
 
 type TProps = {
     isLogin: boolean
@@ -23,6 +24,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     const currentWindowWidth = useContext(ContextWindowResolution);
     const [mobileBodyState, setMobileBodyState] = useState(<BodyStartPage onClickBegin={onClickBeginMobile}/>);
     const [mobileModal, setMobileModal] = useState(<></>);
+    const [showModal, setShowModal] = useState(false)
         
     function toMainPage() {
         navigate('/mainPage');
@@ -169,15 +171,18 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     }
 
     function onClickSignIn() {
+        setShowModal(true);
         setModal(<SignModal title="Вход" submitButtonName="Войти" onClickCloseModal={closeModal} onSubmit={onSubmitSignIn} onSubmitGoogle={onSubmitSignInGoogle} /> );
     }
 
     function onClickSignUp() {
+        setShowModal(true);
         setModal(<SignModal title="Регистрация" submitButtonName="Зарегистрироваться" onClickCloseModal={closeModal} onSubmit={onSubmitSignUp} onSubmitGoogle={onSubmitSignUpGoogle}/> );
     }
 
     function closeModal() {
-        setModal(<></>);
+        setShowModal(false);
+        // setModal(<></>);
         // setModal(<div className="sign-modal-container-back hide"></div>);
     }
 
@@ -200,10 +205,19 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         </div>
     }
 
+    
+
     return <div className="start-page">
         <HeaderStartPage onClickSignUp={onClickSignUp} toMainPage={toMainPage} onClickSignIn={onClickSignIn}/>        
         <BodyStartPage onClickBegin={onClickSignUp}/>
         <FooterStartPage />
-        {modal}
+        <CSSTransition 
+            in={showModal}
+            timeout={300}
+            classNames='modal'            
+            unmountOnExit
+        >
+            {modal}
+        </CSSTransition>        
     </div>
 })
