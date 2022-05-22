@@ -43,8 +43,17 @@ export class RequestListComponent implements OnInit {
     const dialogRef = this.dialog.open(ScanModalComponent);
     console.log('open')
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+
     });
+  }
+
+  public onSearchChanges(value: any) {
+    this.viewRequests = this.AllRequests.filter(request => {
+      return request.name.toLowerCase().includes(value.toLowerCase())
+      || request.company.toLowerCase().includes(value.toLowerCase())
+      || request.inn.toString().includes(value)
+      || request.ogrn.toString().includes(value);
+    })
   }
 
   private generatePageSizeOptions(start: number, stop: number, step: number) : number[] {
