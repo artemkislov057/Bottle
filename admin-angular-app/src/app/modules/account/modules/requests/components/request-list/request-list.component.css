@@ -1,0 +1,32 @@
+table {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.demo-table {
+    width: 100%;
+}
+
+.mat-row .mat-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    /* cursor: pointer; */
+}
+
+/* .mat-row:hover .mat-cell {
+    border-color: currentColor;
+} */
+
+.scan-button {
+    background-color: #303030;
+    color: #fff;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    border: 0;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+.scan-button:hover {
+    background-color: #7b1fa2; /* Цвет ссылки при наведении */ 
+}

@@ -1,0 +1,10 @@
+.scan-container {
+    /* width:1000px; */
+    margin: 0 auto;
+    text-align: center;
+}
+
+.scan-image {
+    height: 891px;
+    width: 630px
+}
