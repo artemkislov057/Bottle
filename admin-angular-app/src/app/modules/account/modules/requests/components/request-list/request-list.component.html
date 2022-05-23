@@ -37,7 +37,8 @@
     ></tr>
   </table>
 
-<mat-paginator [length]="this.AllRequests.length"
+<mat-paginator *ngIf="showPaginator"
+              [length]="this.AllRequests.length"
               [pageSize]="10"
               [pageSizeOptions]="paginatorOption"
               aria-label="Select page"

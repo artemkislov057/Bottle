@@ -11,10 +11,11 @@ import { ScanModalComponent } from '../scan-modal/scan-modal.component';
 })
 export class RequestListComponent implements OnInit {
 
-  displayedColumns: string[] = ['position', 'company', 'name', 'inn', 'ogrn', 'scan'];
-  viewRequests!: IRequestItem[];
+  public displayedColumns: string[] = ['position', 'company', 'name', 'inn', 'ogrn', 'scan'];
+  public viewRequests!: IRequestItem[];
   public paginatorOption!: PaginatorOptions;
   public AllRequests!: IRequestItem[];
+  public showPaginator: boolean = true;
 
   constructor(
     public dialog: MatDialog,
@@ -47,8 +48,9 @@ export class RequestListComponent implements OnInit {
     });
   }
 
-  public onSearchChanges(value: any) {
+  public onSearchChanges(value: string) {
     this.viewRequests = this.AllRequests.filter(request => {
+      this.showPaginator = value === ''? true: false;
       return request.name.toLowerCase().includes(value.toLowerCase())
       || request.company.toLowerCase().includes(value.toLowerCase())
       || request.inn.toString().includes(value)
@@ -76,32 +78,3 @@ export interface IRequestItem {
   inn: number;
   ogrn: number;
 }
-
-// const ELEMENT_DATA: IRequestItem[] = [
-//   { position: 1, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 2, company: 'ООО "Пример"', name: 'А.С.Пушкин', inn: 7722263771, ogrn: 1057749631994},
-//   { position: 3, company: 'ЗАО "РДУ"', name: 'Повелитель зверей', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 4, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 5, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 6, company: 'ООО "Пример"', name: 'А.С.Пушкин', inn: 7722263771, ogrn: 1057749631994},
-//   { position: 7, company: 'ЗАО "РДУ"', name: 'Повелитель зверей', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 1, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 2, company: 'ООО "Пример"', name: 'А.С.Пушкин', inn: 7722263771, ogrn: 1057749631994},
-//   { position: 3, company: 'ЗАО "РДУ"', name: 'Повелитель зверей', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 4, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 5, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 6, company: 'ООО "Пример"', name: 'А.С.Пушкин', inn: 7722263771, ogrn: 1057749631994},
-//   { position: 7, company: 'ЗАО "РДУ"', name: 'Повелитель зверей', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 4, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 5, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 6, company: 'ООО "Пример"', name: 'А.С.Пушкин', inn: 7722263771, ogrn: 1057749631994},
-//   { position: 7, company: 'ЗАО "РДУ"', name: 'Повелитель зверей', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 1, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 2, company: 'ООО "Пример"', name: 'А.С.Пушкин', inn: 7722263771, ogrn: 1057749631994},
-//   { position: 3, company: 'ЗАО "РДУ"', name: 'Повелитель зверей', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 4, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 5, company: 'ООО "Моя оборона"', name: 'Егор Летов', inn: 7727563778, ogrn: 1057749631994},
-//   { position: 6, company: 'ООО "Пример"', name: 'А.С.Пушкин', inn: 7722263771, ogrn: 1057749631994},
-//   { position: 7, company: 'ЗАО "РДУ"', name: 'Повелитель зверей', inn: 7727563778, ogrn: 1057749631994},
-// ];
-

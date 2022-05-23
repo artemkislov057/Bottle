@@ -9,21 +9,27 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { ScanModalComponent } from './components/scan-modal/scan-modal.component';
 import { RequestsService } from './services/requests.service';
 import {MatDialogModule} from '@angular/material/dialog';
-
-
-
+import { SearchComponent } from './components/search/search.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input'
 @NgModule({
   declarations: [
     RequestsComponent,
     RequestListComponent,
     ScanModalComponent,
+    SearchComponent,
   ],
   imports: [
     CommonModule,
     RequestsRoutingModule,
     MatTableModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
     RequestsService
