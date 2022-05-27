@@ -256,7 +256,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         setShowPopupBar(true);
         closeOtherBars(setRightBarPopup);
         enableBackgroundGray();
-        setRightBarPopup(<RightBarDescrBottle 
+        setRightBarPopup(<RightBarDescrBottle
             setSelfState={setRightBarPopup}
             data={data}
             onClickOpenDialog={openPartnerChat}
