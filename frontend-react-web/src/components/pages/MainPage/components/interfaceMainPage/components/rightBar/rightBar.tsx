@@ -46,10 +46,11 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
     }
 
     function onSubmitBottleDataForm() {
-        console.log('fuck')
         onClickBackToMapButton();
 
         setData(bottleData);
+
+        setBottleData(initObj)
     }
 
     async function saveChangeData() {
@@ -84,8 +85,7 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
                             credentials: "include",                           
                         });
                     }
-                }
-                
+                }                
 
                 for(let e of bottleData.content) {
                     let formData = new FormData();
@@ -110,7 +110,6 @@ export const RightBar:React.FC<TProps> = React.memo((props) => {
         console.log('change locate and save data')
         saveChangeData()
         onSubmitBottleDataForm();
-        
     }
 
     useEffect(() => {
