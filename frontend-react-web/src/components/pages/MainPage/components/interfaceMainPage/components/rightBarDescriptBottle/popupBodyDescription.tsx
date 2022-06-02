@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { JsxElement } from "typescript";
+
 
 type TProps = {
     description: string,
@@ -8,18 +10,35 @@ type TProps = {
 
 export const BodyDescription:React.FC<TProps> = React.memo((props) => {
     const [content, setContent] = useState(<></>);
+    const [scaledPhoto, setScaledPhoto] = useState<JSX.Element>();
 
     function scalePhoto(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        let event = e.target as HTMLElement;
-        // let parent = event.parentElement.classList.add('scaled');
-        //@ts-ignore
-        let curr = event.classList.add('scaled');
+        let el = e.target as HTMLImageElement;        
+        
+        console.log(el.src)
+
+        let top = window.innerHeight / 2 - el.clientHeight / 2 + 'px';
+        let left = window.innerWidth / 2 - el.clientWidth / 2 + 'px';
+        
+        setScaledPhoto(<img 
+            src={el.src} 
+            alt='Изображение из записки' 
+            className="right-bar-map-popup-body-description-content-photo-dublicate"
+            style={{top: top, left: left, position: 'fixed', transform: 'scale(4)'}}
+        />);
+        
+        
+        // el.classList.add('scaled');
+        // el.style.top = window.innerHeight / 2 - el.clientHeight / 2 + 'px';
+        // el.style.left = window.innerWidth / 2 - el.clientWidth / 2 + 'px';
+
     }
 
     function blur(e: React.FocusEvent<HTMLDivElement>) {
-        let event = e.target as HTMLElement;
-        // let parent = event.classList.remove('scaled');
-        let curr = event.classList.remove('scaled');
+        let el = e.target as HTMLElement;
+        // el.classList.remove('scaled');
+
+        setScaledPhoto(<></>);
     }
     
     useEffect(() => {
@@ -45,6 +64,7 @@ export const BodyDescription:React.FC<TProps> = React.memo((props) => {
     }, [props.content, props.bottleId])
 
     return <div className="right-bar-map-popup-body-description">
+        {scaledPhoto}
         <div className="right-bar-map-popup-body-description-text">
             {props.description}
         </div>

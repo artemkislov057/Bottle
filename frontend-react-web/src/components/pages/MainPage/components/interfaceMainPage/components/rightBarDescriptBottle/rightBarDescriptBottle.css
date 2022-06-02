@@ -170,20 +170,31 @@
 
     transition: .5s;
 
-    /* transform: scale(1); */
 }
 
 .right-bar-map-popup-body-description-content-photo.scaled {
     position: fixed;
-    /* left: -50%;
-    top: 40%; */
-    /* left: 50%;
-    top: 50%; */
+    transform: scale(4);
     
-    /* transition: .5s; */
+}
+
+.right-bar-map-popup-body-description-content-photo-dublicate {
+    max-width: 180px;
+    max-height: 120px;
+    border-radius: 10px;
+
+    transition: .5s;
+
+}
+
+.right-bar-map-popup-body-description-content-photo-dublicate.scaled {
+    position: fixed;
+
+    max-width: 180px !important;
+    max-height: 120px !important;
+    border-radius: 10px;
+    transform: scale(4);
     
-    transform: scale(4) translate(-50%, -50%);
-    /* animation: scaleImage .5s forwards;     */
 }
 
 .right-bar-map-popup-body-description-content-container.scaled {

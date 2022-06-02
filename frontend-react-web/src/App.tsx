@@ -22,7 +22,7 @@ function App() {
 
   window.addEventListener('resize', e => {
     //@ts-ignore
-    setCurrentWindowWidth(e.currentTarget.screen.availWidth);
+    setCurrentWindowWidth(e.currentTarget.screen.availWidth);    
   });
 
   useEffect(() => {
