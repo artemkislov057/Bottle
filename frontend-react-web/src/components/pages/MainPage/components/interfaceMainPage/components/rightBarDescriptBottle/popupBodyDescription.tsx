@@ -19,12 +19,15 @@ export const BodyDescription:React.FC<TProps> = React.memo((props) => {
 
         let top = window.innerHeight / 2 - el.clientHeight / 2 + 'px';
         let left = window.innerWidth / 2 - el.clientWidth / 2 + 'px';
+        let scale = 4;
+        if(window.innerWidth < 700)
+            scale = 2;
         
         setScaledPhoto(<img 
             src={el.src} 
             alt='Изображение из записки' 
             className="right-bar-map-popup-body-description-content-photo-dublicate"
-            style={{top: top, left: left, position: 'fixed', transform: 'scale(4)'}}
+            style={{top: top, left: left, position: 'fixed', transform: `scale(${scale})`}}
         />);
         
         
