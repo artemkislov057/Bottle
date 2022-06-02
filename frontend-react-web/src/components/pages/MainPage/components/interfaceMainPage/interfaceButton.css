@@ -219,7 +219,7 @@
     }
 
 
-    .show-myBottles-bar-enter,
+    /* .show-myBottles-bar-enter,
     .show-popup-bar-enter {
         opacity: 0;
         transform: translateY(100%);
@@ -243,5 +243,5 @@
         opacity: 0;
         transform: translateY(100%);
         transition: opacity 300ms, transform 300ms;
-    }
+    } */
 }
