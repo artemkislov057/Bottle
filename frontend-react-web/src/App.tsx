@@ -7,6 +7,7 @@ import { Route, Link, BrowserRouter, Routes, Router, useNavigate } from 'react-r
 import { apiUrl } from 'components/connections/apiUrl';
 import { ContextLogin } from 'loginContext';
 import { ContextWindowResolution } from 'windoResolutionContext';
+import { CommercRegistrationPage } from 'components/pages/StartPage/components/commercRegistrPage/commercRegisterPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,6 +52,7 @@ function App() {
             <Routes>
               <Route path='/mainPage' element={<MainPage isLogin={isLogin} />} />
               <Route path='/' element={<StartPage isLogin={isLogin} />} />
+              <Route path='/commercial-registration' element={<CommercRegistrationPage />} />
             </Routes>        
           </BrowserRouter>
         </ContextWindowResolution.Provider>
