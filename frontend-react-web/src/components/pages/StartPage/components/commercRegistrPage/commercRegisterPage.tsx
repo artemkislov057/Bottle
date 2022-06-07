@@ -9,18 +9,18 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             <div className="commerc-registration-data-side-header">
                 Регистрация
             </div>
-            <DataContainer 
-                headerName="Данные владельца компании:"
-                fieldsNames={['Фамилия', 'Имя', 'Отчество', 'Email']}
-            />
-            <DataContainer 
-                headerName="Данные компании:"
-                fieldsNames={['Наименование', 'ИНН компании']}
-            />
-            <div className="commerc-registration-data-side-documents">
-                <DocumentContainer titleName="Скан свидетельства ИНН:" />
-                <DocumentContainer titleName="Скан свидетельства ОГРН:" />
-            </div>
+                <DataContainer 
+                    headerName="Данные владельца компании:"
+                    fieldsNames={['Фамилия', 'Имя', 'Отчество', 'Email']}
+                />
+                <DataContainer 
+                    headerName="Данные компании:"
+                    fieldsNames={['Наименование', 'ИНН компании']}
+                />
+                <div className="commerc-registration-data-side-documents">
+                    <DocumentContainer titleName="Скан свидетельства ИНН:" />
+                    <DocumentContainer titleName="Скан свидетельства ОГРН:" />
+                </div>
             <button 
                 type="submit" 
                 className="commerc-registration-data-side-register-button" 
