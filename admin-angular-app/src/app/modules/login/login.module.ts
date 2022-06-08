@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input'
 import { LoginComponent } from './login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import { LoginService } from './services/login.service';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,9 @@ import {MatButtonModule} from '@angular/material/button';
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule
+  ],
+  providers: [
+    LoginService
   ]
 })
 export class LoginModule { }

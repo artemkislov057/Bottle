@@ -1,10 +1,10 @@
 <div class="scan-container">
     <h2 mat-dialog-title>Скан свидетельства</h2>
     <mat-dialog-content class="mat-typography">
-        <img class='scan-image' src="../../../../../../../assets/inn.jpg">
+        <img class='scan-image' [src]="viewImg">
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button class='custom-button' mat-button [mat-dialog-close]="true" cdkFocusInitial>Принять</button>
-        <button class='custom-button' mat-button mat-dialog-close>Отклонить</button>
+        <button class='custom-button' (click)="onAccept()" mat-button [mat-dialog-close]="true" cdkFocusInitial>Принять</button>
+        <button class='custom-button' (click)="onReject()" mat-button mat-dialog-close>Отклонить</button>
     </mat-dialog-actions>
 </div>

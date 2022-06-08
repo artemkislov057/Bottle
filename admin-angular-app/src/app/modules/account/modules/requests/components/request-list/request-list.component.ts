@@ -12,9 +12,9 @@ import { ScanModalComponent } from '../scan-modal/scan-modal.component';
 export class RequestListComponent implements OnInit {
 
   public displayedColumns: string[] = ['position', 'company', 'name', 'inn', 'ogrn', 'scan'];
-  public viewRequests!: IRequestItem[];
+  public viewRequests!: RequestItem[];
   public paginatorOption!: PaginatorOptions;
-  public AllRequests!: IRequestItem[];
+  public AllRequests: RequestItem[] = [];
   public showPaginator: boolean = true;
 
   constructor(
@@ -23,12 +23,15 @@ export class RequestListComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.updateRequests();
+  }
+
+  private updateRequests(): void {
     this.requestsService.getRequests().pipe().subscribe(requests => {
       this.AllRequests = requests;
       this.viewRequests = this.AllRequests.slice(0, 10);
-    })
-    this.paginatorOption = this.generatePageSizeOptions(10, this.AllRequests.length, 5);
-    
+      this.paginatorOption = this.generatePageSizeOptions(10, this.AllRequests.length, 5);
+    })    
   }
 
   public onPageChange(event: PageEvent) : void {
@@ -40,11 +43,11 @@ export class RequestListComponent implements OnInit {
     this.viewRequests = this.AllRequests.slice(start, end);
   }
 
-  openScans() {
+  openScans(id: string) {
     const dialogRef = this.dialog.open(ScanModalComponent);
-    console.log('open')
+    dialogRef.componentInstance.id = id;
     dialogRef.afterClosed().subscribe(result => {
-
+      this.updateRequests();
     });
   }
 
@@ -71,10 +74,24 @@ export class RequestListComponent implements OnInit {
 
 type PaginatorOptions = number[]
 
-export interface IRequestItem {
-  position: number
+export class RequestItem {
+  position: string
   company: string;
   name: string;
   inn: number;
   ogrn: number;
+
+  constructor(
+    position: string,
+    company: string,
+    name: string,
+    inn: number,
+    ogrn: number
+  ) {
+    this.position = position;
+    this.company = company;
+    this.name = name;
+    this.inn = inn;
+    this.ogrn = ogrn;
+  }
 }

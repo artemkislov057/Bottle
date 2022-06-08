@@ -12,6 +12,8 @@ import { MatInputModule } from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatMenuModule} from '@angular/material/menu';
 import { MenuComponent } from './components/menu/menu.component';
+import {HttpClientModule} from '@angular/common/http';
+import { CutPipe } from './pipes/cut.pipe';
 
 
 @NgModule({
@@ -29,7 +31,8 @@ import { MenuComponent } from './components/menu/menu.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatMenuModule
+    MatMenuModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

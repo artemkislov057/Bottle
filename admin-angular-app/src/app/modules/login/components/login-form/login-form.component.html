@@ -1,14 +1,12 @@
 <form class="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <h1 class="title">Booble</h1>
     <mat-form-field class="full-width" appearance="fill">
-      <mat-label>Почта</mat-label>
-      <input type="email" matInput formControlName="email"
-             placeholder="email@example.com">
+      <mat-label>Логин</mat-label>
+      <input matInput formControlName="email">
     </mat-form-field>
     <mat-form-field class="full-width" appearance="fill">
         <mat-label>Пароль</mat-label>
-        <input type="password" matInput formControlName="password"
-               placeholder="password">
+        <input type="password" matInput formControlName="password">
     </mat-form-field>
     <button type='submit' [disabled]="!loginForm.valid" mat-raised-button color="primary" class="full-width">Войти</button>
 </form>

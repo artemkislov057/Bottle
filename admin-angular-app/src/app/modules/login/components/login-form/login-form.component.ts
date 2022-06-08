@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { Router } from '@angular/router';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-login-form',
@@ -10,22 +11,24 @@ import { Router } from '@angular/router';
 })
 export class LoginFormComponent implements OnInit {
 
-  private readonly emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
   public loginForm: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.pattern(this.emailRegex), Validators.required]),
-    password: new FormControl('', [Validators.minLength(6), Validators.required])
+    email: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.minLength(5), Validators.required])
   });
 
   constructor(
-    private router: Router
+    private router: Router,
+    private loginService: LoginService
   ) { }
 
   ngOnInit(): void {
   }
 
   public onSubmit() {
-    this.router.navigate(['account']);
+    this.loginService.login(
+      this.loginForm.controls['email'].value,
+      this.loginForm.controls['password'].value,
+      true
+    ).subscribe(_ => this.router.navigate(['account/requests']))
   }
-
 }
