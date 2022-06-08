@@ -17,6 +17,6 @@ namespace Bottle.Models
         [Required]
         public string Sex { get; set; }
 
-        public CommercialModel CommercialData { get; set; }
+        //public CommercialModel CommercialData { get; set; }
     }
 }

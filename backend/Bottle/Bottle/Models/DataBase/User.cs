@@ -11,11 +11,12 @@ namespace Bottle.Models.DataBase
         public byte[] Avatar { get; set; }
         public int AvatarId { get; set; }
         public string AvatarContentType { get; set; }
+        public bool IsCommercial { get; set; }
         public string Sex { get; set; }
-        public UserType Type { get; set; }
         public ExternalProvider? Provider { get; set; }
         public string ExternalUserId { get; set; }
         public CommercialData CommercialData { get; set; }
+        public List<CommercialDataAdminComment> CommercialDataAdminComments { get; set; }
         public List<UserRating> UserRating { get; set; }
 
         public static bool IsValidRating(int value)

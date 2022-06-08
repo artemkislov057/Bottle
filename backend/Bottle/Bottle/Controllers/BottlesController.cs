@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    //[Authorize(Roles = "confirmed")]
+    [Authorize]
     [Route("api/bottles")]
     public class BottlesController : Controller
     {
@@ -63,7 +63,7 @@ namespace Bottle.Controllers
                 return BadRequest();
             }
             bottle.PickingUp++;
-            if (bottleUser.Type == UserType.Default && bottle.PickingUp >= bottle.MaxPickingUp)
+            if (!bottleUser.IsCommercial && bottle.PickingUp >= bottle.MaxPickingUp)
             {
                 bottle.Active = false;
                 await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
@@ -89,7 +89,7 @@ namespace Bottle.Controllers
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 var bottle = new Models.DataBase.Bottle(data, user);
-                if (user.Type == UserType.Commercial)
+                if (user.IsCommercial)
                 {
                     bottle.MaxPickingUp = -1;
                 }
@@ -298,7 +298,7 @@ namespace Bottle.Controllers
                 var timeSpan = TimeSpan.FromSeconds((double)model.LifeTime);
                 if (bottle.Created + timeSpan > DateTime.UtcNow) bottle.EndTime = bottle.Created + timeSpan;
             }
-            if (model.MaxPickingUp != null && user.Type == UserType.Default)
+            if (model.MaxPickingUp != null && !user.IsCommercial)
             {
                 if (model.MaxPickingUp > bottle.PickingUp)
                 {

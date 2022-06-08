@@ -11,28 +11,29 @@ namespace Bottle.Utilities
     {
         public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if (!await roleManager.RoleExistsAsync("confirmed"))
+            if (!await roleManager.RoleExistsAsync("Admin"))
             {
-                await roleManager.CreateAsync(new IdentityRole("confirmed"));
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
-            if (!await roleManager.RoleExistsAsync("not-confirmed"))
+            if (!await roleManager.RoleExistsAsync("Moderator"))
             {
-                await roleManager.CreateAsync(new IdentityRole("not-confirmed"));
+                await roleManager.CreateAsync(new IdentityRole("Moderator"));
             }
 
-            if (!await roleManager.RoleExistsAsync("rejected"))
+            if (await userManager.FindByNameAsync("admin") == null)
             {
-                await roleManager.CreateAsync(new IdentityRole("rejected"));
+                User user = new User { Email = "admin@mail.ru", UserName = "admin", Sex = "attack helicopter", IsCommercial = false, AvatarId = 1 };
+                if ((await userManager.CreateAsync(user, "admin")).Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
             }
 
             if (await userManager.FindByNameAsync("string") == null)
             {
-                User user = new User { Email = "string@mail.ru", UserName = "string", Sex = "attack helicopter", Type = Models.UserType.Default, AvatarId = 1 };
-                if ((await userManager.CreateAsync(user, "string")).Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "confirmed");
-                }
+                User user = new User { Email = "string@mail.ru", UserName = "string", Sex = "attack helicopter", IsCommercial = false, AvatarId = 1 };
+                await userManager.CreateAsync(user, "string");
             }
         }
     }

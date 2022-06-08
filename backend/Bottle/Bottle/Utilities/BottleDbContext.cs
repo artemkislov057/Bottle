@@ -22,12 +22,12 @@ namespace Bottle.Utilities
 
         public DbSet<CommercialData> CommercialData { get; set; }
         public DbSet<UserRating> UserRating { get; set; }
-        public DbSet<CommercialData> CommercialDatas { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Models.DataBase.Bottle> Bottles { get; set; }
         public DbSet<BottleContent> BottleContent { get; set; }
         public DbSet<MessageContent> MessageContent { get; set; }
+        public DbSet<CommercialDataAdminComment> CommercialDataAdminComments { get; set; }
 
         public User GetUser(string id)
         {
