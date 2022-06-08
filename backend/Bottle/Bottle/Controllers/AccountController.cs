@@ -92,20 +92,10 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 User user = new User { Email = data.Email, UserName = data.Nickname, Sex = data.Sex };
-                if (data.CommercialData == null)
-                {
-                    user.Type = 1;
-                }
-                else
-                {
-                    user.Type = 2;
-                    user.CommercialData = new CommercialData(data.CommercialData);
-                }
                 user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                 var result = await userManager.CreateAsync(user, data.Password);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "confirmed");
                     await signInManager.SignInAsync(user, false);
                     return Created(string.Empty, new Account(user, Rating.Zero));
                 }
@@ -166,18 +156,8 @@ namespace Bottle.Controllers
                     if (user == null)
                     {
                         user = new User { Provider = model.ExternalLogin.Provider, ExternalUserId = model.ExternalLogin.ExternalUserId, UserName = model.Nickname, Sex = model.Sex };
-                        if (model.CommercialData == null)
-                        {
-                            user.Type = 1;
-                        }
-                        else
-                        {
-                            user.Type = 2;
-                            user.CommercialData = new CommercialData(model.CommercialData);
-                        }
                         user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                         var result = await userManager.CreateAsync(user);
-                        await userManager.AddToRoleAsync(user, "confirmed");
                         if (result.Succeeded)
                         {
                             await signInManager.SignInAsync(user, model.ExternalLogin.RememberMe);
@@ -271,13 +251,6 @@ namespace Bottle.Controllers
             {
                 user.Email = data.Email;
                 user.NormalizedEmail = data.Email.ToUpper();
-            }
-            if (data.CommercialData != null)
-            {
-                var cd = db.CommercialData.FirstOrDefault(x => x.User == user);
-                user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
-                user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
-                user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
             }
             db.SaveChanges();
             var account = new Account(user, user.CommercialData, db.GetUserRating(user.Id));

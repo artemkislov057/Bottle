@@ -22,20 +22,15 @@ namespace Bottle.Models
             Nickname = user.UserName;
             Rating = rating;
             Sex = user.Sex;
-            Type = user.Type;
-            CommercialData = user.CommercialData is null ? null : new CommercialModel(user.CommercialData);
-        }
-
-        public UserModel(User user, CommercialData commercialData, Rating rating) : this(user, rating)
-        {
-            CommercialData = commercialData is null ? null : new CommercialModel(commercialData);
+            IsCommercial = user.IsCommercial;
+            CommercialData = user.IsCommercial && user.CommercialData != null ? new CommercialModel(user.CommercialData) : null;
         }
 
         public string Id { get; set; }
         public string Nickname { get; set; }
         public Rating Rating { get; set; }
         public string Sex { get; set; }
-        public int Type { get; set; }
+        public bool IsCommercial { get; set; }
         public CommercialModel CommercialData { get; set; }
     }
 }

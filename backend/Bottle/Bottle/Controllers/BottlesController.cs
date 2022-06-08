@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    [Authorize(Roles = "confirmed")]
+    [Authorize]
     [Route("api/bottles")]
     public class BottlesController : Controller
     {
@@ -63,7 +63,7 @@ namespace Bottle.Controllers
                 return BadRequest();
             }
             bottle.PickingUp++;
-            if (bottleUser.Type == 1 && bottle.PickingUp >= bottle.MaxPickingUp)
+            if (!bottleUser.IsCommercial && bottle.PickingUp >= bottle.MaxPickingUp)
             {
                 bottle.Active = false;
                 await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
@@ -89,13 +89,14 @@ namespace Bottle.Controllers
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 var bottle = new Models.DataBase.Bottle(data, user);
-                if (user.Type == 2)
+                if (user.IsCommercial)
                 {
                     bottle.MaxPickingUp = -1;
                 }
                 else
                 {
-                    bottle.MaxPickingUp = data.MaxPickingUp;
+                    if (data.MaxPickingUp is null) return BadRequest();
+                    bottle.MaxPickingUp = (int)data.MaxPickingUp;
                 }
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
@@ -295,9 +296,9 @@ namespace Bottle.Controllers
             if (model.LifeTime != null)
             {
                 var timeSpan = TimeSpan.FromSeconds((double)model.LifeTime);
-                bottle.EndTime = bottle.Created + timeSpan;
+                if (bottle.Created + timeSpan > DateTime.UtcNow) bottle.EndTime = bottle.Created + timeSpan;
             }
-            if (model.MaxPickingUp != null && user.Type == 1)
+            if (model.MaxPickingUp != null && !user.IsCommercial)
             {
                 if (model.MaxPickingUp > bottle.PickingUp)
                 {
@@ -331,10 +332,8 @@ namespace Bottle.Controllers
                 var oldLng = bottle.Lng;
                 bottle.Lat = model.Lat;
                 bottle.Lng = model.Lng;
-                if (model.GeoObjectName != null) bottle.GeoObjectName = model.GeoObjectName;
-                if (model.Address != null) bottle.Address = model.Address;
                 var bottleModel = db.GetBottleModel(bottle);
-                await WebSocketController.OnChangeCoordinatesBottle(bottleId, oldLat, oldLng, model);
+                await WebSocketController.OnChangeCoordinatesBottle(bottleId, oldLat, oldLng, model.Lat, model.Lng);
                 db.SaveChanges();
                 return Ok(bottleModel);
             }

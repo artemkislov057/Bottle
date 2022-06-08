@@ -28,6 +28,10 @@ namespace Bottle.Models.DataBase
         public string PSRN { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        public byte[] Documents { get; set; }
+        public string DocumentsContentType { get; set; }
+        public bool IsChecked { get; set; }
+        public bool IsAccepted { get; set; }
 
         [ForeignKey("Id")]
         public User User { get; set; }
