@@ -16,6 +16,6 @@ namespace Bottle.Models
         public int ContentItemsCount { get; set; }
         public string Category { get; set; }
         public long LifeTime { get; set; }
-        public int MaxPickingUp { get; set; }
+        public int? MaxPickingUp { get; set; }
     }
 }

@@ -216,5 +216,32 @@
 
     .select-category-checked-category-name {
         color: transparent;
-    }    
+    }
+
+
+    /* .show-myBottles-bar-enter,
+    .show-popup-bar-enter {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+
+    .show-myBottles-bar-enter-active,
+    .show-popup-bar-enter-active {
+        opacity: 1;
+        transform: translate(0);
+        transition: all 0.3s;
+    }
+
+    .show-myBottles-bar-exit,
+    .show-popup-bar-exit {
+        opacity: 1;
+        transform: translate(0);
+    }
+    
+    .show-myBottles-bar-exit-active,
+    .show-popup-bar-exit-active {
+        opacity: 0;
+        transform: translateY(100%);
+        transition: opacity 300ms, transform 300ms;
+    } */
 }

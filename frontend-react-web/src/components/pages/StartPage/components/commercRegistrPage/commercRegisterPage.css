@@ -1,0 +1,129 @@
+.commerc-registration-page {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+
+    background-color: rgba(33, 33, 33, 1);
+
+}
+
+.commerc-registration-data-side {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 40px;
+    color: rgba(213, 220, 223, 0.8);
+    /* height: 100%; */
+    /* justify-content: space-between; */
+    /* justify-content: space-between; */
+    gap: 25px;
+
+}
+
+.commerc-registration-data-side-header {
+    font-family: Montserrat;
+    font-size: 28px;    
+}
+
+.commerc-registration-data-side-header,
+.commerc-registration-data-container-header {
+    color: rgba(213, 220, 223, 1);
+}
+
+.commerc-registration-data-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;    
+}
+
+.commerc-registration-data-container-header {
+    font-size: 18px;
+}
+
+.commerc-registration-data-container-data-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.commerc-registration-data-container-input-field {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.commerc-registration-data-container-input-field-label {
+    font-size: 16px;
+    min-width: 150px;
+}
+
+.commerc-registration-data-container-input-field-input {
+    /* width: 70%; */
+    max-width: 240px;
+    /* min-width: 100px; */
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #6B11DF;
+    outline: none;
+    padding: 0;
+    color: rgba(213, 220, 223, 0.8);
+}
+
+.commerc-registration-data-side-documents {
+    display: flex;
+    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 50px;
+}
+
+.commerc-registration-data-side-document-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.commerc-registration-data-side-document-container-input-field {
+    display: flex;
+    flex-direction: column;    
+}
+
+.commerc-registration-data-side-document-container-label {
+    font-size: 14px;
+    min-width: 170px;
+}
+
+.commerc-registration-data-side-document-container-input {
+    /* display: none; */
+    /* visibility: hidden; */
+    width: 1px;
+    height: 1px;
+
+}
+
+.commerc-registration-data-side-document-container-help-label {
+    width: 90px;
+    height: 55px;
+
+    background: url('addPhotos.svg') 50% 50% no-repeat;
+    background-size: 100% 100%;
+}
+
+.commerc-registration-data-side-register-button {
+    width: 220px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(130, 77, 197, 1);
+    margin-top: auto;
+}
+
+.commerc-registration-description-side {
+    flex: 5;
+
+    background-color: rgba(115, 70, 171, 1);
+    background: url('commercWaveIcon.svg') 50% 50% no-repeat;
+    background-size: 100% 100%;
+}

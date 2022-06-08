@@ -54,6 +54,9 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
             setCurrentHours(currH);
             setCurrentMinutes(currM);
 
+            setHoursInSec(+currH * 60 * 60);
+            setMinutesInSec(+currM * 60);
+
             setCurrentPickCount(props.bottleData.countPick.toString());
         }
     }, [props.bottleData?.initTimeLife]);
