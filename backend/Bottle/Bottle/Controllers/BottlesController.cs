@@ -52,8 +52,9 @@ namespace Bottle.Controllers
         public async Task<IActionResult> PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = await db.GetBottleAsync(bottleId);
+            var bottleUser = db.Users.FirstOrDefault(u => u.Id == bottle.UserId);
             var user = await userManager.GetUserAsync(HttpContext.User);
-            if (bottle == null || !bottle.Active || bottle.User == user)
+            if (bottle == null || !bottle.Active || bottleUser == user)
                 return BadRequest();
             var hasDialogWithUser = db.Dialogs.Where(d => d.BottleId == bottle.Id)
                                               .Any(d => d.RecipientId == user.Id);
@@ -62,7 +63,7 @@ namespace Bottle.Controllers
                 return BadRequest();
             }
             bottle.PickingUp++;
-            if (user.Type == 1 && bottle.PickingUp >= bottle.MaxPickingUp)
+            if (bottleUser.Type == 1 && bottle.PickingUp >= bottle.MaxPickingUp)
             {
                 bottle.Active = false;
                 await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
