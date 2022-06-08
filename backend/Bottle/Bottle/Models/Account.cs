@@ -23,7 +23,7 @@ namespace Bottle.Models
             Email = user.Email;
             Rating = rating;
             Sex = user.Sex;
-            Type = user.Type;
+            IsCommercial = user.IsCommercial;
             CommercialData = user.CommercialData is null ? null : new CommercialModel(user.CommercialData);
         }
 
@@ -39,7 +39,7 @@ namespace Bottle.Models
         public string Email { get; set; }
         public Rating Rating { get; set; }
         public string Sex { get; set; }
-        public int Type { get; set; }
+        public bool IsCommercial { get; set; }
         public CommercialModel CommercialData { get; set; }
     }
 }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Bottle.Controllers
 {
-    [Authorize(Roles = "confirmed")]
+    [Authorize]
     [Route("api/bottles")]
     public class BottlesController : Controller
     {
@@ -52,8 +52,9 @@ namespace Bottle.Controllers
         public async Task<IActionResult> PickUp([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = await db.GetBottleAsync(bottleId);
+            var bottleUser = db.Users.FirstOrDefault(u => u.Id == bottle.UserId);
             var user = await userManager.GetUserAsync(HttpContext.User);
-            if (bottle == null || !bottle.Active || bottle.User == user)
+            if (bottle == null || !bottle.Active || bottleUser == user)
                 return BadRequest();
             var hasDialogWithUser = db.Dialogs.Where(d => d.BottleId == bottle.Id)
                                               .Any(d => d.RecipientId == user.Id);
@@ -62,7 +63,7 @@ namespace Bottle.Controllers
                 return BadRequest();
             }
             bottle.PickingUp++;
-            if (user.Type == 1 && bottle.PickingUp >= bottle.MaxPickingUp)
+            if (!bottleUser.IsCommercial && bottle.PickingUp >= bottle.MaxPickingUp)
             {
                 bottle.Active = false;
                 await WebSocketController.OnPickedUdBottle(db.GetBottleModel(bottle));
@@ -88,13 +89,14 @@ namespace Bottle.Controllers
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 var bottle = new Models.DataBase.Bottle(data, user);
-                if (user.Type == 2)
+                if (user.IsCommercial)
                 {
                     bottle.MaxPickingUp = -1;
                 }
                 else
                 {
-                    bottle.MaxPickingUp = data.MaxPickingUp;
+                    if (data.MaxPickingUp is null) return BadRequest();
+                    bottle.MaxPickingUp = (int)data.MaxPickingUp;
                 }
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
@@ -294,9 +296,9 @@ namespace Bottle.Controllers
             if (model.LifeTime != null)
             {
                 var timeSpan = TimeSpan.FromSeconds((double)model.LifeTime);
-                bottle.EndTime = bottle.Created + timeSpan;
+                if (bottle.Created + timeSpan > DateTime.UtcNow) bottle.EndTime = bottle.Created + timeSpan;
             }
-            if (model.MaxPickingUp != null && user.Type == 1)
+            if (model.MaxPickingUp != null && !user.IsCommercial)
             {
                 if (model.MaxPickingUp > bottle.PickingUp)
                 {

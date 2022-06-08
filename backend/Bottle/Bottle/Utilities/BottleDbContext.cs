@@ -16,21 +16,18 @@ namespace Bottle.Utilities
         {
             if (Database.EnsureCreated())
             {
-                UserTypes.Add(new UserType { Type = "DefaultUser" });
-                UserTypes.Add(new UserType { Type = "Commercial" });
                 SaveChanges();
             }
         }
 
         public DbSet<CommercialData> CommercialData { get; set; }
         public DbSet<UserRating> UserRating { get; set; }
-        public DbSet<CommercialData> CommercialDatas { get; set; }
-        public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Models.DataBase.Bottle> Bottles { get; set; }
         public DbSet<BottleContent> BottleContent { get; set; }
         public DbSet<MessageContent> MessageContent { get; set; }
+        public DbSet<CommercialDataAdminComment> CommercialDataAdminComments { get; set; }
 
         public User GetUser(string id)
         {
