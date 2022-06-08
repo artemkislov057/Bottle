@@ -12,12 +12,9 @@ namespace Bottle.Models.DataBase
         public int AvatarId { get; set; }
         public string AvatarContentType { get; set; }
         public string Sex { get; set; }
-        public int Type { get; set; }
+        public UserType Type { get; set; }
         public ExternalProvider? Provider { get; set; }
         public string ExternalUserId { get; set; }
-
-        [ForeignKey("Type")]
-        public UserType UserType { get; set; }
         public CommercialData CommercialData { get; set; }
         public List<UserRating> UserRating { get; set; }
 

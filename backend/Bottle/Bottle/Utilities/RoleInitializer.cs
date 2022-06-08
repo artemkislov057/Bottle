@@ -21,9 +21,14 @@ namespace Bottle.Utilities
                 await roleManager.CreateAsync(new IdentityRole("not-confirmed"));
             }
 
+            if (!await roleManager.RoleExistsAsync("rejected"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("rejected"));
+            }
+
             if (await userManager.FindByNameAsync("string") == null)
             {
-                User user = new User { Email = "string@mail.ru", UserName = "string", Sex = "attack helicopter", Type = 1, AvatarId = 1 };
+                User user = new User { Email = "string@mail.ru", UserName = "string", Sex = "attack helicopter", Type = Models.UserType.Default, AvatarId = 1 };
                 if ((await userManager.CreateAsync(user, "string")).Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, "confirmed");

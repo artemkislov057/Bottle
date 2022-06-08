@@ -92,20 +92,21 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 User user = new User { Email = data.Email, UserName = data.Nickname, Sex = data.Sex };
+                user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
+                var result = await userManager.CreateAsync(user, data.Password);
                 if (data.CommercialData == null)
                 {
-                    user.Type = 1;
+                    user.Type = UserType.Default;
+                    await userManager.AddToRoleAsync(user, "confirmed");
                 }
                 else
                 {
-                    user.Type = 2;
+                    user.Type = UserType.Commercial;
                     user.CommercialData = new CommercialData(data.CommercialData);
+                    await userManager.AddToRoleAsync(user, "not-confirmed");
                 }
-                user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
-                var result = await userManager.CreateAsync(user, data.Password);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, "confirmed");
                     await signInManager.SignInAsync(user, false);
                     return Created(string.Empty, new Account(user, Rating.Zero));
                 }
@@ -168,16 +169,17 @@ namespace Bottle.Controllers
                         user = new User { Provider = model.ExternalLogin.Provider, ExternalUserId = model.ExternalLogin.ExternalUserId, UserName = model.Nickname, Sex = model.Sex };
                         if (model.CommercialData == null)
                         {
-                            user.Type = 1;
+                            user.Type = UserType.Default;
+                            await userManager.AddToRoleAsync(user, "confirmed");
                         }
                         else
                         {
-                            user.Type = 2;
+                            user.Type = UserType.Commercial;
                             user.CommercialData = new CommercialData(model.CommercialData);
+                            await userManager.AddToRoleAsync(user, "not-confirmed");
                         }
                         user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                         var result = await userManager.CreateAsync(user);
-                        await userManager.AddToRoleAsync(user, "confirmed");
                         if (result.Succeeded)
                         {
                             await signInManager.SignInAsync(user, model.ExternalLogin.RememberMe);
@@ -272,12 +274,31 @@ namespace Bottle.Controllers
                 user.Email = data.Email;
                 user.NormalizedEmail = data.Email.ToUpper();
             }
+            if (data.Type == UserType.Commercial)
+            {
+                if (user.Type == UserType.Default)
+                {
+                    await userManager.AddToRoleAsync(user, "not-confirmed");
+                    user.Type = UserType.Commercial;
+                }
+            }
+            else if (data.Type == UserType.Default)
+            {
+                if (user.Type == UserType.Commercial)
+                {
+                    await userManager.AddToRoleAsync(user, "confirmed");
+                    user.Type = UserType.Default;
+                }
+            }
             if (data.CommercialData != null)
             {
                 var cd = db.CommercialData.FirstOrDefault(x => x.User == user);
                 user.CommercialData.FullName = data.CommercialData.FullName is null ? user.CommercialData.FullName : data.CommercialData.FullName;
                 user.CommercialData.IdentificationNumber = data.CommercialData.IdentificationNumber is null ? user.CommercialData.IdentificationNumber : data.CommercialData.IdentificationNumber;
                 user.CommercialData.PSRN = data.CommercialData.PSRN is null ? user.CommercialData.PSRN : data.CommercialData.PSRN;
+                user.CommercialData.ContactPerson = data.CommercialData.ContactPerson is null ? user.CommercialData.ContactPerson : data.CommercialData.ContactPerson;
+                user.CommercialData.Email = data.CommercialData.Email is null ? user.CommercialData.Email : data.CommercialData.Email;
+                user.CommercialData.PhoneNumber = data.CommercialData.PhoneNumber is null ? user.CommercialData.PhoneNumber : data.CommercialData.PhoneNumber;
             }
             db.SaveChanges();
             var account = new Account(user, user.CommercialData, db.GetUserRating(user.Id));

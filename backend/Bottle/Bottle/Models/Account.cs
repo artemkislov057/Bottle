@@ -39,7 +39,7 @@ namespace Bottle.Models
         public string Email { get; set; }
         public Rating Rating { get; set; }
         public string Sex { get; set; }
-        public int Type { get; set; }
+        public UserType? Type { get; set; }
         public CommercialModel CommercialData { get; set; }
     }
 }

@@ -16,8 +16,6 @@ namespace Bottle.Utilities
         {
             if (Database.EnsureCreated())
             {
-                UserTypes.Add(new UserType { Type = "DefaultUser" });
-                UserTypes.Add(new UserType { Type = "Commercial" });
                 SaveChanges();
             }
         }
@@ -25,7 +23,6 @@ namespace Bottle.Utilities
         public DbSet<CommercialData> CommercialData { get; set; }
         public DbSet<UserRating> UserRating { get; set; }
         public DbSet<CommercialData> CommercialDatas { get; set; }
-        public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Models.DataBase.Bottle> Bottles { get; set; }
