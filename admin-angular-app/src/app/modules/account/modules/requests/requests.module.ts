@@ -14,13 +14,14 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input'
 import { CutPipe } from 'src/app/pipes/cut.pipe';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 @NgModule({
   declarations: [
     RequestsComponent,
     RequestListComponent,
     ScanModalComponent,
     SearchComponent,
-    CutPipe
+    CutPipe,
   ],
   imports: [
     CommonModule,
@@ -32,6 +33,7 @@ import { CutPipe } from 'src/app/pipes/cut.pipe';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    PdfViewerModule
   ],
   providers: [
     RequestsService

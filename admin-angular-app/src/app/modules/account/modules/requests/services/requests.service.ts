@@ -17,7 +17,6 @@ export class RequestsService {
       withCredentials: true
     }).pipe(
       map(requests => {
-      let index = 1;
       return requests.map(request => new RequestItem(
           request.id,
           request.data.fullName,
@@ -28,8 +27,11 @@ export class RequestsService {
     }));
   }
 
-  public getImage(id: string): Observable<Blob> {
+  public getPdf(id: string): Observable<Blob> {
     return this.http.get(`https://${this.settings.host}/api/moderator/requests/${id}/document`, { 
+      headers: {
+        'Accept': 'application/pdf'
+      },
       responseType: 'blob',
       withCredentials: true
     });

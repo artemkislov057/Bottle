@@ -10,8 +10,9 @@ import { RequestsService } from '../../services/requests.service';
 export class ScanModalComponent implements OnInit{
     @Input()id!: string;
     private img!: Blob;
-    public viewImg!: any;
+    public viewPdf!: any;
     public loading: boolean = true;
+    public pdfSrc = "";
     @Output() change: EventEmitter<string> = new EventEmitter();
     
     constructor(
@@ -19,8 +20,9 @@ export class ScanModalComponent implements OnInit{
     ){}
     
     public ngOnInit(): void {
-      this.requestsService.getImage(this.id).subscribe(img => {
-        this.createImageFromBlob(img);
+      this.requestsService.getPdf(this.id).subscribe(pdf => {
+        this.pdfSrc = URL.createObjectURL(pdf);
+        this.createPdfFromBlob(pdf);
       })
     }
 
@@ -36,14 +38,19 @@ export class ScanModalComponent implements OnInit{
       })
     }
 
-    private createImageFromBlob(image: Blob) {
+    public showPdf() {
+      window.open(this.pdfSrc);
+    }
+    
+    private createPdfFromBlob(pdf: Blob) {
       let reader = new FileReader();
       reader.addEventListener("load", () => {
-          this.viewImg = reader.result;
+          this.viewPdf = reader.result;
           this.loading = false;
         }, false);
-      if (image) {
-         reader.readAsDataURL(image);
+      if (pdf) {
+        //reader.readAsDataURL(pdf);
+        reader.readAsArrayBuffer(pdf);
       }
    }
     

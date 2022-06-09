@@ -8,3 +8,7 @@
     height: 891px;
     width: 630px
 }
+
+mat-dialog-actions {
+    gap: 5px;
+}
