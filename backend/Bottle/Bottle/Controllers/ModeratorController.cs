@@ -32,6 +32,10 @@ namespace Bottle.Controllers
         public IActionResult GetDocument([FromRoute] string id)
         {
             var request = db.CommercialData.FirstOrDefault(cd => cd.Id == id);
+            if (request.Documents == null || request.DocumentsContentType == null)
+            {
+                return NotFound();
+            }
             return File(request.Documents, request.DocumentsContentType);
         }
 
