@@ -1,0 +1,10 @@
+<div class="scan-container">
+    <h2 mat-dialog-title>Причина отказа</h2>
+    <mat-dialog-content class="mat-typography">
+        <input matInput [formControl]="reasonControl">
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button class='custom-button' (click)="clickOK()" mat-button [mat-dialog-close]="true" cdkFocusInitial>Ок</button>
+        <button class='custom-button' mat-button mat-dialog-close>Отмена</button>
+    </mat-dialog-actions>
+</div>

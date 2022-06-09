@@ -27,12 +27,12 @@ export class RequestListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(_ => {
-      this.updateType();
       this.updateRequests();
     })
   }
 
   private updateRequests(): void {
+    this.updateType();
     this.requestsService.getRequests(this.type).pipe().subscribe(requests => {
       this.AllRequests = requests;
       this.viewRequests = this.AllRequests.slice(0, 10);
@@ -62,7 +62,7 @@ export class RequestListComponent implements OnInit {
     const dialogRef = this.dialog.open(ScanModalComponent);
     dialogRef.componentInstance.id = id;
     dialogRef.componentInstance.type = this.type;
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.componentInstance.change.subscribe(result => {
       this.updateRequests();
     });
   }

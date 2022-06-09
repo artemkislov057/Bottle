@@ -37,14 +37,16 @@ export class RequestsService {
     });
   }
 
-  public rejectRequest(id: string) : Observable<void> {
-    return this.http.post<void>(`https://localhost:44358/api/moderator/requests/${id}/reject`,{}, {
+  public rejectRequest(id: string, message: string) : Observable<void> {
+    return this.http.post<void>(`https://${this.settings.host}/api/moderator/requests/${id}/reject`,{
+      value: message
+    }, {
       withCredentials: true
     })
   }
 
   public acceptRequest(id: string) : Observable<void> {
-    return this.http.post<void>(`https://localhost:44358/api/moderator/requests/${id}/accept`,{}, {
+    return this.http.post<void>(`https://${this.settings.host}/api/moderator/requests/${id}/accept`,{}, {
       withCredentials: true
     })
   }

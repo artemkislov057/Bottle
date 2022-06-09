@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input'
 import { CutPipe } from 'src/app/pipes/cut.pipe';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { RejectReasonModalComponent } from './components/reject-reason-modal/reject-reason-modal.component';
 @NgModule({
   declarations: [
     RequestsComponent,
@@ -22,6 +23,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     ScanModalComponent,
     SearchComponent,
     CutPipe,
+    RejectReasonModalComponent,
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 import { RequestsService } from '../../services/requests.service';
+import { RejectReasonModalComponent } from '../reject-reason-modal/reject-reason-modal.component';
 
 @Component({
   selector: 'app-scan-modal',
@@ -14,10 +16,11 @@ export class ScanModalComponent implements OnInit{
     public viewPdf!: any;
     public loading: boolean = true;
     public pdfSrc = "";
-    @Output() change: EventEmitter<string> = new EventEmitter();
+    public change: Subject<void> = new Subject();
     
     constructor(
       private requestsService: RequestsService,
+      private dialog: MatDialog,
     ){}
     
     public ngOnInit(): void {
@@ -27,15 +30,22 @@ export class ScanModalComponent implements OnInit{
       })
     }
 
+    public openScan() {
+      const dialogRef = this.dialog.open(RejectReasonModalComponent);
+      dialogRef.componentInstance.OnReject.subscribe(message => this.rejectRequest(message))
+    }
+
     public onAccept() {
       this.requestsService.acceptRequest(this.id).subscribe(() => {
-        this.change.emit();
+        this.change.next();
+        this.change.complete();
       })
     }
 
-    public onReject() {
-      this.requestsService.rejectRequest(this.id).subscribe(() => {
-        this.change.emit();
+    private rejectRequest(message: string) {
+      this.requestsService.rejectRequest(this.id, message).subscribe(() => {
+        this.change.next();
+        this.change.complete();
       })
     }
 
@@ -50,7 +60,6 @@ export class ScanModalComponent implements OnInit{
           this.loading = false;
         }, false);
       if (pdf) {
-        //reader.readAsDataURL(pdf);
         reader.readAsArrayBuffer(pdf);
       }
    }

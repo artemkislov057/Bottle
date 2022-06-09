@@ -11,3 +11,7 @@ table {
     border-bottom: 1px solid transparent;
     border-top: 1px solid transparent;
 }
+
+mat-dialog-actions {
+    gap: 5px;
+}
