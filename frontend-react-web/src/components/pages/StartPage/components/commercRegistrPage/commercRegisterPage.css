@@ -85,7 +85,9 @@
 
 .commerc-registration-data-side-document-container-input-field {
     display: flex;
-    flex-direction: column;    
+    /* flex-direction: column; */
+    gap: 20px;
+    align-items: center;
 }
 
 .commerc-registration-data-side-document-container-label {
@@ -107,6 +109,10 @@
 
     background: url('addPhotos.svg') 50% 50% no-repeat;
     background-size: 100% 100%;
+}
+
+.commerc-registration-data-side-document-container-input-field-icon-href-document {
+    color: rgba(213, 220, 223, 0.8);
 }
 
 .commerc-registration-data-side-register-button {

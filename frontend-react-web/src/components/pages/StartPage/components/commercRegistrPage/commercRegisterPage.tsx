@@ -17,10 +17,12 @@ type CommercialData = {
     companyName: string
     itn: string
     psrn: string
+    document: FormData
 }
 
 export const CommercRegistrationPage:React.FC = React.memo(() => {
     const [commercData, setCommercData] = useState<CommercialData>();
+    const [documentHref, setDocumentHref] = useState<JSX.Element>();
     const loginData = useContext(ContextLogin);
     const navigate = useNavigate();
 
@@ -31,6 +33,7 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
         if(commercData.password !== commercData.secondPassword) {
             alert('Пароли не совпадают');
             return;
@@ -54,7 +57,7 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
                 method: 'POST',
                 body: JSON.stringify({
                     fullName: `${commercData.secondName} ${commercData.firstName} ${commercData.patronymic}`,
-                    contactPerson: '?',
+                    contactPerson: commercData.companyName,
                     email: commercData.email,
                     phoneNumber: '?',
                     identificationNumber: commercData.itn,
@@ -67,8 +70,19 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             });
             if(responseCommerc.ok) {
                 loginData.setIsLogin(true);
-                console.log('регистрация коммерции успешна')
-                navigate('/mainPage');
+                console.log('регистрация коммерции успешна');
+                let responseDocument = await fetch(`${apiUrl}/api/commercial/document`, {
+                    method: 'POST',
+                    body: commercData.document,
+                    credentials: 'include'                    
+                });
+                if(responseDocument.ok) {
+                    console.log('документ отправлен');
+                    navigate('/mainPage');
+                } else {
+                    navigate('/');
+                    console.log('не успешно ничего..')
+                }
             } else {
                 navigate('/');
                 console.log('не успешно ничего..')
@@ -78,6 +92,17 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             console.log('не успешно ничего..')
         }
         
+    }
+
+    async function onLoadDocument(e: React.ChangeEvent<HTMLInputElement>) {
+        let document = e.target.files[0];
+        let formData = new FormData();
+        formData.append('file', document);
+
+        let url = URL.createObjectURL(document);
+        setDocumentHref(<a className="commerc-registration-data-side-document-container-input-field-icon-href-document" href={url} rel="noopener noreferrer" target={'_blank'}>Ваш документ</a>);
+
+        setCommercData({...commercData, document: formData});
     }
 
     return <div className="commerc-registration-page">
@@ -106,7 +131,11 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
                     updateData={updateCommercData}
                 />                
                 <div className="commerc-registration-data-side-documents">
-                    <DocumentContainer titleName="Скан свидетельства ИНН и ОГРН (одним файлом):" />
+                    <DocumentContainer 
+                        titleName="Скан свидетельства ИНН и ОГРН (одним файлом):" 
+                        onLoadDocument={onLoadDocument}
+                        visualDocument={documentHref}
+                    />
                 </div>
                 <DataContainer 
                     headerName=""

@@ -2,7 +2,8 @@ import React from "react";
 
 type TProps = {
     titleName: string
-
+    onLoadDocument: Function,
+    visualDocument: JSX.Element
 }
 
 export const DocumentContainer:React.FC<TProps> = React.memo((props) => {
@@ -19,9 +20,11 @@ export const DocumentContainer:React.FC<TProps> = React.memo((props) => {
                 type={'file'} 
                 className={`commerc-registration-data-side-document-container-input`}
                 id={`document-container-input ${props.titleName}`}
+                onChange={e => props.onLoadDocument(e)}
                 required
             >
             </input>
+            {props.visualDocument}
         </div>
     </div>
 })
