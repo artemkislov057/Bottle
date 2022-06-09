@@ -22,6 +22,7 @@ type TProps = {
     onClickMyBottles: Function,
     onClickChat: Function,
     onClickMap: Function
+    onClickCommercBar: Function
     closeChat?: Function,
     setShowLeftBar: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -92,6 +93,11 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
         closeLeftBar();
     }
 
+    function onClickCommercPart() {
+        props.onClickCommercBar();
+        closeLeftAndSendToMap();
+    }
+
     return <div className={`left-bar-map`}>
         <div className="left-bar-map-header" >
             <InfoUser avatarUrl={userInfo.avatar} nameUser={userInfo.name} onClick={onClickProfileInfo}/>
@@ -103,7 +109,7 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
                 <LeftBarItem urlIconItem={chatIcon} title='Диалоги тет а тет' onClick={onClickChatButton} />
                 <LeftBarItem urlIconItem={createIcon} title='Создать записку' onClick={onClickCreateBottleButton} />
                 <LeftBarItem urlIconItem={myBottlesIcon} title='Мои записки' onClick={onClickMyBottles} />
-                <LeftBarItem urlIconItem={commercIcon} title='Коммерческий аккаунт' onClick={onClickOnMapButton} />                
+                <LeftBarItem urlIconItem={commercIcon} title='Коммерческий аккаунт' onClick={onClickCommercPart} />                
             </ul>
         </div>
         <div className="left-bar-map-footer">
