@@ -1,0 +1,15 @@
+.scan-container {
+    /* width:1000px; */
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+.scan-image {
+    height: 891px;
+    width: 630px
+}
+
+mat-dialog-actions {
+    gap: 5px;
+}

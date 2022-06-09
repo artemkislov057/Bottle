@@ -1,0 +1,46 @@
+<app-search (searchChangeValue)="onSearchChanges($event)"></app-search>
+<table mat-table [dataSource]="viewRequests" class="mat-elevation-z8 demo-table">
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element">{{element.position | cut:1:20}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="company">
+      <th mat-header-cell *matHeaderCellDef>Компания</th>
+      <td mat-cell *matCellDef="let element">{{element.company}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>ФИО Директора</th>
+      <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="inn">
+      <th mat-header-cell *matHeaderCellDef>ИНН</th>
+      <td mat-cell *matCellDef="let element">{{element.inn}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="ogrn">
+        <th mat-header-cell *matHeaderCellDef>ОГРН</th>
+        <td mat-cell *matCellDef="let element">{{element.ogrn}}</td>
+      </ng-container>
+
+    <ng-container matColumnDef="scan">
+        <th mat-header-cell *matHeaderCellDef>Скан</th>
+        <td mat-cell *matCellDef="let element"><button class='custom-button' (click)='openScans(element.position)'mat-raised-button>См. скан</button></td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"
+    ></tr>
+  </table>
+
+<mat-paginator *ngIf="showPaginator"
+              [length]="this.AllRequests.length"
+              [pageSize]="10"
+              [pageSizeOptions]="paginatorOption"
+              aria-label="Select page"
+              (page)="onPageChange($event)">
+</mat-paginator>

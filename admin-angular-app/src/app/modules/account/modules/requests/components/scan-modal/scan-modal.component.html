@@ -1,0 +1,16 @@
+<div class="scan-container">
+    <h2 mat-dialog-title>Скан свидетельства</h2>
+    <mat-dialog-content class="mat-typography">
+        <!-- <img class='scan-image' [src]="viewImg"> -->
+        <pdf-viewer [src]="viewPdf"
+              [render-text]="true"
+              [original-size]="false"
+              style="width: 400px; height: 500px"
+        ></pdf-viewer>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button *ngIf="type === 'unchecked'" class='custom-button' (click)="onAccept()" mat-button [mat-dialog-close]="true" cdkFocusInitial>Принять</button>
+        <button *ngIf="type === 'unchecked'" class='custom-button' (click)="openScan()" mat-button mat-dialog-close>Отклонить</button>
+        <button class='custom-button' (click)="showPdf()">Во весь экран</button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,14 @@
+.menu-button {
+    background-color: #303030;
+    color: #fff;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: large;
+    border: 0;
+    width: 80px;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.menu-button:hover {
+    background-color: #414141; /* Цвет ссылки при наведении */ 
+}

@@ -1,0 +1,9 @@
+<div *ngIf="currentUrl != '/' && currentUrl != '/login'">
+    <button class='menu-button' mat-button [matMenuTriggerFor]="menu">Меню</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="'account/requests/unchecked'">Непроверенные заявки</button>
+        <button mat-menu-item [routerLink]="'account/requests/rejected'">Непринятые заявки</button>
+        <button mat-menu-item [routerLink]="'account/requests/accepted'">Принятые заявки</button>
+        <button mat-menu-item (click)="logout()">Выход</button>
+    </mat-menu>
+</div>
