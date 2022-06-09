@@ -41,15 +41,7 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
                 nickname: commercData.email.split('@')[0],
                 password: commercData.password,
                 email: commercData.email,
-                sex: "?",
-                commercialData: {
-                    fullName: `${commercData.secondName} ${commercData.firstName} ${commercData.patronymic}`,
-                    contactPerson: '?',
-                    email: commercData.email,
-                    phoneNumber: '?',
-                    identificationNumber: commercData.itn,
-                    psrn: commercData.psrn
-                }              
+                sex: "?"                   
             }),
             credentials: 'include',
             headers: {
@@ -57,13 +49,35 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             }
         });
         if(response.ok) {
-            loginData.setIsLogin(true);
-            navigate('/mainPage');
-            console.log('регистрация успешна')
+            console.log('регистрация обычного акк успешна');
+            let responseCommerc = await fetch(`${apiUrl}/api/commercial/make`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fullName: `${commercData.secondName} ${commercData.firstName} ${commercData.patronymic}`,
+                    contactPerson: '?',
+                    email: commercData.email,
+                    phoneNumber: '?',
+                    identificationNumber: commercData.itn,
+                    psrn: commercData.psrn
+                }),
+                credentials: 'include',
+                headers: {
+                    "content-type": 'application/json'
+                }
+            });
+            if(responseCommerc.ok) {
+                loginData.setIsLogin(true);
+                console.log('регистрация коммерции успешна')
+                navigate('/mainPage');
+            } else {
+                navigate('/');
+                console.log('не успешно ничего..')
+            }
         } else {
             navigate('/');
             console.log('не успешно ничего..')
         }
+        
     }
 
     return <div className="commerc-registration-page">
