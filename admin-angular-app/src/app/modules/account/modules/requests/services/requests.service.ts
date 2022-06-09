@@ -12,8 +12,8 @@ export class RequestsService {
     private settings: SettingsService
   ) { }
 
-  public getRequests() : Observable<RequestItem[]> {
-    return this.http.get<IRequestData[]>(`https://${this.settings.host}/api/moderator/requests/unchecked`, {
+  public getRequests(type: string) : Observable<RequestItem[]> {
+    return this.http.get<IRequestData[]>(`https://${this.settings.host}/api/moderator/requests/${type}`, {
       withCredentials: true
     }).pipe(
       map(requests => {

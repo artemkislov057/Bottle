@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ActivatedRoute } from '@angular/router';
 import { RequestsService } from '../../services/requests.service';
 import { ScanModalComponent } from '../scan-modal/scan-modal.component';
 
@@ -16,22 +17,36 @@ export class RequestListComponent implements OnInit {
   public paginatorOption!: PaginatorOptions;
   public AllRequests: RequestItem[] = [];
   public showPaginator: boolean = true;
+  private type: 'rejected' | 'unchecked' | 'accepted' = 'unchecked';
 
   constructor(
     public dialog: MatDialog,
-    public requestsService: RequestsService
+    private requestsService: RequestsService,
+    private route: ActivatedRoute
     ) { }
 
   ngOnInit(): void {
-    this.updateRequests();
+    this.route.params.subscribe(_ => {
+      this.updateType();
+      this.updateRequests();
+    })
   }
 
   private updateRequests(): void {
-    this.requestsService.getRequests().pipe().subscribe(requests => {
+    this.requestsService.getRequests(this.type).pipe().subscribe(requests => {
       this.AllRequests = requests;
       this.viewRequests = this.AllRequests.slice(0, 10);
       this.paginatorOption = this.generatePageSizeOptions(10, this.AllRequests.length, 5);
     })    
+  }
+
+  private updateType(): void {
+    const type = this.route.snapshot.params['type'];
+    if (type === 'unchecked' || type === 'rejected' || type === 'accepted') {
+      this.type = type;
+    } else {
+      this.type = 'unchecked';
+    }
   }
 
   public onPageChange(event: PageEvent) : void {
@@ -46,6 +61,7 @@ export class RequestListComponent implements OnInit {
   openScans(id: string) {
     const dialogRef = this.dialog.open(ScanModalComponent);
     dialogRef.componentInstance.id = id;
+    dialogRef.componentInstance.type = this.type;
     dialogRef.afterClosed().subscribe(result => {
       this.updateRequests();
     });

@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccountComponent } from './account.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'requests' },
-    { path: 'requests', loadChildren: () => import('./modules/requests/requests.module').then(m => m.RequestsModule) }
+    //{ path: '', redirectTo: 'requests' },
+    { path: 'requests/:type', loadChildren: () => import('./modules/requests/requests.module').then(m => m.RequestsModule) }
 ];
 
 @NgModule({

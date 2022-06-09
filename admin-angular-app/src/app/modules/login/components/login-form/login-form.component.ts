@@ -29,6 +29,6 @@ export class LoginFormComponent implements OnInit {
       this.loginForm.controls['email'].value,
       this.loginForm.controls['password'].value,
       true
-    ).subscribe(_ => this.router.navigate(['account/requests']))
+    ).subscribe(_ => this.router.navigate(['account/requests/unchecked']))
   }
 }

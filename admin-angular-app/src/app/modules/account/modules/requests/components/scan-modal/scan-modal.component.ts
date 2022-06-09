@@ -9,6 +9,7 @@ import { RequestsService } from '../../services/requests.service';
 })
 export class ScanModalComponent implements OnInit{
     @Input()id!: string;
+    @Input()type!: 'unchecked' | 'rejected' | 'accepted';
     private img!: Blob;
     public viewPdf!: any;
     public loading: boolean = true;
