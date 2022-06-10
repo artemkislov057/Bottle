@@ -123,7 +123,11 @@ export const RightBarDescrBody:React.FC<TProps> = React.memo((props) => {
         <div className="right-bar-map-popup-body-info">
             <PopupBodyInfo className="addres" title="Адрес:" value={address}/>
             <PopupBodyInfo className="timeLeft" title="До конца мероприятия:" value={timeLife}/>
-            <PopupBodyInfo className="pickCount" title="Осталось мест:" value={props.data.maxPickingUp - props.data.pickingUp} />
+            {
+                props.data.maxPickingUp === -1 ? 
+                null
+                : <PopupBodyInfo className="pickCount" title="Осталось мест:" value={props.data.maxPickingUp - props.data.pickingUp} />
+            }            
         </div>
         <BodyDescription description={props.data.description} content={photosContent} bottleId={props.data.id} />
     </div>

@@ -80,10 +80,10 @@
 .right-bar-map-popup-body-info {
     display: flex;
     flex-direction: column;
-    height: 120px;
+    gap: 10px;
     border: none;
     border-radius: 10px;
-    padding: 5px 15px 5px 15px;
+    padding: 10px 15px;
     background-color: #373839;
 }
 

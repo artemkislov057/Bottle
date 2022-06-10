@@ -13,6 +13,14 @@ export type UserInfoType = {
     },
     sex: string,
     type: number,
-    commercialData: string[] | null, //
+    commercialData: {
+        contactPerson: string
+        email: string
+        fullName: string
+        identificationNumber: string
+        phoneNumber: string
+        psrn: string
+    } | null
     email?: string
+    isCommercial: boolean
 }

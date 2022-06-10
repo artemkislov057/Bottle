@@ -24,6 +24,7 @@ import { RightBarDescrBottle } from "./components/rightBarDescriptBottle/rightBa
 import { LatLng } from "leaflet";
 import { CSSTransition } from "react-transition-group";
 import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
+import { CommercPart } from "./components/commercPart/commercPart";
 
 type TProps = {    
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -38,7 +39,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
-    const leftRightBarsStates = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup];
+    const [commercBar, setCommercBar] = useState<JSX.Element>();
+    const leftRightBarsStates = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup, setCommercBar];
     const wsEvent = useContext(WsEventContext);
     const[currentFilterCategory, setcurrentFilterCategory] = useState('Все категории');
 
@@ -60,6 +62,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [showProfileBar, setShowProfileBar] = useState(false);
     const [showMyBottlesBar, setShowMyBottlesBar] = useState(false);
     const [showPopupBar, setShowPopupBar] = useState(false);
+    const [showCommercBar, setShowCommercBar] = useState(false);
 
     
 
@@ -69,6 +72,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     showBarsDict.set(setRightBarProfile, setShowProfileBar);
     showBarsDict.set(setRightBarMyBottles, setShowMyBottlesBar);
     showBarsDict.set(setRightBarPopup, setShowPopupBar);
+    showBarsDict.set(setCommercBar, setShowCommercBar);
 
     useEffect(() => { // при обновлении стр получение всех бутылок
         if(!props.children) return;
@@ -213,8 +217,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             onClickMyBottles={onClickMyBottles}
             onClickChat={props.openChat}
             onClickMap={props.openMap}
+            onClickCommercBar={onClickOpenCommercPart}
             disableBackgroundGray={disableBackgroundGray}
             setShowLeftBar={setShowLeftBar}
+            closeCommercPart={closeCommercPart}
         />)
     }
 
@@ -266,6 +272,16 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         />)
     }
 
+    function onClickOpenCommercPart() {
+        setShowCommercBar(true);
+        closeOtherBars(setCommercBar);
+        disableBackgroundGray();
+        // enableBackgroundGray();
+        setCommercBar(<CommercPart 
+            openLeftBar={onClickOpenLeftBar}
+        />)
+    }
+
     function enableBackgroundGray() {
         props.backgroundState(<div className="background-gray"></div>);
     }
@@ -289,6 +305,11 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     function closeRightBar() {
         setShowRightBar(false);
     }
+
+   function closeCommercPart() {
+       setShowCommercBar(false);
+    //    setCommercBar(<></>);
+   } 
 
     function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>> = null) {
         for(let e of leftRightBarsStates) {
@@ -402,5 +423,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         >
             {rightBarPopup}
         </CSSTransition>
+        <CSSTransition
+            in={showCommercBar}
+            timeout={300}
+            classNames='show-commerc-part'
+            unmountOnExit
+        >
+            {commercBar}
+        </CSSTransition>        
     </div>
 })
