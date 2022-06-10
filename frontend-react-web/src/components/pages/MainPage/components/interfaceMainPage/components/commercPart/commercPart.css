@@ -154,7 +154,8 @@
 }
 
 .commerc-part-data-side-bottles-info-buy-card-try-button:hover {
-    background: linear-gradient(90deg, #8833f7 5.56%, #c18eff 81.94%);
+    /* background: linear-gradient(90deg, #8833f7 5.56%, #c18eff 81.94%); */
+    background: linear-gradient(90deg, #B77EFF 5.56%, #8F46EC 81.94%);
 }
 
 /* .background-gray {
