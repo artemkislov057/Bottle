@@ -8,6 +8,7 @@ import { apiUrl } from 'components/connections/apiUrl';
 import { ContextLogin } from 'loginContext';
 import { ContextWindowResolution } from 'windoResolutionContext';
 import { CommercRegistrationPage } from 'components/pages/StartPage/components/commercRegistrPage/commercRegisterPage';
+import { UserInfoType } from 'components/pages/MainPage/UserInfoType';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,7 @@ const queryClient = new QueryClient({
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
+  const [isCommercial, setIsCommercial] = useState(false);
   const [currentWindowWidth, setCurrentWindowWidth] = useState(window.screen.availWidth);
 
   window.addEventListener('resize', e => {
@@ -33,8 +35,14 @@ function App() {
           credentials:'include'
         });
         if (response.ok) {
-          console.log('login')
-          setIsLogin(true)
+          console.log('login');
+          setIsLogin(true);
+
+          let data = await response.json() as UserInfoType;
+          
+          if(data.isCommercial) {
+            setIsCommercial(true);
+          }
         }  
       } catch {
         console.log('logout')
@@ -46,7 +54,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ContextLogin.Provider value={{isLogin: isLogin, setIsLogin:setIsLogin}}>
+      <ContextLogin.Provider value={{isLogin: isLogin, setIsLogin:setIsLogin, isCommercial: isCommercial}}>
         <ContextWindowResolution.Provider value={currentWindowWidth}>
           <BrowserRouter>
             <Routes>

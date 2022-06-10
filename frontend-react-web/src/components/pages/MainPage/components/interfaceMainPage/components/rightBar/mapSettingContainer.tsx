@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DataBottleDescType } from "components/pages/MainPage/DataBottleDescriptType";
+import { ContextLogin } from "loginContext";
 
 type TProps = {
     bottleData: DataBottleDescType
@@ -17,6 +18,8 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
     const [currentMinutes, setCurrentMinutes] = useState('');
 
     const [currentPickCount, setCurrentPickCount] = useState('');
+
+    const {isCommercial} = useContext(ContextLogin);
 
 
     function onChangeTimeInput(e: React.ChangeEvent<HTMLInputElement>, type: string) {
@@ -97,9 +100,13 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
                     required/>
             </div>                    
         </div>
-        <div className="right-bar-map-setting-pick-count">
-            <label className="right-bar-map-setting-pick-count-title" htmlFor="pick-count-input">Количество поднятий</label>
-            <input className="right-bar-map-setting-pick-count-input" id="pick-count-input" type={"number"} min='1' onChange={e => onChangePickCount(e)} value={currentPickCount} required/>
-        </div>
+        {
+            isCommercial ?
+            null
+            : <div className="right-bar-map-setting-pick-count">
+                <label className="right-bar-map-setting-pick-count-title" htmlFor="pick-count-input">Количество поднятий</label>
+                <input className="right-bar-map-setting-pick-count-input" id="pick-count-input" type={"number"} min='1' onChange={e => onChangePickCount(e)} value={currentPickCount} required/>
+            </div>
+        }        
     </div>
 })

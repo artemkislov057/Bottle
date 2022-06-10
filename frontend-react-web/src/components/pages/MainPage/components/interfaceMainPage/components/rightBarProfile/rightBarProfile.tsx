@@ -43,7 +43,8 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
                     rating: data.rating,
                     sex: data.sex,
                     type: data.type,
-                    email: data.email
+                    email: data.email,
+                    isCommercial: data.isCommercial
                 },
                 avatar: resAvatar
             })            

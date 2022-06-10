@@ -53,8 +53,8 @@ export const PhotosContainer:React.FC<TProps> = React.memo((props) => {
     }
 
     useEffect(() => {
-        console.log('old photo')
         if(!props.bottleData.content) return;
+        console.log('old photo')
         if(photos) return
         let photosArray = Array<string>();
         let fr = new FileReader();
