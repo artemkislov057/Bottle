@@ -9,9 +9,11 @@
 
 .commerc-part-data-side {
     flex: 3;
-    background-color: rgba(33, 33, 33, 1);
-
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
     padding: 40px 0 85px 40px;
+    background-color: rgba(33, 33, 33, 1);
 }
 
 .commerc-part-data-side-header {
@@ -46,11 +48,14 @@
 .commerc-part-data-side-bottles-info {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    justify-content: space-evenly;
 }
 
 .commerc-part-data-side-bottles-info-text-container {
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
 .commerc-part-data-side-bottles-info-text-title {
@@ -61,25 +66,45 @@
 .commerc-part-data-side-bottles-info-text-description {
     color: rgba(118, 106, 200, 1);
     font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .commerc-part-data-side-bottles-info-buy-cards-container {
     display: flex;
     width: 100%;
-    justify-content: space-between
+    justify-content: space-between;
+    gap: 5%;
 }
 
 .commerc-part-data-side-bottles-info-buy-card {
-    width: 270px;
-    height: 300px;
+    /* width: 270px; */
+    width: 100%;
+    height: 350px;
     display: flex;
     background-color: rgba(55, 56, 57, 1);
     border-radius: 5px;
     position: relative;
     flex-direction: column;
     justify-content: space-evenly;
+    align-items: center;    
+}
+
+.commerc-part-data-side-bottles-info-buy-card-discount {
+    position: absolute;
+    display: flex;
+    top: 10px;
+    left: 20px;
+    font-size: 16px;
+    width: 60px;
+    height: 30px;
+    border-radius: 10px;
+    color: #FFFFFF;
+    background: #C83FD1;
+    box-shadow: 5px 4px 4px rgba(233, 44, 245, 0.1);
     align-items: center;
-    
+    justify-content: center;
 }
 
 .commerc-part-data-side-bottles-info-buy-card-icon {
@@ -98,6 +123,33 @@
 
 .commerc-part-data-side-bottles-info-buy-card-icon.fiveteen {
     background: url('commercCardFiveteenIcon.svg') 50% 50% no-repeat;
+}
+
+.commerc-part-data-side-bottles-info-buy-card-info-and-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.commerc-part-data-side-bottles-info-buy-card-price {
+    font-size: 28px;
+    color: #9B58F2;
+}
+
+.commerc-part-data-side-bottles-info-buy-card-count {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 1);
+}
+
+.commerc-part-data-side-bottles-info-buy-card-try-button {
+    width: 200px;
+    height: 50px;
+    border: none;    
+    border-radius: 10px;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 1);
+    background: linear-gradient(90deg, #8F46EC 5.56%, #B77EFF 81.94%);
 }
 
 /* .background-gray {

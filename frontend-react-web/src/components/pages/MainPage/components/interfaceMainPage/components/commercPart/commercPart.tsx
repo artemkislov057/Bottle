@@ -15,11 +15,10 @@ export const CommercPart:React.FC = React.memo(() => {
             <div className="commerc-part-data-side-bottles-info">
                 <div className="commerc-part-data-side-bottles-info-text-container">
                     <div className="commerc-part-data-side-bottles-info-text-title">Количество бутылочек уменьшается</div>
-                    <text className="commerc-part-data-side-bottles-info-text-description">
-                        У вас осталось !!! бутылочек.
-                        <br />
-                        Вы можете в любой момент увеличить их количество.
-                    </text>
+                    <div className="commerc-part-data-side-bottles-info-text-description">
+                        <span>У вас осталось !!! бутылочек.</span>
+                        <span>Вы можете в любой момент увеличить их количество.</span>
+                    </div>
                 </div>
                 <div className="commerc-part-data-side-bottles-info-buy-cards-container">
                     <BottlesCard 
