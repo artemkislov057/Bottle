@@ -184,6 +184,24 @@
     transition: opacity 300ms, transform 300ms;
 }
 
+.show-commerc-part-enter {
+    opacity: 0;
+}
+
+.show-commerc-part-enter-active {
+    opacity: 1;
+    transition: .3s;
+}
+
+.show-commerc-part-exit {
+    opacity: 1;
+}
+
+.show-commerc-part-exit-active {
+    opacity: 0;
+    transition: .3s;
+}
+
 @media screen and (max-width: 700px) {
     .create-bottle-button-mainPage {
         position: fixed !important;

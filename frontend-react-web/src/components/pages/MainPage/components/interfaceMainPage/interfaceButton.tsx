@@ -220,6 +220,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             onClickCommercBar={onClickOpenCommercPart}
             disableBackgroundGray={disableBackgroundGray}
             setShowLeftBar={setShowLeftBar}
+            closeCommercPart={closeCommercPart}
         />)
     }
 
@@ -276,7 +277,9 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         closeOtherBars(setCommercBar);
         disableBackgroundGray();
         // enableBackgroundGray();
-        setCommercBar(<CommercPart />)
+        setCommercBar(<CommercPart 
+            openLeftBar={onClickOpenLeftBar}
+        />)
     }
 
     function enableBackgroundGray() {
@@ -302,6 +305,11 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     function closeRightBar() {
         setShowRightBar(false);
     }
+
+   function closeCommercPart() {
+       setShowCommercBar(false);
+    //    setCommercBar(<></>);
+   } 
 
     function closeOtherBars(currentBar: React.Dispatch<React.SetStateAction<JSX.Element>> = null) {
         for(let e of leftRightBarsStates) {
@@ -415,6 +423,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         >
             {rightBarPopup}
         </CSSTransition>
-        {commercBar}
+        <CSSTransition
+            in={showCommercBar}
+            timeout={300}
+            classNames='show-commerc-part'
+            unmountOnExit
+        >
+            {commercBar}
+        </CSSTransition>        
     </div>
 })

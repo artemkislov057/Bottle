@@ -2,12 +2,16 @@ import React from "react";
 import { BottlesCard } from "./cardBuyBottles";
 import './commercPart.css';
 
-export const CommercPart:React.FC = React.memo(() => {
+type TProps = {
+    openLeftBar: Function
+}
+
+export const CommercPart:React.FC<TProps> = React.memo((props) => {
     return <div className="commerc-part-container">
         <div className="commerc-part-data-side">
             <div className="commerc-part-data-side-header">
                 <div className="commerc-part-data-side-header-button-container">
-                    <button className="commerc-part-data-side-header-other-button"></button>
+                    <button type="button" className="commerc-part-data-side-header-other-button" onClick={() => props.openLeftBar()}></button>
                     <div className="commerc-part-data-side-header-part-name">Меню</div>
                 </div>
                 <div className="commerc-part-data-side-header-title">Управление бутылочками</div>

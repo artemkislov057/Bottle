@@ -34,7 +34,7 @@
     border: none;
     background: url('otherIcon.svg') 50% 50% no-repeat;
     background-size: 100%;
-
+    cursor: pointer;
 }
 
 .commerc-part-data-side-header-part-name {
@@ -150,6 +150,11 @@
     font-size: 18px;
     color: rgba(255, 255, 255, 1);
     background: linear-gradient(90deg, #8F46EC 5.56%, #B77EFF 81.94%);
+    cursor: pointer;
+}
+
+.commerc-part-data-side-bottles-info-buy-card-try-button:hover {
+    background: linear-gradient(90deg, #8833f7 5.56%, #c18eff 81.94%);
 }
 
 /* .background-gray {

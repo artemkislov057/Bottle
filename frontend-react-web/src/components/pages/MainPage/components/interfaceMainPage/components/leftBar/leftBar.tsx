@@ -24,6 +24,7 @@ type TProps = {
     onClickMap: Function
     onClickCommercBar: Function
     closeChat?: Function,
+    closeCommercPart: Function
     setShowLeftBar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -59,6 +60,7 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
     }
 
     function closeLeftAndSendToMap() {
+        // props.closeCommercPart();
         props.onClickMap();
         closeLeftBar();
     }
@@ -91,11 +93,14 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
     function onClickChatButton() {
         props.onClickChat();
         closeLeftBar();
+        props.closeCommercPart();
     }
 
     function onClickCommercPart() {
         props.onClickCommercBar();
         closeLeftAndSendToMap();
+        // closeLeftBar();
+        // props.onClickMap();
     }
 
     return <div className={`left-bar-map`}>
