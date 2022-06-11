@@ -35,11 +35,12 @@ export class RequestListComponent implements OnInit {
   private updateRequests(): void {
     this.loading = true;
     this.updateType();
-    this.requestsService.getRequests(this.type).pipe().subscribe(requests => {
+    const sub = this.requestsService.getRequests(this.type).pipe().subscribe(requests => {
       this.AllRequests = requests;
       this.viewRequests = this.AllRequests.slice(0, 10);
       this.paginatorOption = this.generatePageSizeOptions(10, this.AllRequests.length, 5);
       this.loading = false;
+      sub.unsubscribe();
     })    
   }
 
