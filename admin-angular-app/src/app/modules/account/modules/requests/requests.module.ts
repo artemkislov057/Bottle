@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input'
 import { CutPipe } from 'src/app/pipes/cut.pipe';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { RejectReasonModalComponent } from './components/reject-reason-modal/reject-reason-modal.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @NgModule({
   declarations: [
     RequestsComponent,
@@ -35,10 +36,11 @@ import { RejectReasonModalComponent } from './components/reject-reason-modal/rej
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    PdfViewerModule
+    PdfViewerModule,
+    MatProgressSpinnerModule
   ],
   providers: [
-    RequestsService
+    RequestsService,
   ]
 })
 export class RequestsModule { }

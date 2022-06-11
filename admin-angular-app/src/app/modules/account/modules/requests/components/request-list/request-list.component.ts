@@ -18,6 +18,7 @@ export class RequestListComponent implements OnInit {
   public AllRequests: RequestItem[] = [];
   public showPaginator: boolean = true;
   private type: 'rejected' | 'unchecked' | 'accepted' = 'unchecked';
+  public loading: boolean = true;
 
   constructor(
     public dialog: MatDialog,
@@ -32,11 +33,13 @@ export class RequestListComponent implements OnInit {
   }
 
   private updateRequests(): void {
+    this.loading = true;
     this.updateType();
     this.requestsService.getRequests(this.type).pipe().subscribe(requests => {
       this.AllRequests = requests;
       this.viewRequests = this.AllRequests.slice(0, 10);
       this.paginatorOption = this.generatePageSizeOptions(10, this.AllRequests.length, 5);
+      this.loading = false;
     })    
   }
 

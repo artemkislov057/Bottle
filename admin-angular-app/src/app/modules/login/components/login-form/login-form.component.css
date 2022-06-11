@@ -20,3 +20,15 @@ input:-webkit-autofill {
 .title {
     text-align: center;
 }
+
+mat-spinner {
+    margin: 0 auto;
+}
+
+.loader-container {
+    height: 36px
+}
+
+.alert {
+    color: #ce0000
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
@@ -16,6 +17,8 @@ export class LoginFormComponent implements OnInit {
     password: new FormControl('', [Validators.minLength(5), Validators.required])
   });
 
+  public loading: boolean = false;
+  public showAlert: boolean = false;
   constructor(
     private router: Router,
     private loginService: LoginService
@@ -25,10 +28,20 @@ export class LoginFormComponent implements OnInit {
   }
 
   public onSubmit() {
+    this.loading = true;
+    this.showAlert = false;
     this.loginService.login(
       this.loginForm.controls['email'].value,
       this.loginForm.controls['password'].value,
       true
-    ).subscribe(_ => this.router.navigate(['account/requests/unchecked']))
+    ).subscribe(
+      _ => {
+        this.router.navigate(['account/requests/unchecked']);
+        this.loading = false;
+      },
+      _ => {
+        this.loading = false;
+        this.showAlert = true;
+      })
   }
 }

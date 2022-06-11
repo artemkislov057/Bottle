@@ -14,12 +14,14 @@ import {MatMenuModule} from '@angular/material/menu';
 import { MenuComponent } from './components/menu/menu.component';
 import {HttpClientModule} from '@angular/common/http';
 import { CutPipe } from './pipes/cut.pipe';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent
+    MenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,8 @@ import { CutPipe } from './pipes/cut.pipe';
     MatInputModule,
     MatSelectModule,
     MatMenuModule,
-    HttpClientModule
+    HttpClientModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
