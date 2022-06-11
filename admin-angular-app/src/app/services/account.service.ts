@@ -18,4 +18,14 @@ export class AccountService {
       withCredentials: true
     });
   }
+
+  public isAuthorized(): Observable<IUser> {
+    return this.http.get<IUser>(`https://${this.settings.host}/api/account`, {
+      withCredentials: true
+    })
+  }
+}
+
+export interface IUser {
+  nickname: string
 }

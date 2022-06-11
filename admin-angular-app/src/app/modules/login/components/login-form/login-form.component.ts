@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { Router } from '@angular/router';
+import { map } from 'rxjs';
 import { LoginService } from '../../services/login.service';
 
 @Component({
@@ -19,6 +20,8 @@ export class LoginFormComponent implements OnInit {
 
   public loading: boolean = false;
   public showAlert: boolean = false;
+  public showAdminAlert: boolean = false;
+
   constructor(
     private router: Router,
     private loginService: LoginService
@@ -34,13 +37,24 @@ export class LoginFormComponent implements OnInit {
       this.loginForm.controls['email'].value,
       this.loginForm.controls['password'].value,
       true
-    ).subscribe(
+    )
+    .pipe(
+      map(user => {
+        if (user.nickname != 'admin') {
+          console.log('you are not admin');
+          this.showAdminAlert = true;
+        }
+        return user;
+      }),
+    )
+    .subscribe(
       _ => {
         this.router.navigate(['account/requests/unchecked']);
         this.loading = false;
       },
       _ => {
         this.loading = false;
+        this.showAdminAlert = false;
         this.showAlert = true;
       })
   }
