@@ -41,7 +41,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
 
     // const [rateModal, setRateModal] = useState(<></>);
     const rateModal = useRef(<></>);
-    const [closeQuestModal, setCloseQuestModal] = useState<JSX.Element>(<></>);
+    const [closeQuestModal, setCloseQuestModal] = useState(<div className="fffffff"></div>);
     let init :{value: number, id: number};
     const [rateValue, setRateValue] = useState(init);    
 
@@ -65,7 +65,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                         onClickCloseDialog={() => {
                             if(props.currentDialogData.dialogInfo.active) {
                                 // return closeDialog(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
-                                return openCloseQuestModal(1,'');
+                                return openCloseQuestModal(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
                             }
                             return ratePartner(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
                         }}
@@ -79,15 +79,20 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                     />
                     {closeQuestModal}
                     {rateModal.current}
-                    <CloseDialogQuestModal />
                 </div>
             )
         }
-    }, [props.currentDialogData, props.newMessage, props.updateDialogsInfo, props.currentDialogData?.dialogInfo.active]);
+    }, [props.currentDialogData, props.newMessage, props.updateDialogsInfo, props.currentDialogData?.dialogInfo.active, closeQuestModal]);
 
     function openCloseQuestModal(id: number, name: string) {
         console.log('open modal')
-        setCloseQuestModal(<CloseDialogQuestModal />);
+        setCloseQuestModal(<CloseDialogQuestModal
+            onStayButton={() => setCloseQuestModal(<></>)}
+            onCloseButton={() => {
+                setCloseQuestModal(<></>);
+                closeDialog(id, name);
+            }}
+        />);
     }
 
     async function closeDialog(id: number, name: string) {
@@ -138,6 +143,5 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
 
     return <>
         {currentChat}
-        
     </>
 })

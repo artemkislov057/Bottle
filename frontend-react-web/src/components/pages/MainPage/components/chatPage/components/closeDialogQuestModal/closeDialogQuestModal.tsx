@@ -2,7 +2,12 @@ import React from "react";
 import './closeDialogQuestModal.css';
 import closeIcon from './closeImageQuestCloseDialogIcon.svg';
 
-export const CloseDialogQuestModal:React.FC = React.memo(() => {
+type TProps = {
+    onStayButton: Function
+    onCloseButton: Function
+}
+
+export const CloseDialogQuestModal:React.FC<TProps> = React.memo((props) => {
     return <div className="chat-page-close-dialog-quest-modal-container">
         <div className="chat-page-close-dialog-quest-modal">
             <img className="chat-page-close-dialog-quest-modal-image" alt="крестик" src={closeIcon} />
@@ -15,8 +20,8 @@ export const CloseDialogQuestModal:React.FC = React.memo(() => {
                 </span>
             </div>
             <div className="chat-page-close-dialog-quest-modal-buttons">
-                <button className="chat-page-close-dialog-quest-modal-stay-button">Остаться</button>
-                <button className="chat-page-close-dialog-quest-modal-close-button">Завершить</button>
+                <button className="chat-page-close-dialog-quest-modal-stay-button" onClick={() => props.onStayButton()}>Остаться</button>
+                <button className="chat-page-close-dialog-quest-modal-close-button" onClick={() => props.onCloseButton()}>Завершить</button>
             </div>
         </div>
     </div>
