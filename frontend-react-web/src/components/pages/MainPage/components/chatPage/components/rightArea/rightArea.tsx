@@ -41,13 +41,16 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
 
     // const [rateModal, setRateModal] = useState(<></>);
     const rateModal = useRef(<></>);
-    const [closeQuestModal, setCloseQuestModal] = useState(<div className="fffffff"></div>);
+    const [closeQuestModal, setCloseQuestModal] = useState(<></>);
     let init :{value: number, id: number};
     const [rateValue, setRateValue] = useState(init);    
 
     useEffect(() => {
         if(props.currentDialogData) {
-            console.log(props.currentDialogData)
+            console.log(props.currentDialogData);
+            if(closeQuestModal !== <></>) {
+                
+            }
             if(!props.currentDialogData.dialogInfo.active) {
                 console.log('this dialog has been closed');
                 ratePartner(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);

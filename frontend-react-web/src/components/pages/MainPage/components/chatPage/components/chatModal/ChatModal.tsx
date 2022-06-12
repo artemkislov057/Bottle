@@ -16,7 +16,12 @@ export const ChatModal:React.FC<TProps> = React.memo((props) => {
     }
     return <div className="chat-modal-container">
         <div className="chat-modal-window">
-            <div>Оцените {props.partnerName}</div>            
+            <div className="chat-modal-window-text">
+                <span className="chat-modal-window-title">
+                    Пожалуйста, оцените вашего собеседника <span className="chat-modal-window-title-name">{props.partnerName}</span>
+                </span>
+                <span className="chat-modal-window-caption">Ваш отзыв о собеседнике помогает нам развиваться в нужном направлении</span>
+            </div>            
             <div className="chat-modal-window-rate-buttons">
                 <button className="chate-modal-rate-button" onClick={() => onClickNumber(1)}>1</button>
                 <button className="chate-modal-rate-button" onClick={() => onClickNumber(2)}>2</button>
