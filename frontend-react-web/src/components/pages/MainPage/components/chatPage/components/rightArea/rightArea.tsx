@@ -9,6 +9,7 @@ import { WsDialogType } from "components/pages/MainPage/WsDialogType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 import { WsGetMessageType } from "components/pages/MainPage/WsGetMessageType";
 import { ChatModal } from "../chatModal/ChatModal";
+import { CloseDialogQuestModal } from "../closeDialogQuestModal/closeDialogQuestModal";
 
 type TProps = {
     currentDialogData: {
@@ -40,6 +41,7 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
 
     // const [rateModal, setRateModal] = useState(<></>);
     const rateModal = useRef(<></>);
+    const [closeQuestModal, setCloseQuestModal] = useState<JSX.Element>(<></>);
     let init :{value: number, id: number};
     const [rateValue, setRateValue] = useState(init);    
 
@@ -62,7 +64,8 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                         activeDialog={props.currentDialogData.dialogInfo.active}
                         onClickCloseDialog={() => {
                             if(props.currentDialogData.dialogInfo.active) {
-                                return closeDialog(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
+                                // return closeDialog(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
+                                return openCloseQuestModal(1,'');
                             }
                             return ratePartner(props.currentDialogData.dialogInfo.id, props.currentDialogData?.userInfo.nickname);
                         }}
@@ -72,12 +75,20 @@ export const MessageAreaChat:React.FC<TProps> = React.memo((props) => {
                         currentDialogData={props.currentDialogData} 
                         newMessage={props.newMessage} 
                         setUpdateDialogsInfo={props.setUpdateDialogsInfo} 
-                        updateDialogsInfo={props.updateDialogsInfo} />
+                        updateDialogsInfo={props.updateDialogsInfo} 
+                    />
+                    {closeQuestModal}
                     {rateModal.current}
+                    <CloseDialogQuestModal />
                 </div>
             )
         }
     }, [props.currentDialogData, props.newMessage, props.updateDialogsInfo, props.currentDialogData?.dialogInfo.active]);
+
+    function openCloseQuestModal(id: number, name: string) {
+        console.log('open modal')
+        setCloseQuestModal(<CloseDialogQuestModal />);
+    }
 
     async function closeDialog(id: number, name: string) {
         console.log('fuck')
