@@ -6,32 +6,42 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,300&display=swap');
 
+.start-page-header-commerc-container {
+    position: fixed;
+    left: 25px;
+    top: 20px;
+    z-index: 100;
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+}
+
+.start-page-header-commerc-signup-button {
+    height: 50px;
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+    color: rgba(213, 220, 223, 1);
+}
+
 .start-page-header-sign-container {
     position: fixed;
     right: 25px;
-    top: 25px;
+    top: 20px;
     display: flex;
     z-index: 100;
     height: 60px;
     justify-content: center;
     align-items: center;
     gap: 25px;
-    
 }
 
-.start-page-header-exit-button {
-    height: 50px;
-    /* width: 100px; */
-    background-color: transparent;
-    border: none;
-}
-
-.start-page-header-exit-button,
-.start-page-header-sign-button {
-    color: rgba(47, 57, 82, 0.9);
+.start-page-header-signup-button,
+.start-page-header-signin-button,
+.start-page-header-commerc-signup-button {
     font-family: 'Poppins';
-    font-size: 25px;
-
+    font-size: 22px;
     cursor: pointer;
 }
 
@@ -41,13 +51,25 @@
     background-color: rgba(33, 33, 33, 1);
 }
 
-.start-page-header-sign-button {    
+.start-page-header-signin-button {
+    height: 50px;
+    /* width: 100px; */
+    background-color: transparent;
+    border: none;
+    text-decoration: underline;
+    color: rgba(213, 220, 223, 1);
+}
+
+.start-page-header-signup-button {    
     border-radius: 10px;
     border: none;
     height: 50px;
     width: 155px;
-    background-color: #D5DCDF;;
+    background-color: #D5DCDF;
+    color: rgba(122, 74, 184, 1);
 }
+
+
 
 .start-page-header-wave-first {
     width: 100%;

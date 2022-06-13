@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { ContextWindowResolution } from "windoResolutionContext";
 
 type TProps = {
-    onClickSignUp: Function,
-    onClickSignIn: Function,
+    onClickSignUp: Function
+    onClickSignIn: Function
+    onClickCommercialSignUp: Function
     toMainPage: Function
 }
 
@@ -67,13 +68,15 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
             {pinkMarker}
             {violetMarker}
         </div>
-    
+        <div className="start-page-header-commerc-container">
+            <button className="start-page-header-commerc-signup-button" onClick={() => props.onClickCommercialSignUp()}>for busines</button>
+        </div>
         <div className="start-page-header-sign-container">
-            <button className="start-page-header-exit-button" onClick={() => props.onClickSignIn()}>
+            <button className="start-page-header-signin-button" onClick={() => props.onClickSignIn()}>
                 sign in
             </button>
             <div className="start-page-header-sign-container-central-line"></div>
-            <button className="start-page-header-sign-button" onClick={() => props.onClickSignUp()}>
+            <button className="start-page-header-signup-button" onClick={() => props.onClickSignUp()}>
                 sign up
             </button>
         </div>

@@ -186,6 +186,10 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         // setModal(<div className="sign-modal-container-back hide"></div>);
     }
 
+    function onClickCommercialSignUp() {
+        navigate('/commercial-registration');
+    }
+
     function onClickBeginMobile() {
         setMobileBodyState(<></>);
         setMobileModal(<MobileSignModal
@@ -198,7 +202,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
 
     if(currentWindowWidth < 701) {
         return <div className="start-page">
-            <HeaderStartPage onClickSignUp={onClickSignUp} toMainPage={toMainPage} onClickSignIn={onClickSignIn}/>
+            <HeaderStartPage onClickSignUp={onClickSignUp} toMainPage={toMainPage} onClickSignIn={onClickSignIn} onClickCommercialSignUp={onClickCommercialSignUp} />
             {mobileBodyState}
             {mobileModal}
             <FooterStartPage />            
@@ -208,7 +212,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     
 
     return <div className="start-page">
-        <HeaderStartPage onClickSignUp={onClickSignUp} toMainPage={toMainPage} onClickSignIn={onClickSignIn}/>        
+        <HeaderStartPage onClickSignUp={onClickSignUp} toMainPage={toMainPage} onClickSignIn={onClickSignIn} onClickCommercialSignUp={onClickCommercialSignUp} />
         <BodyStartPage onClickBegin={onClickSignUp}/>
         <FooterStartPage />
         <CSSTransition 
