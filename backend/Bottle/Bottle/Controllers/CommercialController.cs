@@ -68,6 +68,10 @@ namespace Bottle.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             var commercialData = db.CommercialData.FirstOrDefault(cd => cd.Id == user.Id);
+            if (commercialData == null)
+            {
+                return NotFound();
+            }
             return Ok(new CommercialModel(commercialData));
         }
 
@@ -96,6 +100,10 @@ namespace Bottle.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             var commercialData = db.CommercialData.FirstOrDefault(cd => cd.Id == user.Id);
+            if (commercialData == null)
+            {
+                return NotFound();
+            }
             return Ok(new { commercialData.IsChecked, commercialData.IsAccepted });
         }
     }
