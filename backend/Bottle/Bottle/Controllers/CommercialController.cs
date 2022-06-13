@@ -42,6 +42,7 @@ namespace Bottle.Controllers
         }
 
         [HttpPost("document")]
+        [RequestSizeLimit(100 * 1024)]
         public async Task<IActionResult> PostDocumentsAsync(IFormFile file)
         {
             var user = await userManager.GetUserAsync(User);

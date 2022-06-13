@@ -219,6 +219,10 @@ namespace Bottle.Controllers
                 db.SaveChanges();
                 return Ok();
             }
+            if (file.Length > 100 * 1024)
+            {
+                return BadRequest();
+            }
             byte[] imageData = null;
             using (var binaryReader = new BinaryReader(file.OpenReadStream()))
             {
