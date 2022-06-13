@@ -71,8 +71,8 @@
 }
 
 /* .chat-modal-rate-button:hover */
-/* .chat-modal-window-rate-buttons :not(.chat-modal-rate-button:hover ~ .chat-modal-rate-button), */
-.chat-modal-window-rate-buttons :not(.chat-modal-rate-button:hover ~ .chat-modal-rate-button) {
+.chat-modal-window-rate-buttons :not(.chat-modal-rate-button:hover ~ .chat-modal-rate-button) 
+{
     /* background: linear-gradient(90deg, #B77FFF 5.56%, #8F46EC 81.94%); */
     background: url('ratingStar.svg') 50% 50% no-repeat;
     background-size: 100% 100%;
