@@ -272,7 +272,7 @@ namespace Bottle.Controllers
                 {
                     return Ok();
                 }
-                return Ok(new Account(user, db.GetUserRating(user.Id.ToString())));
+                return BadRequest();
             }
             return BadRequest();
         }
