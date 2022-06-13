@@ -1,0 +1,73 @@
+.chat-page-close-dialog-quest-modal-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 550;
+}
+
+.chat-page-close-dialog-quest-modal {
+    width: 370px;
+    height: 260px;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 55px 40px 40px 40px;
+    justify-content: space-between;
+}
+
+.chat-page-close-dialog-quest-modal-image {
+    width: 50px;
+    height: 50px;
+}
+
+.chat-page-close-dialog-quest-modal-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-page-close-dialog-quest-modal-quest {
+    font-weight: 500;
+    font-size: 22px;
+    text-align: center;
+}
+
+.chat-page-close-dialog-quest-modal-caption {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.chat-page-close-dialog-quest-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.chat-page-close-dialog-quest-modal-stay-button,
+.chat-page-close-dialog-quest-modal-close-button {
+    width: 170px;
+    height: 50px;
+    border: none;
+    border-radius: 7px;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.chat-page-close-dialog-quest-modal-stay-button {
+    color: rgba(183, 127, 255, 1);
+    background-color: transparent;
+    border: 1px solid #B77FFF;
+    filter: drop-shadow(3px 5px 10px rgba(92, 106, 112, 0.25));
+}
+
+.chat-page-close-dialog-quest-modal-close-button {
+    color: rgba(255, 255, 255, 1);
+    background: linear-gradient(90deg, #8F46EC 5.56%, #B77FFF 81.94%);
+}
