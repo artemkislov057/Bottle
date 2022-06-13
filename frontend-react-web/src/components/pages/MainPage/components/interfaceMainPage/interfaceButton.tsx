@@ -25,6 +25,8 @@ import { LatLng } from "leaflet";
 import { CSSTransition } from "react-transition-group";
 import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
 import { CommercPart } from "./components/commercPart/commercPart";
+import { MapModal } from "../questModal/questModal";
+import timeModalIcon from '../questModal/timeModalIcon.svg';
 
 type TProps = {    
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -226,7 +228,21 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         />)
     }
 
-    function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
+    async function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
+        if(!changeBottleData && !currentData) {
+            if(!(await checkAccessToCreateBottle())) {
+                props.setQuestModal(<MapModal 
+                    imageUrl={timeModalIcon}
+                    titleQuest='Вы не можете создать больше одной бутылки :('
+                    onClickOkButton={() => {
+                        props.setShowQuestModal(false);
+                        disableBackgroundGray();
+                    }}
+                />)
+                props.setShowQuestModal(true);
+                return;
+            }
+        }
         setShowRightBar(true);
         closeOtherBars(setRightBar);
         enableBackgroundGray();
@@ -284,6 +300,14 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         setCommercBar(<CommercPart 
             openLeftBar={onClickOpenLeftBar}
         />)
+    }
+
+    async function checkAccessToCreateBottle() {
+        let responseBottles = await fetch(`${apiUrl}/api/bottles`, {
+            credentials: "include"
+        });
+        let bottles = await responseBottles.json() as Array<BottleRequestType>;
+        return bottles.length === 0;
     }
 
     function enableBackgroundGray() {
