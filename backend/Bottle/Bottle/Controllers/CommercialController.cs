@@ -80,7 +80,7 @@ namespace Bottle.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             var commercialData = db.CommercialData.FirstOrDefault(cd => cd.Id == user.Id);
-            if (commercialData.Documents == null || commercialData.DocumentsContentType == null)
+            if (commercialData?.Documents == null || commercialData.DocumentsContentType == null)
             {
                 return NotFound();
             }
