@@ -15,6 +15,7 @@ namespace Bottle.Models.DataBase
         public string Sex { get; set; }
         public ExternalProvider? Provider { get; set; }
         public string ExternalUserId { get; set; }
+        public int MaxBottlesCount { get; set; }
         public CommercialData CommercialData { get; set; }
         public List<CommercialDataAdminComment> CommercialDataAdminComments { get; set; }
         public List<UserRating> UserRating { get; set; }

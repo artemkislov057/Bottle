@@ -24,6 +24,7 @@ namespace Bottle.Models
             Rating = rating;
             Sex = user.Sex;
             IsCommercial = user.IsCommercial;
+            MaxBottlesCount = user.MaxBottlesCount;
             CommercialData = user.CommercialData is null ? null : new CommercialModel(user.CommercialData);
         }
 
@@ -40,6 +41,7 @@ namespace Bottle.Models
         public Rating Rating { get; set; }
         public string Sex { get; set; }
         public bool IsCommercial { get; set; }
+        public int MaxBottlesCount { get; set; }
         public CommercialModel CommercialData { get; set; }
     }
 }

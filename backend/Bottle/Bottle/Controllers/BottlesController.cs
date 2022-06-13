@@ -88,16 +88,16 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
+                var userBottlesCount = db.Bottles.Count(b => b.User == user);
+                if (userBottlesCount >= user.MaxBottlesCount || !user.IsCommercial && data.MaxPickingUp > 10 || data.MaxPickingUp <= 0)
+                {
+                    return BadRequest();
+                }
                 var bottle = new Models.DataBase.Bottle(data, user);
-                if (user.IsCommercial)
-                {
-                    bottle.MaxPickingUp = -1;
-                }
-                else
-                {
-                    if (data.MaxPickingUp is null) return BadRequest();
-                    bottle.MaxPickingUp = (int)data.MaxPickingUp;
-                }
+                var maxLifeTime = user.IsCommercial ? 48 : 24;
+                if (data.LifeTime <= 0 || data.LifeTime > TimeSpan.FromHours(maxLifeTime).TotalSeconds)
+                    return BadRequest();
+                bottle.MaxPickingUp = user.IsCommercial ? -1 : data.MaxPickingUp ?? 1;
                 db.Bottles.Add(bottle);
                 db.SaveChanges();
                 if (data.ContentItemsCount == 0)
@@ -106,28 +106,6 @@ namespace Bottle.Controllers
             }
             return BadRequest();
         }
-
-        ///// <summary>
-        ///// Выбросить свою бутылочку обратно
-        ///// </summary>
-        ///// <remarks>
-        ///// Если кто-то поднял вашу бутылочку
-        ///// </remarks>
-        ///// <param name="bottleId">ID бутылочки</param>
-        //[HttpPost("{bottle-id}/throw")]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(400)]
-        //[ProducesResponseType(403)]
-        //public IActionResult Throw([FromRoute(Name = "bottle-id")] int bottleId)
-        //{
-        //    var bottle = db.GetBottle(bottleId);
-        //    var user = db.GetUser(User.Identity.Name);
-        //    if (bottle == null || bottle.Active || bottle.UserId != user.Id)
-        //        return BadRequest();
-        //    bottle.Active = true;
-        //    db.SaveChanges();
-        //    return Ok(new BottleModel(bottle));
-        //}
 
         [HttpPost("{bottle-id}/content")]
         [RequestSizeLimit(100 * 1024)]

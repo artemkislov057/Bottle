@@ -23,7 +23,7 @@ namespace Bottle.Utilities
 
             if (await userManager.FindByNameAsync("admin") == null)
             {
-                User user = new User { Email = "admin@mail.ru", UserName = "admin", Sex = "attack helicopter", IsCommercial = false, AvatarId = 1 };
+                User user = new User { Email = "admin@mail.ru", UserName = "admin", Sex = "attack helicopter", IsCommercial = false, AvatarId = 1, MaxBottlesCount = 1 };
                 if ((await userManager.CreateAsync(user, "admin")).Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
@@ -32,7 +32,7 @@ namespace Bottle.Utilities
 
             if (await userManager.FindByNameAsync("string") == null)
             {
-                User user = new User { Email = "string@mail.ru", UserName = "string", Sex = "attack helicopter", IsCommercial = false, AvatarId = 1 };
+                User user = new User { Email = "string@mail.ru", UserName = "string", Sex = "attack helicopter", IsCommercial = false, AvatarId = 1, MaxBottlesCount = 1 };
                 await userManager.CreateAsync(user, "string");
             }
         }
