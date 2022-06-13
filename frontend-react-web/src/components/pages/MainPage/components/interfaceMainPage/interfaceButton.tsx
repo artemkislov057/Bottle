@@ -30,7 +30,8 @@ type TProps = {
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
     openChat: Function,
     openMap: Function,
-    openLeftMainBar: React.MutableRefObject<() => void>,    
+    openLeftMainBar: React.MutableRefObject<() => void>,
+    setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>>
 }
 
 export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
@@ -255,6 +256,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             openLeftBar={onClickOpenLeftBar}
             openChangeRightBar={onClickOpenRightBar}
             closeThis={closeMyBottlesBar}
+            setQuestModal={props.setQuestModal}
         />)
     }    
     

@@ -59,6 +59,7 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
                 openChat={openChatPage}
                 openMap={openMainPage}
                 openLeftMainBar={openLeftMainBar}
+                setQuestModal={setQuestModal}
                 >
             <MapMainPage setQuestModal={setQuestModal}/>
         </InterfaceButtonMainPage>
@@ -80,6 +81,7 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
                 openChat={openChatPage} 
                 openMap={openMainPage}
                 openLeftMainBar={openLeftMainBar}
+                setQuestModal={setQuestModal}
                 >
             </InterfaceButtonMainPage>
         );
@@ -95,10 +97,10 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
         <CurrentCoordinationsContext.Provider value={{currentLatLng: currentLatLng, changeCoord: updateWsCoordinates}}>
             <ContextForSearch.Provider value={[latLngForSearch, setLatLng]}>
                 <WsEventContext.Provider value={wsEvent}>
-                    {interfaceMainPageContainer}
                     {chatPageContainer}
-                    {questModal}
                     {backgroundGray}
+                    {interfaceMainPageContainer}
+                    {questModal}
                 </WsEventContext.Provider>
             </ContextForSearch.Provider>
         </CurrentCoordinationsContext.Provider>        

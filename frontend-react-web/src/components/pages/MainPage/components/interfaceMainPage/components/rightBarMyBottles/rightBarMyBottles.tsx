@@ -10,12 +10,15 @@ import meetIcon from './categoryIcon/categoryAcquaintanceIcon.svg';
 import sportIcon from './categoryIcon/categorySportIcon.svg';
 import otherIcon from './categoryIcon/categoryOtherIcon.svg';
 import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
+import { MapModal } from "../../../questModal/questModal";
+import modalIcon from '../../../questModal/deleteBottleModalIcon.svg';
 
 type TProps = {
     setRightBarMyBottles: React.Dispatch<React.SetStateAction<JSX.Element>>,
     openLeftBar: Function,
     openChangeRightBar: Function,
     closeThis: Function
+    setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>>
 }
 
 
@@ -51,6 +54,15 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
         getMyBottles();
     }, []);
 
+    function onClickDeleteBottle(bottleData: BottleRequestType) {
+        props.setQuestModal(<MapModal 
+            imageUrl={modalIcon}
+            titleQuest='Вы уверены, что хотите удалить бутылочку?'
+            onClickNoButton={() => props.setQuestModal(<></>)}
+            onClickYesButton={() => deleteBottle(bottleData)}
+        />);
+    }
+
     async function deleteBottle(bottleData: BottleRequestType) {
         let deleteResponse = await fetch(`${apiUrl}/api/bottles/${bottleData.id}`, {
             method: 'DELETE',
@@ -60,6 +72,7 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
             let tempCurrentBottles = currentBottles.slice();
             let ind = tempCurrentBottles.indexOf(bottleData);
             tempCurrentBottles.splice(ind, 1);
+            props.setQuestModal(<></>)
             setCurrentBottles(tempCurrentBottles)
         }        
     }
@@ -87,7 +100,7 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
                     demoDescript={demoDescr}
                     urlIcon={icon}
                     bottleData={bottle}
-                    onClickDelete={deleteBottle}
+                    onClickDelete={() => onClickDeleteBottle(bottle)}
                     onClickChange={() => props.openChangeRightBar(bottle)}
                 />
                 }
