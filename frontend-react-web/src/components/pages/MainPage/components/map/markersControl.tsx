@@ -13,6 +13,7 @@ import hangMarker from './markerIcons/markerHangIcon.svg';
 import otherMarker from './markerIcons/markerOtherIcon.svg';
 import sportMarker from './markerIcons/markerSportIcon.svg';
 import acquainMarker from './markerIcons/markerAcquaintanceIcon.svg';
+import modalIcon from '../questModal/choiceAddressModlaIcon.svg';
 
 import { MapModal } from "../questModal/questModal";
 import { ContextForSearch } from "../../contextForSearch";
@@ -128,9 +129,11 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
                     }
                 }
 
-
                 props.setQuestModal(<MapModal 
-                        quest={`Вы точно хотите поставить бутылку по адресу: ${localAddress}?`}
+                        titleQuest='Вы уверены в выборе адреса?'
+                        quest="Хотите ли вы установить бутылочку по адресу:"
+                        address={localAddress}
+                        imageUrl={modalIcon}
                         onClickNoButton={onClickNoCreateButton} 
                         onClickYesButton={onClickYes} 
                     />);

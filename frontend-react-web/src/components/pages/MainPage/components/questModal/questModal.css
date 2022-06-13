@@ -13,32 +13,69 @@
 .map-modal-data-container {
     cursor: auto;
     z-index: 650;
-    width: 300px;
-    height: 150px;
+    padding: 30px 40px;
+    width: 370px;
+    height: 220px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    background-color: #212121;
-    color: #CDCDCD;
-    font-size: 18px;
+    /* gap: 10px; */
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(33, 33, 33, 1);
+    font-weight: 500;
     border-radius: 10px;
 }
 
-.map-modal-data-container-addres {
+.map-modal-data-container-image {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.map-modal-data-container-text {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.map-modal-data-container-text-quest {
+    font-size: 22px;
+}
+
+.map-modal-data-container-text-caption {
+    font-size: 14px;
+}
+
+.map-modal-data-container-text-caption-address {
+    background-image: linear-gradient(90deg, #8F46EC 5.56%, #B77FFF 81.94%);
+    background-color: #6c61b3;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .map-modal-data-container-buttons {
     display: flex;
-    gap: 20px;    
+    width: 100%;
+    justify-content: space-between;
 }
 
 .map-modal-data-container-button {
-    width: 40px;
-    height: 25px;
+    width: 170px;
+    height: 50px;
     border: none;
-    border-radius: 5px;
+    border-radius: 7px;
+    font-size: 20px;    
+}
+
+.map-modal-data-container-button.yes {
+    background: linear-gradient(90deg, #8F46EC 5.56%, #B77FFF 81.94%);
+    color: rgba(255, 255, 255, 1);
+}
+
+.map-modal-data-container-button.no {
+    border: 1px solid #B77FFF;
+    color: rgba(183, 127, 255, 1);
+    background-color: transparent;
 }
 
