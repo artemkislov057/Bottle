@@ -9,11 +9,11 @@ import L, { LatLng } from 'leaflet';
 import './mainPage.css';
 import { WsEventContext } from "./contextWsEvents";
 
-
 import { ContextForSearch } from "./contextForSearch";
 import { useNavigate } from "react-router-dom";
 import { ContextLogin } from "loginContext";
 import { CurrentCoordinationsContext } from "./changeCoordinationContext";
+import { CSSTransition } from "react-transition-group";
 
 type TProps = {
     isLogin: boolean
@@ -23,6 +23,7 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
     let wsEv : MessageEvent<any>;
     const [wsEvent, setWsEvent] = useState(wsEv);
     const [questModal, setQuestModal] = useState(<></>);
+    const [showQuestModal, setShowQuestModal] = useState<boolean>();
     const navigator = useNavigate();
     const loginData = useContext(ContextLogin);
     // const WS = new Ws();
@@ -60,8 +61,9 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
                 openMap={openMainPage}
                 openLeftMainBar={openLeftMainBar}
                 setQuestModal={setQuestModal}
+                setShowQuestModal={setShowQuestModal}
                 >
-            <MapMainPage setQuestModal={setQuestModal}/>
+            <MapMainPage setQuestModal={setQuestModal} setShowQuestModal={setShowQuestModal}/>
         </InterfaceButtonMainPage>
 
     const [interfaceMainPageContainer, setInterfaceMainPage] = useState(interfaceMapContainer);
@@ -82,6 +84,7 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
                 openMap={openMainPage}
                 openLeftMainBar={openLeftMainBar}
                 setQuestModal={setQuestModal}
+                setShowQuestModal={setShowQuestModal}
                 >
             </InterfaceButtonMainPage>
         );
@@ -100,7 +103,14 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
                     {chatPageContainer}
                     {backgroundGray}
                     {interfaceMainPageContainer}
-                    {questModal}
+                    <CSSTransition
+                        in={showQuestModal}
+                        timeout={300}
+                        classNames='show-quest-modal'
+                        unmountOnExit
+                    >
+                        {questModal}
+                    </CSSTransition>                    
                 </WsEventContext.Provider>
             </ContextForSearch.Provider>
         </CurrentCoordinationsContext.Provider>        

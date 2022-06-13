@@ -32,6 +32,7 @@ type TProps = {
     openMap: Function,
     openLeftMainBar: React.MutableRefObject<() => void>,
     setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>>
+    setShowQuestModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
@@ -257,6 +258,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             openChangeRightBar={onClickOpenRightBar}
             closeThis={closeMyBottlesBar}
             setQuestModal={props.setQuestModal}
+            setShowQuestModal={props.setShowQuestModal}
         />)
     }    
     

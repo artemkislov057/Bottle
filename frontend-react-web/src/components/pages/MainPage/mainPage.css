@@ -26,6 +26,24 @@ html, body {
     animation: showBackground .3s forwards;
 }
 
+.show-quest-modal-enter {
+    opacity: 0;
+}
+
+.show-quest-modal-enter-active {
+    opacity: 1;
+    transition: .3s;
+}
+
+.show-quest-modal-exit {
+    opacity: 1;
+}
+
+.show-quest-modal-exit-active {
+    opacity: 0;
+    transition: .3s;
+}
+
 @keyframes showBackground {
     0%{
         opacity: 0;

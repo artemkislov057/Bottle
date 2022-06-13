@@ -27,7 +27,8 @@ import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
  
 
 type TProps = {
-    setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>> 
+    setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>>
+    setShowQuestModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type FuckTs = {
@@ -136,7 +137,8 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
                         imageUrl={modalIcon}
                         onClickNoButton={onClickNoCreateButton} 
                         onClickYesButton={onClickYes} 
-                    />);
+                />);
+                props.setShowQuestModal(true);
             })
         }
     }, [data]);
@@ -155,18 +157,21 @@ export const AddMarkersOnMap:React.FC<TProps> = React.memo((props) => {
 
     function onClickYesCreateButton(data: DataBottleDescType, locate: LatLng, address: string) {
         map.removeEventListener('click');
-        props.setQuestModal(<></>);
+        // props.setQuestModal(<></>);
+        props.setShowQuestModal(false);
         exitCreateMode();
         sendCreateBottleRequest(data, locate, address);
     }
 
     function onClickNoCreateButton() {
-        props.setQuestModal(<></>);
+        // props.setQuestModal(<></>);
+        props.setShowQuestModal(false);
     }
 
     function onClickYesChangeCoordinates(id: number, coordinates: LatLng, address: string) {
         map.removeEventListener('click');
-        props.setQuestModal(<></>);
+        // props.setQuestModal(<></>);
+        props.setShowQuestModal(false);
         exitCreateMode();
         console.log('change');
         changeLocate(id, coordinates, address)

@@ -19,6 +19,7 @@ type TProps = {
     openChangeRightBar: Function,
     closeThis: Function
     setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>>
+    setShowQuestModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -58,9 +59,10 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
         props.setQuestModal(<MapModal 
             imageUrl={modalIcon}
             titleQuest='Вы уверены, что хотите удалить бутылочку?'
-            onClickNoButton={() => props.setQuestModal(<></>)}
+            onClickNoButton={() => props.setShowQuestModal(false)}
             onClickYesButton={() => deleteBottle(bottleData)}
         />);
+        props.setShowQuestModal(true);
     }
 
     async function deleteBottle(bottleData: BottleRequestType) {
@@ -72,8 +74,8 @@ export const RightBarMyBottles:React.FC<TProps> = React.memo((props) => {
             let tempCurrentBottles = currentBottles.slice();
             let ind = tempCurrentBottles.indexOf(bottleData);
             tempCurrentBottles.splice(ind, 1);
-            props.setQuestModal(<></>)
-            setCurrentBottles(tempCurrentBottles)
+            props.setShowQuestModal(false);
+            setCurrentBottles(tempCurrentBottles);
         }        
     }
 

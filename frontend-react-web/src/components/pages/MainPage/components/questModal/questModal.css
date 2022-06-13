@@ -45,6 +45,8 @@
 
 .map-modal-data-container-text-caption {
     font-size: 14px;
+    display: flex;
+    flex-direction: column;
 }
 
 .map-modal-data-container-text-caption-address {

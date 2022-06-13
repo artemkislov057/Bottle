@@ -12,6 +12,7 @@ import 'leaflet-defaulticon-compatibility';
 
 type TProps = {
     setQuestModal: React.Dispatch<React.SetStateAction<JSX.Element>>
+    setShowQuestModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const MapMainPage:React.FC<TProps> = React.memo((props) => {  
@@ -24,7 +25,7 @@ export const MapMainPage:React.FC<TProps> = React.memo((props) => {
             accessToken='pk.eyJ1IjoiZGltYXNpa2J1cmRpbiIsImEiOiJja3VyNm5vNzEwb2N1Mm5xdnVmY2F2NmZkIn0.m48LWgVP-vrcXmP0r-oiBQ'
         />
         <ZoomControl position="bottomright"></ZoomControl>
-        <AddMarkersOnMap setQuestModal={props.setQuestModal}/>
+        <AddMarkersOnMap setQuestModal={props.setQuestModal} setShowQuestModal={props.setShowQuestModal}/>
         {/* {props.children} */}
     </MapContainer>
     
