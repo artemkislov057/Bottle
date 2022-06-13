@@ -54,18 +54,26 @@
 
 .chat-modal-window-rate-buttons {
     display: flex;
-    gap: 10px
+    /* gap: 10px; */
+    width: 100%;
 }
 
-.chate-modal-rate-button {
+.chat-modal-rate-button {
     width: 50px;
+    width: 100%;
     height: 40px;
     border: none;
     border-radius: 10px;
     background: linear-gradient(90deg, #8F46EC 5.56%, #B77FFF 81.94%);
+    background: url('emptyRatingStar.svg') 50% 50% no-repeat;
+    background-size: 50px 100%;
     color: rgba(255, 255, 255, 1);
 }
 
-.chate-modal-rate-button:hover {
-    background: linear-gradient(90deg, #B77FFF 5.56%, #8F46EC 81.94%);;
+/* .chat-modal-rate-button:hover */
+/* .chat-modal-window-rate-buttons :not(.chat-modal-rate-button:hover ~ .chat-modal-rate-button), */
+.chat-modal-window-rate-buttons :not(.chat-modal-rate-button:hover ~ .chat-modal-rate-button) {
+    /* background: linear-gradient(90deg, #B77FFF 5.56%, #8F46EC 81.94%); */
+    background: url('ratingStar.svg') 50% 50% no-repeat;
+    background-size: 100% 100%;
 }
