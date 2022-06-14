@@ -59,7 +59,7 @@ namespace Bottle.Utilities
             return result;
         }
 
-        public async Task<DbSet<Models.DataBase.Bottle>> GetBottles()
+        public async Task<DbSet<Models.DataBase.Bottle>> GetBottlesAsync()
         {
             var timeoutBottles = Bottles.Where(b => b.Active && b.EndTime <= DateTime.UtcNow);
             await WebSocketController.OnTimeoutBottles(timeoutBottles.Select(b => new BottleModel(b)));
@@ -131,6 +131,16 @@ namespace Bottle.Utilities
             if (bottleContent.Length > 0)
                 result.ContentIds = bottleContent;
             return result;
+        }
+
+        public async Task<int> GetUserActiveBottlesCountAsync(string userId)
+        {
+            return (await GetBottlesAsync()).Count(b => b.UserId == userId && b.Active);
+        }
+
+        public async Task<int> GetUserActiveBottlesCountAsync(User user)
+        {
+            return await GetUserActiveBottlesCountAsync(user.Id);
         }
 
         private Dictionary<int, int> GetUserRatingDictionary(string id)
