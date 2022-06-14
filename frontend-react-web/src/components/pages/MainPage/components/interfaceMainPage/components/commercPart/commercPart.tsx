@@ -1,4 +1,7 @@
-import React from "react";
+import { apiUrl } from "components/connections/apiUrl";
+import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
+import { UserInfoType } from "components/pages/MainPage/UserInfoType";
+import React, { useEffect, useState } from "react";
 import { BottlesCard } from "./cardBuyBottles";
 import './commercPart.css';
 
@@ -7,6 +10,30 @@ type TProps = {
 }
 
 export const CommercPart:React.FC<TProps> = React.memo((props) => {
+    const [currentAccessCountBottles, setCurrentAccessCountBottles] = useState(0);
+
+    useEffect(() => {
+        async function getCurrentCount() {
+            let responseUserInfo = await fetch(`${apiUrl}/api/account`, {
+                credentials: "include"
+            });
+            let userData = await responseUserInfo.json() as UserInfoType;
+
+            let responseBottles = await fetch(`${apiUrl}/api/bottles/my`, {
+                credentials: "include"
+            });
+            let bottles = await responseBottles.json() as Array<BottleRequestType>;
+
+            let accessCount = userData.maxBottlesCount - bottles.length;
+            if(accessCount < 0){
+                accessCount = 0;
+            }
+            setCurrentAccessCountBottles(accessCount)
+        }
+
+        getCurrentCount();
+    }, []);
+
     return <div className="commerc-part-container">
         <div className="commerc-part-data-side">
             <div className="commerc-part-data-side-header">
@@ -20,7 +47,10 @@ export const CommercPart:React.FC<TProps> = React.memo((props) => {
                 <div className="commerc-part-data-side-bottles-info-text-container">
                     <div className="commerc-part-data-side-bottles-info-text-title">Количество бутылочек уменьшается</div>
                     <div className="commerc-part-data-side-bottles-info-text-description">
-                        <span>У вас осталось !!! бутылочек.</span>
+                        <span>У вас осталось 
+                            <span className="commerc-part-data-side-bottles-info-text-description-count"> {currentAccessCountBottles} </span> 
+                            бутылочек.
+                        </span>
                         <span>Вы можете в любой момент увеличить их количество.</span>
                     </div>
                 </div>
