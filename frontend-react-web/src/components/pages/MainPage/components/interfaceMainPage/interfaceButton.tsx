@@ -308,13 +308,15 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             closeThis={closePopupBar}
             />)
         setShowPopupBar(true);
-        }
+    }
 
     async function tryOpenCommercPart() {
         let userInfo = await getUserInfo();
 
         if(!userInfo.isCommercial && !userInfo.commercialData) {
             //для обычного пользователя раздел коммерции
+            onClickOpenCommercPart(true);
+            return
         }
         
         if(!userInfo.isCommercial && userInfo.commercialData) {
@@ -333,12 +335,13 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         onClickOpenCommercPart();
     }
 
-    function onClickOpenCommercPart() {        
+    function onClickOpenCommercPart(isOrdinary?: boolean) {
         closeOtherBars(setCommercBar);
         disableBackgroundGray();
         setCommercBar(<CommercPart 
             openLeftBar={onClickOpenLeftBar}
-            closeThis={closeCommercPart}           
+            closeThis={closeCommercPart}
+            isOrdinary={isOrdinary || false}
             />)
         setShowCommercBar(true);
     }

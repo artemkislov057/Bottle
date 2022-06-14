@@ -2,16 +2,19 @@ import { apiUrl } from "components/connections/apiUrl";
 import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
 import React, { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { BottlesCard } from "./cardBuyBottles";
 import './commercPart.css';
 
 type TProps = {
     openLeftBar: Function
-    closeThis: Function
+    closeThis: Function,
+    isOrdinary: boolean
 }
 
 export const CommercPart:React.FC<TProps> =  React.memo((props) => {
     const [currentAccessCountBottles, setCurrentAccessCountBottles] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function getCurrentCount() {
@@ -38,6 +41,32 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
     function onClickOtherButton() {
         props.openLeftBar();
         props.closeThis();
+    }
+
+    function toCommercRegPage() {
+        navigate('/commercial-registration');
+    }
+
+    if(props.isOrdinary) {
+        return <div className="commerc-part-container">
+        <div className="commerc-part-data-side">
+            <div className="commerc-part-data-side-header">
+                <div className="commerc-part-data-side-header-button-container">
+                    <button type="button" className="commerc-part-data-side-header-other-button" onClick={() => onClickOtherButton()}></button>
+                    <div className="commerc-part-data-side-header-part-name">Меню</div>
+                </div>                
+            </div>
+            <div className="commerc-part-data-side-bottles-preview">                
+                
+            </div>
+            <div className="commerc-part-data-side-try-button-container">
+                <button className="commerc-part-data-side-try-button" onClick={() => toCommercRegPage()}>Попробовать</button>
+            </div>            
+        </div>
+        <div className="commerc-part-design-side">
+
+        </div>
+    </div>
     }
 
     return <div className="commerc-part-container">

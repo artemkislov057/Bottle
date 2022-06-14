@@ -52,6 +52,26 @@
     justify-content: space-evenly;
 }
 
+.commerc-part-data-side-bottles-preview {
+    width: 100%;
+    height: 100%;
+    background-color: aliceblue;
+}
+
+.commerc-part-data-side-try-button {
+    width: 230px;
+    height: 70px;    
+    font-size: 24px;
+    color: #D5DCDF;
+    background-color: transparent;
+
+    border-radius: 10px;
+    
+    border: 2px solid;    
+    border-image-slice: 1;
+    border-image-source: linear-gradient(94.85deg, #6B11DF -4.74%, #8F46EC 104.61%);
+}
+
 .commerc-part-data-side-bottles-info-text-container {
     display: flex;
     flex-direction: column;
