@@ -21,7 +21,7 @@ export const MapModal:React.FC<TProps> = React.memo((props) => {
                     props.quest ?
                     <span className="map-modal-data-container-text-caption">
                         {props.quest}
-                        <span className="map-modal-data-container-text-caption-address"> {props.address}?</span>
+                        <span className="map-modal-data-container-text-caption-address"> {props.address}</span>
                     </span>
                     : null
                 }

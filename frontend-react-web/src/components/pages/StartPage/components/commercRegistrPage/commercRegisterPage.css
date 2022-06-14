@@ -132,3 +132,21 @@
     background: url('commercWaveIcon.svg') 50% 50% no-repeat;
     background-size: 100% 100%;
 }
+
+.show-info-modal-enter {
+    opacity: 0;
+}
+
+.show-info-modal-enter-active {
+    opacity: 1;
+    transition: .3s;
+}
+
+.show-info-modal-exit {
+    opacity: 1;
+}
+
+.show-info-modal-active {
+    opacity: 0;
+    transition: .3s;
+}

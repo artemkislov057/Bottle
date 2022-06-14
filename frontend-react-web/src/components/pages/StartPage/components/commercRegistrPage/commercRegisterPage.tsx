@@ -1,10 +1,13 @@
 import { apiUrl } from "components/connections/apiUrl";
+import { MapModal } from "components/pages/MainPage/components/questModal/questModal";
 import { ContextLogin } from "loginContext";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './commercRegisterPage.css';
 import { DataContainer } from "./dataContainer"; 
 import { DocumentContainer } from "./documentsContainer";
+import letterModalIcon from '../../../MainPage/components/questModal/letterModalIcon.svg';
+import { CSSTransition } from "react-transition-group";
 
 type CommercialData = {
     // fullname: string
@@ -23,6 +26,8 @@ type CommercialData = {
 export const CommercRegistrationPage:React.FC = React.memo(() => {
     const [commercData, setCommercData] = useState<CommercialData>();
     const [documentHref, setDocumentHref] = useState<JSX.Element>();
+    const [infoModal, setInfoModal] = useState(<></>);
+    const [showInfoModal, setShowInfoModal] = useState(false);
     const loginData = useContext(ContextLogin);
     const navigate = useNavigate();
 
@@ -68,8 +73,7 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
                     "content-type": 'application/json'
                 }
             });
-            if(responseCommerc.ok) {
-                loginData.setIsLogin(true);
+            if(responseCommerc.ok) {                
                 console.log('регистрация коммерции успешна');
                 let responseDocument = await fetch(`${apiUrl}/api/commercial/document`, {
                     method: 'POST',
@@ -78,7 +82,17 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
                 });
                 if(responseDocument.ok) {
                     console.log('документ отправлен');
-                    navigate('/mainPage');
+                    setInfoModal(<MapModal 
+                        imageUrl={letterModalIcon}
+                        titleQuest='Мы отпправили данные на проверку'
+                        quest="Вы можете использовать наше приложение прямо сейчас, однако пока ваши документы не прошли проверку, возможности бизнес-аккаунта будут закрыты. Мы же постараемся проверить их как можно скорее"
+                        onClickOkButton={() => {
+                            navigate('/mainPage');
+                            loginData.setIsLogin(true);
+                        }}
+                    />);
+                    setShowInfoModal(true);
+                    
                 } else {
                     navigate('/');
                     console.log('не успешно ничего..')
@@ -93,6 +107,7 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
         }
         
     }
+    
 
     async function onLoadDocument(e: React.ChangeEvent<HTMLInputElement>) {
         let document = e.target.files[0];
@@ -156,5 +171,13 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
         <div className="commerc-registration-description-side">
 
         </div>
+        <CSSTransition
+            in={showInfoModal}
+            timeout={300}
+            classNames='show-info-modal'
+            unmountOnExit
+        >
+            {infoModal}
+        </CSSTransition>
     </div>
 })

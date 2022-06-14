@@ -27,6 +27,7 @@ import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
 import { CommercPart } from "./components/commercPart/commercPart";
 import { MapModal } from "../questModal/questModal";
 import timeModalIcon from '../questModal/timeModalIcon.svg';
+import bottleModalIcon from '../questModal/bottleModalIcon.svg';
 import { UserInfoType } from "../../UserInfoType";
 
 type TProps = {    
@@ -235,8 +236,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             let accessCountBottles = await getCurrentCountMyBottles();
             if(userInfo.maxBottlesCount - accessCountBottles < 1) {
                 props.setQuestModal(<MapModal 
-                    imageUrl={timeModalIcon}
-                    titleQuest='У вас закончились бутылки... Приобретите еще!'
+                    imageUrl={bottleModalIcon}
+                    titleQuest='У вас закончились бутылочки :( Приобретите еще!'
                     onClickOkButton={() => {
                         props.setShowQuestModal(false);
                         disableBackgroundGray();
@@ -248,7 +249,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         } else if(!changeBottleData && !currentData) {
             if((await getCurrentCountMyBottles()) > 0) {
                 props.setQuestModal(<MapModal 
-                    imageUrl={timeModalIcon}
+                    imageUrl={bottleModalIcon}
                     titleQuest='Вы не можете создать больше одной бутылки :('
                     onClickOkButton={() => {
                         props.setShowQuestModal(false);
@@ -260,7 +261,6 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             }
         }
 
-        setShowRightBar(true);
         closeOtherBars(setRightBar);
         enableBackgroundGray();
         setRightBar(<RightBar 
@@ -269,7 +269,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             changeBottleData={changeBottleData} 
             currentBottleData={currentData}
             closeThis={closeRightBar}
-        />);
+            />);
+        setShowRightBar(true);
     }
 
     function onClickProfileInfofromLeft() {

@@ -15,12 +15,14 @@
     z-index: 650;
     padding: 30px 40px;
     width: 370px;
-    height: 220px;
+    height: auto;
+    min-height: 220px;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    /* gap: 10px; */
+    gap: 10px;
     background-color: rgba(255, 255, 255, 1);
     color: rgba(33, 33, 33, 1);
     font-weight: 500;
