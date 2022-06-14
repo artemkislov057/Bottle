@@ -89,7 +89,7 @@ namespace Bottle.Controllers
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 var userBottlesCount = db.Bottles.Count(b => b.User == user);
-                if (userBottlesCount >= user.MaxBottlesCount || !user.IsCommercial && data.MaxPickingUp > 10 || data.MaxPickingUp <= 0)
+                if (userBottlesCount >= user.MaxBottlesCount || !user.IsCommercial && (data.MaxPickingUp > 10 || data.MaxPickingUp <= 0))
                 {
                     return BadRequest();
                 }
