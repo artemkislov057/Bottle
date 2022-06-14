@@ -7,9 +7,10 @@ import './commercPart.css';
 
 type TProps = {
     openLeftBar: Function
+    closeThis: Function
 }
 
-export const CommercPart:React.FC<TProps> = React.memo((props) => {
+export const CommercPart:React.FC<TProps> =  React.memo((props) => {
     const [currentAccessCountBottles, setCurrentAccessCountBottles] = useState(0);
 
     useEffect(() => {
@@ -34,11 +35,16 @@ export const CommercPart:React.FC<TProps> = React.memo((props) => {
         getCurrentCount();
     }, []);
 
+    function onClickOtherButton() {
+        props.openLeftBar();
+        props.closeThis();
+    }
+
     return <div className="commerc-part-container">
         <div className="commerc-part-data-side">
             <div className="commerc-part-data-side-header">
                 <div className="commerc-part-data-side-header-button-container">
-                    <button type="button" className="commerc-part-data-side-header-other-button" onClick={() => props.openLeftBar()}></button>
+                    <button type="button" className="commerc-part-data-side-header-other-button" onClick={() => onClickOtherButton()}></button>
                     <div className="commerc-part-data-side-header-part-name">Меню</div>
                 </div>
                 <div className="commerc-part-data-side-header-title">Управление бутылочками</div>

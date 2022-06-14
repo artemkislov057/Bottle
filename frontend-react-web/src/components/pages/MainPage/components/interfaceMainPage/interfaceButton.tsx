@@ -44,7 +44,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     const [rightbarProfileState, setRightBarProfile] = useState(<></>);
     const [rightBarMyBottles, setRightBarMyBottles] = useState(<></>);
     const [rightBarPopup, setRightBarPopup] = useState(<></>);
-    const [commercBar, setCommercBar] = useState<JSX.Element>();
+    const [commercBar, setCommercBar] = useState(<div className="show-commerc-part"></div>);
     const leftRightBarsStates = [setLeftBar, setRightBar, setRightBarProfile, setRightBarMyBottles, setRightBarPopup, setCommercBar];
     const wsEvent = useContext(WsEventContext);
     const[currentFilterCategory, setcurrentFilterCategory] = useState('Все категории');
@@ -222,7 +222,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             onClickMyBottles={onClickMyBottles}
             onClickChat={props.openChat}
             onClickMap={props.openMap}
-            onClickCommercBar={onClickOpenCommercPart}
+            onClickCommercBar={tryOpenCommercPart}
             disableBackgroundGray={disableBackgroundGray}
             setShowLeftBar={setShowLeftBar}
             closeCommercPart={closeCommercPart}
@@ -230,10 +230,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     async function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
-        let userInfo =  await isCommercialAccount();
+        let userInfo =  await getUserInfo();
         if(userInfo.isCommercial) {
             let accessCountBottles = await getCurrentCountMyBottles();
-            if(userInfo.maxBottleCount - accessCountBottles < 1) {
+            if(userInfo.maxBottlesCount - accessCountBottles < 1) {
                 props.setQuestModal(<MapModal 
                     imageUrl={timeModalIcon}
                     titleQuest='У вас закончились бутылки... Приобретите еще!'
@@ -259,7 +259,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 return;
             }
         }
-        
+
         setShowRightBar(true);
         closeOtherBars(setRightBar);
         enableBackgroundGray();
@@ -296,7 +296,6 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }    
     
     function onClickOpenPopup(data: BottleRequestType, onClickEdit?: Function) {
-        setShowPopupBar(true);
         closeOtherBars(setRightBarPopup);
         enableBackgroundGray();
         setRightBarPopup(<RightBarDescrBottle
@@ -306,25 +305,49 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             disableBackgroundGray={disableBackgroundGray}
             onClickOpenEdit={onClickEdit}
             closeThis={closePopupBar}
-        />)
+            />)
+        setShowPopupBar(true);
+        }
+
+    async function tryOpenCommercPart() {
+        let userInfo = await getUserInfo();
+
+        if(!userInfo.isCommercial && !userInfo.commercialData) {
+            //для обычного пользователя раздел коммерции
+        }
+        
+        if(!userInfo.isCommercial && userInfo.commercialData) {
+            props.setQuestModal(<MapModal 
+                imageUrl={timeModalIcon}
+                titleQuest='Еще чуть чуть... Пока что мы проверяем ваши данные'
+                onClickOkButton={() => {
+                    props.setShowQuestModal(false);
+                    disableBackgroundGray();
+                }}
+            />)
+            props.setShowQuestModal(true);
+            return;
+        }
+
+        onClickOpenCommercPart();
     }
 
-    function onClickOpenCommercPart() {
-        setShowCommercBar(true);
+    function onClickOpenCommercPart() {        
         closeOtherBars(setCommercBar);
         disableBackgroundGray();
-        // enableBackgroundGray();
         setCommercBar(<CommercPart 
             openLeftBar={onClickOpenLeftBar}
-        />)
+            closeThis={closeCommercPart}           
+            />)
+        setShowCommercBar(true);
     }
 
-    async function isCommercialAccount() {
+    async function getUserInfo() {
         let responseUserInfo = await fetch(`${apiUrl}/api/account`, {
             credentials: "include"
         });
         let userData = await responseUserInfo.json() as UserInfoType;
-        return {isCommercial: userData.isCommercial, maxBottleCount: userData.maxBottlesCount}
+        return userData;
     }
 
     async function getCurrentCountMyBottles() {
@@ -483,6 +506,6 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             unmountOnExit
         >
             {commercBar}
-        </CSSTransition>        
+        </CSSTransition>
     </div>
 })
