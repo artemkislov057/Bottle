@@ -23,4 +23,5 @@ export type UserInfoType = {
     } | null
     email?: string
     isCommercial: boolean
+    maxBottlesCount: number
 }

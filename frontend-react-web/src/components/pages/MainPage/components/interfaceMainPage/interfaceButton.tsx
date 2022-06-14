@@ -27,6 +27,7 @@ import { CurrentCoordinationsContext } from "../../changeCoordinationContext";
 import { CommercPart } from "./components/commercPart/commercPart";
 import { MapModal } from "../questModal/questModal";
 import timeModalIcon from '../questModal/timeModalIcon.svg';
+import { UserInfoType } from "../../UserInfoType";
 
 type TProps = {    
     backgroundState: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -229,8 +230,23 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }
 
     async function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
-        if(!changeBottleData && !currentData) {
-            if(!(await checkAccessToCreateBottle())) {
+        let userInfo =  await isCommercialAccount();
+        if(userInfo.isCommercial) {
+            let accessCountBottles = await getCurrentCountMyBottles();
+            if(userInfo.maxBottleCount - accessCountBottles < 1) {
+                props.setQuestModal(<MapModal 
+                    imageUrl={timeModalIcon}
+                    titleQuest='У вас закончились бутылки... Приобретите еще!'
+                    onClickOkButton={() => {
+                        props.setShowQuestModal(false);
+                        disableBackgroundGray();
+                    }}
+                />)
+                props.setShowQuestModal(true);
+                return;
+            }
+        } else if(!changeBottleData && !currentData) {
+            if((await getCurrentCountMyBottles()) > 0) {
                 props.setQuestModal(<MapModal 
                     imageUrl={timeModalIcon}
                     titleQuest='Вы не можете создать больше одной бутылки :('
@@ -243,6 +259,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                 return;
             }
         }
+        
         setShowRightBar(true);
         closeOtherBars(setRightBar);
         enableBackgroundGray();
@@ -302,12 +319,20 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         />)
     }
 
-    async function checkAccessToCreateBottle() {
-        let responseBottles = await fetch(`${apiUrl}/api/bottles`, {
+    async function isCommercialAccount() {
+        let responseUserInfo = await fetch(`${apiUrl}/api/account`, {
+            credentials: "include"
+        });
+        let userData = await responseUserInfo.json() as UserInfoType;
+        return {isCommercial: userData.isCommercial, maxBottleCount: userData.maxBottlesCount}
+    }
+
+    async function getCurrentCountMyBottles() {
+        let responseBottles = await fetch(`${apiUrl}/api/bottles/my`, {
             credentials: "include"
         });
         let bottles = await responseBottles.json() as Array<BottleRequestType>;
-        return bottles.length === 0;
+        return bottles.length;
     }
 
     function enableBackgroundGray() {
