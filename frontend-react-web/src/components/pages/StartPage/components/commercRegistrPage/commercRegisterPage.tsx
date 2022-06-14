@@ -10,10 +10,10 @@ import letterModalIcon from '../../../MainPage/components/questModal/letterModal
 import { CSSTransition } from "react-transition-group";
 
 type CommercialData = {
-    // fullname: string
-    firstName: string
-    secondName: string
-    patronymic: string
+    fullname: string
+    // firstName: string
+    // secondName: string
+    // patronymic: string
     email: string
     password: string
     secondPassword: string
@@ -37,7 +37,7 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
     }
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
+        e.preventDefault();        
 
         if(commercData.password !== commercData.secondPassword) {
             alert('Пароли не совпадают');
@@ -61,7 +61,8 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             let responseCommerc = await fetch(`${apiUrl}/api/commercial/make`, {
                 method: 'POST',
                 body: JSON.stringify({
-                    fullName: `${commercData.secondName} ${commercData.firstName} ${commercData.patronymic}`,
+                    // fullName: `${commercData.secondName} ${commercData.firstName} ${commercData.patronymic}`,
+                    fullName: commercData.fullname,
                     contactPerson: commercData.companyName,
                     email: commercData.email,
                     phoneNumber: '?',
@@ -128,10 +129,10 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
                 <DataContainer 
                     headerName="Данные владельца компании:"
                     fieldsNames={[
-                        // {field: 'fullname' , title: 'ФИО'}, 
-                        {field: 'secondName' , title: 'Фамилия'}, 
-                        {field: 'firstName', title: 'Имя'}, 
-                        {field: 'patronymic', title: 'Отчество'}, 
+                        {field: 'fullname' , title: 'ФИО'}, 
+                        // {field: 'secondName' , title: 'Фамилия'}, 
+                        // {field: 'firstName', title: 'Имя'}, 
+                        // {field: 'patronymic', title: 'Отчество'}, 
                         {field: 'email', title: 'Email', type: 'email'},                         
                     ]}
                     updateData={updateCommercData}
