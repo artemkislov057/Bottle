@@ -88,7 +88,7 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
-                var userBottlesCount = db.Bottles.Count(b => b.User == user);
+                var userBottlesCount = await db.GetUserActiveBottlesCountAsync(user);
                 if (userBottlesCount >= user.MaxBottlesCount || !user.IsCommercial && (data.MaxPickingUp > 10 || data.MaxPickingUp <= 0))
                 {
                     return BadRequest();
@@ -183,7 +183,7 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public async Task<IActionResult> Delete([FromRoute(Name = "bottle-id")] int bottleId)
+        public async Task<IActionResult> DeleteAsync([FromRoute(Name = "bottle-id")] int bottleId)
         {
             var bottle = await db.GetBottleAsync(bottleId);
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -210,10 +210,10 @@ namespace Bottle.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(403)]
-        public async Task<IActionResult> GetBottles(string category = null, double? radius = null, decimal? lat = null, decimal? lng = null)
+        public async Task<IActionResult> GetBottlesAsync(string category = null, double? radius = null, decimal? lat = null, decimal? lng = null)
         {
             IEnumerable<Models.DataBase.Bottle> result = null;
-            var bottles = (await db.GetBottles()).Where(b => b.Active && b.IsContentLoaded);
+            var bottles = (await db.GetBottlesAsync()).Where(b => b.Active && b.IsContentLoaded);
             if (category != null)
                 bottles = bottles.Where(b => b.Category == category);
             result = bottles;
@@ -230,11 +230,34 @@ namespace Bottle.Controllers
         [HttpGet("my")]
         [ProducesResponseType(200)]
         [ProducesResponseType(403)]
-        public async Task<IActionResult> GetMyBottles()
+        public async Task<IActionResult> GetMyBottlesAsync()
         {
             var userId = userManager.GetUserId(HttpContext.User);
-            var bottles = (await db.GetBottles()).Where(b => b.UserId == userId);
+            var bottles = (await db.GetBottlesAsync()).Where(b => b.UserId == userId);
             return Ok(bottles.ToList().Select(b => db.GetBottleModel(b)));
+        }
+
+        /// <summary>
+        /// Получить свои активные бутылочки
+        /// </summary>
+        [HttpGet("my/active")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
+        public async Task<IActionResult> GetMyActiveBottlesAsync()
+        {
+            var userId = userManager.GetUserId(HttpContext.User);
+            var bottles = (await db.GetBottlesAsync()).Where(b => b.UserId == userId && b.Active);
+            return Ok(bottles.ToList().Select(b => db.GetBottleModel(b)));
+        }
+
+        /// <summary>
+        /// Получить количество своих активных бутылочек
+        /// </summary>
+        [HttpGet("my/active/count")]
+        public async Task<IActionResult> GetMyActiveBottlesCountAsync()
+        {
+            var user = await userManager.GetUserAsync(User);
+            return Ok(new { value = await db.GetUserActiveBottlesCountAsync(user) });
         }
 
         /// <summary>
