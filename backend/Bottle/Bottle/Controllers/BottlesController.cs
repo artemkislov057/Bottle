@@ -108,7 +108,7 @@ namespace Bottle.Controllers
         }
 
         [HttpPost("{bottle-id}/content")]
-        [RequestSizeLimit(100 * 1024)]
+        [RequestSizeLimit(Settings.RequestSizeLimit)]
         public async Task<IActionResult> LoadContentAsync(IFormFile file, [FromRoute(Name = "bottle-id")] int bottleId)
         {
             if (file == null)

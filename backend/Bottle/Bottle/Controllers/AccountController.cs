@@ -219,7 +219,7 @@ namespace Bottle.Controllers
                 db.SaveChanges();
                 return Ok();
             }
-            if (file.Length > 100 * 1024)
+            if (file.Length > Settings.RequestSizeLimit)
             {
                 return BadRequest();
             }
