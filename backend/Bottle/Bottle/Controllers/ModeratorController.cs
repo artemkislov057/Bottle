@@ -66,7 +66,7 @@ namespace Bottle.Controllers
             commercialData.IsAccepted = true;
             var user = db.Users.FirstOrDefault(u => u.Id == id);
             user.IsCommercial = true;
-            user.MaxBottlesCount = 0;
+            user.RemainingBottlesCount = 0;
             db.SaveChanges();
             return Ok();
         }
@@ -87,15 +87,14 @@ namespace Bottle.Controllers
 
 
         /// <summary>
-        /// Временный метод пока нет оплаты
+        /// Изменить количество оставшихся бутылочек (временный метод пока нет оплаты)
         /// </summary>
-        /// <returns></returns>
-        [HttpPost("user/{id}/max-bottles-count")]
-        public IActionResult ChangeMaxBottlesCount([FromBody] MaxBottlesCountModel model, [FromRoute] string id)
+        [HttpPost("user/{id}/remaining-bottles-count")]
+        public IActionResult ChangeRemainingBottlesCount([FromBody] MaxBottlesCountModel model, [FromRoute] string id)
         {
             var user = db.Users.FirstOrDefault(u => u.Id == id);
             if (user == null) return NotFound();
-            user.MaxBottlesCount = model.Value;
+            user.RemainingBottlesCount = model.Value;
             db.SaveChanges();
             return Ok();
         }

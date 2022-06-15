@@ -91,7 +91,7 @@ namespace Bottle.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User { Email = data.Email, UserName = data.Nickname, Sex = data.Sex, MaxBottlesCount = 1 };
+                User user = new User { Email = data.Email, UserName = data.Nickname, Sex = data.Sex, RemainingBottlesCount = 1 };
                 user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                 var result = await userManager.CreateAsync(user, data.Password);
                 if (result.Succeeded)
@@ -155,7 +155,7 @@ namespace Bottle.Controllers
                     var user = db.Users.FirstOrDefault(u => u.Provider == model.ExternalLogin.Provider && u.ExternalUserId == model.ExternalLogin.ExternalUserId);
                     if (user == null)
                     {
-                        user = new User { Provider = model.ExternalLogin.Provider, ExternalUserId = model.ExternalLogin.ExternalUserId, UserName = model.Nickname, Sex = model.Sex, MaxBottlesCount = 1 };
+                        user = new User { Provider = model.ExternalLogin.Provider, ExternalUserId = model.ExternalLogin.ExternalUserId, UserName = model.Nickname, Sex = model.Sex, RemainingBottlesCount = 1 };
                         user.AvatarId = random.Next(1, int.Parse(Resources.avatarsCount) + 1);
                         var result = await userManager.CreateAsync(user);
                         if (result.Succeeded)

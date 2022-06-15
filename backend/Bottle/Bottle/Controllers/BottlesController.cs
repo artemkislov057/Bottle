@@ -88,8 +88,8 @@ namespace Bottle.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
-                var userBottlesCount = await db.GetUserActiveBottlesCountAsync(user);
-                if (userBottlesCount >= user.MaxBottlesCount || !user.IsCommercial && (data.MaxPickingUp > 10 || data.MaxPickingUp <= 0))
+                if (!user.IsCommercial && (data.MaxPickingUp > 10 || data.MaxPickingUp <= 0 || (await db.GetBottlesAsync()).Any(b => b.UserId == user.Id && b.Active))
+                  || user.IsCommercial && user.RemainingBottlesCount <= 0)
                 {
                     return BadRequest();
                 }
@@ -99,6 +99,8 @@ namespace Bottle.Controllers
                     return BadRequest();
                 bottle.MaxPickingUp = user.IsCommercial ? -1 : data.MaxPickingUp ?? 1;
                 db.Bottles.Add(bottle);
+                if (user.IsCommercial)
+                    user.RemainingBottlesCount--;
                 db.SaveChanges();
                 if (data.ContentItemsCount == 0)
                     await WebSocketController.OnCreatingBottle(new BottleModel(bottle));
@@ -258,6 +260,13 @@ namespace Bottle.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             return Ok(new { value = await db.GetUserActiveBottlesCountAsync(user) });
+        }
+
+        [HttpGet("my/active/has")]
+        public async Task<IActionResult> HasMyActiveBottlesAsync()
+        {
+            var userId = userManager.GetUserId(User);
+            return Ok(new { value = (await db.GetBottlesAsync()).Any(b => b.UserId == userId && b.Active) });
         }
 
         /// <summary>
