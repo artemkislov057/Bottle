@@ -11,7 +11,7 @@
     flex: 3;
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    /* gap: 50px; */
     padding: 40px 0 85px 40px;
     background-color: rgba(33, 33, 33, 1);
 }
@@ -55,7 +55,15 @@
 .commerc-part-data-side-bottles-preview {
     width: 100%;
     height: 100%;
-    background-color: aliceblue;
+}
+
+.commerc-part-data-side-bottles-preview .review-card-container {
+    margin-right: auto;
+}
+
+.commerc-part-data-side-bottles-preview .review-card-image {
+    width: 365px;
+    height: 245px;
 }
 
 .commerc-part-data-side-try-button {

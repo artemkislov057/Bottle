@@ -80,7 +80,7 @@
     height: 80px;
     display: flex;
     align-items: center;
-    background-color: #212121;
+    /* background-color: #212121; */
     border-radius: 10px;
 }
 

@@ -18,11 +18,12 @@ export const ReviewCard:React.FC<TProps> = React.memo((props) => {
     const [currentCard, setCurrentCard] = useState<{card: Card, currNumber: number}>();
 
     useEffect(() => {
-        setCurrentCard({card: props.cards[0], currNumber: 0});
+        setCurrentCard({card: props.cards[0], currNumber: 0});        
     }, []);
 
     function nextCard() {
-        if(currentCard.currNumber === props.cards.length - 1) {
+        if(!currentCard) return;
+        if(currentCard?.currNumber === props.cards.length - 1) {
             setCurrentCard({card: props.cards[0], currNumber: 0})
         } else {
             setCurrentCard({card: props.cards[currentCard.currNumber + 1], currNumber: currentCard.currNumber + 1});
@@ -30,14 +31,14 @@ export const ReviewCard:React.FC<TProps> = React.memo((props) => {
     }
 
     function previousCard() {
-        if(currentCard.currNumber === 0) {
+        if(!currentCard) return;
+        if(currentCard?.currNumber === 0) {
             setCurrentCard({card: props.cards[props.cards.length - 1], currNumber: props.cards.length - 1})
         } else {
             setCurrentCard({card: props.cards[currentCard.currNumber - 1], currNumber: currentCard.currNumber - 1});
         }
     }
-
-
+    
     return <div className="review-card-container">
         <div className="review-card">
             <img className="review-card-image" alt="изображение к описанию" src={currentCard?.card.imageUrl} />

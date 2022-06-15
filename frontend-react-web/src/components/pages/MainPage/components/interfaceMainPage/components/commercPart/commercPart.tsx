@@ -1,6 +1,7 @@
 import { apiUrl } from "components/connections/apiUrl";
 import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
+import { ReviewCard } from "components/pages/StartPage/components/commercRegistrPage/reviewCard/reviewCard";
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { ContextForRegisterOrdinaryCommerc } from "registerOrdinaryToCommercContext";
@@ -57,7 +58,26 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
                 </div>                
             </div>
             <div className="commerc-part-data-side-bottles-preview">                
-                
+                <ReviewCard
+                    cards={[
+                        {
+                            imageUrl: "asdads",
+                            title: "Кому подойдет бизнес-аккаунт?",
+                            description: "Если вы предприниматель, заинтересованный в быстром и легком продвижении ваших услуг, то данный аккаунт специально для вас"
+                        },
+                        {
+                            imageUrl: "asdads",
+                            title: "Продвижение вашего бизнеса?",
+                            description: "Наш сервиса поможет обратить внимание людей на ваши услуги, без особых затрат "
+                        },
+                        {
+                            imageUrl: "asdads",
+                            title: "Особые бутылочки",
+                            description: "После офрмления бизнес-аккаунта, вам становятся доступны бутылочки с расширенным функционалом "
+                        },                    
+                    ]}
+                    
+                />
             </div>
             <div className="commerc-part-data-side-try-button-container">
                 <button className="commerc-part-data-side-try-button" onClick={() => toCommercRegPage()}>Попробовать</button>
