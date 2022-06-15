@@ -21,6 +21,12 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
 
     const {isCommercial} = useContext(ContextLogin);
 
+    useEffect(() => {
+        if(isCommercial) {
+            setMaxTimeHour(48);
+        }
+    }, [])
+
 
     function onChangeTimeInput(e: React.ChangeEvent<HTMLInputElement>, type: string) {
         let currentSeconds = 0;
@@ -43,6 +49,9 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
         if(props.bottleData.initTimeLife) {
             let initTLInSec = props.bottleData.initTimeLife;
             let accessTimeInSec = 24 * 60 * 60 - initTLInSec + props.bottleData.timeLife;
+            if(isCommercial) {
+                accessTimeInSec = 48 * 60 * 60 - initTLInSec + props.bottleData.timeLife;
+            }
 
             let [maxH, maxM] = calculateTime(accessTimeInSec);
             console.log([maxH, maxM])
@@ -86,7 +95,8 @@ export const SettingContainer:React.FC<TProps> = React.memo((props) => {
                 <input className="right-bar-map-setting-TL-hour-input" 
                     type={"number"} 
                     min="0" 
-                    max={maxTimeHour || 23}  
+                    // max={maxTimeHour || isCommercial ? 47 : 23}
+                    max={maxTimeHour}
                     onChange={e => onChangeTimeInput(e, 'hour')} 
                     value={currentHours || ''} 
                     required/>
