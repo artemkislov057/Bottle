@@ -13,8 +13,8 @@ type TProps = {
 
 export const ChatModal:React.FC<TProps> = React.memo((props) => {
     function onClickNumber(value: number){
-        // props.setRate({id: props.id, value: value});
-        console.log(value)
+        props.setRate({id: props.id, value: value});
+        // console.log(value)
     }
     return <div className="chat-modal-container">
         <div className="chat-modal-window">
