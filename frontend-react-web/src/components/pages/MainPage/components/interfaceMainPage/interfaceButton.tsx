@@ -213,7 +213,6 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
     }, []);
 
     function onClickOpenLeftBar() {
-        setShowLeftBar(true);
         closeOtherBars(setLeftBar);
         enableBackgroundGray();
         setLeftBar(<LeftBar
@@ -227,7 +226,8 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
             disableBackgroundGray={disableBackgroundGray}
             setShowLeftBar={setShowLeftBar}
             closeCommercPart={closeCommercPart}
-        />)
+            />)
+            setShowLeftBar(true);
     }
 
     async function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
