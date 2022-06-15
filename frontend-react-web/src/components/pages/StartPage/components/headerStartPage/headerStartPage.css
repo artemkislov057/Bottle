@@ -40,7 +40,7 @@
 .start-page-header-signup-button,
 .start-page-header-signin-button,
 .start-page-header-commerc-signup-button {
-    font-family: 'Poppins';
+    /* font-family: 'Poppins'; */
     font-size: 22px;
     cursor: pointer;
 }

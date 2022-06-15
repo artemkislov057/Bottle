@@ -16,7 +16,7 @@
     flex-direction: column;
     height: 100%;
     /* justify-content: space-evenly; */
-    font-family: 'Poppins';    
+    /* font-family: 'Poppins';     */
     justify-content: center;
     gap: 10px;
 }
@@ -60,7 +60,8 @@
     border-image:linear-gradient(94.85deg, #6B11DF 0.71%, #8F46EC 100%);
     border-image-slice: 1;
     margin: 10px 20px;
-    font-family: 'Poppins', 'Montserrat', sans-serif;
+    /* font-family: 'Poppins', 'Montserrat', sans-serif; */
+    font-family: 'Montserrat', sans-serif;
     /* text-transform: uppercase; */
     overflow: hidden;
     letter-spacing: 2px;

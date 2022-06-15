@@ -56,22 +56,25 @@ function App() {
   }, [])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ContextLogin.Provider value={{isLogin: isLogin, setIsLogin:setIsLogin, isCommercial: isCommercial}}>
-        <ContextWindowResolution.Provider value={currentWindowWidth}>
-          <ContextForRegisterOrdinaryCommerc.Provider value={{registerOrdinaryUserToCommerc: registerOrdinaryUserToCommerc, setRegisterOrdinaryUserToCommerc: setRegisterOrdinaryUserToCommerc}}>
-            <BrowserRouter>
-              <Routes>
-                <Route path='/main-page' element={<MainPage isLogin={isLogin} />} />
-                <Route path='/' element={<StartPage isLogin={isLogin} />} />
-                <Route path='/commercial-registration' element={<CommercRegistrationPage />} />
-                <Route path='/payment' element={<PaymentPage />} />
-              </Routes>        
-            </BrowserRouter>
-          </ContextForRegisterOrdinaryCommerc.Provider>          
-        </ContextWindowResolution.Provider>
-      </ContextLogin.Provider>      
-    </QueryClientProvider>    
+    <div className='app'>
+      <QueryClientProvider client={queryClient}>
+        <ContextLogin.Provider value={{isLogin: isLogin, setIsLogin:setIsLogin, isCommercial: isCommercial}}>
+          <ContextWindowResolution.Provider value={currentWindowWidth}>
+            <ContextForRegisterOrdinaryCommerc.Provider value={{registerOrdinaryUserToCommerc: registerOrdinaryUserToCommerc, setRegisterOrdinaryUserToCommerc: setRegisterOrdinaryUserToCommerc}}>
+              <BrowserRouter>
+                <Routes>
+                  <Route path='/main-page' element={<MainPage isLogin={isLogin} />} />
+                  <Route path='/' element={<StartPage isLogin={isLogin} />} />
+                  <Route path='/commercial-registration' element={<CommercRegistrationPage />} />
+                  <Route path='/payment' element={<PaymentPage />} />
+                </Routes>        
+              </BrowserRouter>
+            </ContextForRegisterOrdinaryCommerc.Provider>          
+          </ContextWindowResolution.Provider>
+        </ContextLogin.Provider>      
+      </QueryClientProvider>
+    </div>
+    
   );
 }
 
