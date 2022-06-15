@@ -62,7 +62,7 @@ function App() {
           <ContextForRegisterOrdinaryCommerc.Provider value={{registerOrdinaryUserToCommerc: registerOrdinaryUserToCommerc, setRegisterOrdinaryUserToCommerc: setRegisterOrdinaryUserToCommerc}}>
             <BrowserRouter>
               <Routes>
-                <Route path='/mainPage' element={<MainPage isLogin={isLogin} />} />
+                <Route path='/main-page' element={<MainPage isLogin={isLogin} />} />
                 <Route path='/' element={<StartPage isLogin={isLogin} />} />
                 <Route path='/commercial-registration' element={<CommercRegistrationPage />} />
                 <Route path='/payment' element={<PaymentPage />} />

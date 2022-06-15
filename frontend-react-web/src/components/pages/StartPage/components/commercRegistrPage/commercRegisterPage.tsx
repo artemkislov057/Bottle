@@ -185,7 +185,7 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             titleQuest='Мы отправили данные на проверку'
             quest="Вы можете использовать наше приложение прямо сейчас, однако пока ваши документы не прошли проверку, возможности бизнес-аккаунта будут закрыты. Мы же постараемся проверить их как можно скорее"
             onClickOkButton={() => {
-                navigate('/mainPage');
+                navigate('/main-page');
                 loginData.setIsLogin(true);
             }}
         />);

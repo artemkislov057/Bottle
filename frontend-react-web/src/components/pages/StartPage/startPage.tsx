@@ -29,7 +29,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     const {setRegisterOrdinaryUserToCommerc} = useContext(ContextForRegisterOrdinaryCommerc);
         
     function toMainPage() {
-        navigate('/mainPage');
+        navigate('/main-page');
         // window.history.replaceState({}, document.title)
     }
 
@@ -38,7 +38,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
         if(loginData.isLogin) {
             toMainPage();
         }
-    }, [loginData.isLogin])
+    }, [loginData.isLogin]);
     
 
     async function onSubmitSignUp(data: {email: string, password: string}) {
@@ -93,7 +93,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
             console.log('зарегались')
         } else {
             navigate('/');
-            console.log('жопа1');
+            console.log('что то не так');
         }
         
     }
@@ -118,7 +118,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
             console.log('login google')
         } else {
             navigate('/');
-            console.log('жопа2')
+            console.log('что то не так')
         }
         
     }
