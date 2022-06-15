@@ -69,7 +69,7 @@ export const HeaderStartPage:React.FC<TProps> = React.memo((props) => {
             {violetMarker}
         </div>
         <div className="start-page-header-commerc-container">
-            <button className="start-page-header-commerc-signup-button" onClick={() => props.onClickCommercialSignUp()}>for busines</button>
+            <button className="start-page-header-commerc-signup-button" onClick={() => props.onClickCommercialSignUp()}>for business</button>
         </div>
         <div className="start-page-header-sign-container">
             <button className="start-page-header-signin-button" onClick={() => props.onClickSignIn()}>
