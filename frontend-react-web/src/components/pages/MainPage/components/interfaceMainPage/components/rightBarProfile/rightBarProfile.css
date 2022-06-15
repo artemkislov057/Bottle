@@ -42,6 +42,7 @@
 
 .profile-map-body-avatar {
     max-width: 170px;
+    max-height: 200px;
     border-radius: 5px;
 }
 
