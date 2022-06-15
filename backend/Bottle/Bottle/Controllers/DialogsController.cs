@@ -55,7 +55,7 @@ namespace Bottle.Controllers
         }
 
         [HttpPost("{dialog-id}/content")]
-        [RequestSizeLimit(100 * 1024)]
+        [RequestSizeLimit(Settings.RequestSizeLimit)]
         public async Task<IActionResult> SendContentAsync([FromRoute(Name = "dialog-id")] int dialogId, IFormFile file)
         {
             var dialog = db.GetDialog(dialogId);
