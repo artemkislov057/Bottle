@@ -9,6 +9,7 @@ import { DocumentContainer } from "./documentsContainer";
 import letterModalIcon from '../../../MainPage/components/questModal/letterModalIcon.svg';
 import { CSSTransition } from "react-transition-group";
 import { ContextForRegisterOrdinaryCommerc } from "registerOrdinaryToCommercContext";
+import { ReviewCard } from "./reviewCard/reviewCard";
 
 type CommercialData = {
     fullname: string
@@ -259,7 +260,26 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             </button>
         </form>
         <div className="commerc-registration-description-side">
-
+            <ReviewCard
+                cards={[
+                    {
+                        imageUrl: "asdads",
+                        title: "Кому подойдет бизнес-аккаунт?",
+                        description: "Если вы предприниматель, заинтересованный в быстром и легком продвижении ваших услуг, то данный аккаунт специально для вас"
+                    },
+                    {
+                        imageUrl: "asdads",
+                        title: "Продвижение вашего бизнеса?",
+                        description: "Наш сервиса поможет обратить внимание людей на ваши услуги, без особых затрат "
+                    },
+                    {
+                        imageUrl: "asdads",
+                        title: "Особые бутылочки",
+                        description: "После офрмления бизнес-аккаунта, вам становятся доступны бутылочки с расширенным функционалом "
+                    },                    
+                ]}
+                
+            />
         </div>
         <CSSTransition
             in={showInfoModal}
