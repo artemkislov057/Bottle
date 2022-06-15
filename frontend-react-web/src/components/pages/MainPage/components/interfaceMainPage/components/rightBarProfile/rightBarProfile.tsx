@@ -45,7 +45,7 @@ export const RightBarProfile:React.FC<TProps> = React.memo((props) => {
                     type: data.type,
                     email: data.email,
                     isCommercial: data.isCommercial,
-                    maxBottlesCount: data.maxBottlesCount
+                    remainingBottlesCount: data.remainingBottlesCount
                 },
                 avatar: resAvatar
             })            

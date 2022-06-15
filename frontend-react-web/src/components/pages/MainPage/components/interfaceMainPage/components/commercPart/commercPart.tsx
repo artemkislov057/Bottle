@@ -22,16 +22,7 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
                 credentials: "include"
             });
             let userData = await responseUserInfo.json() as UserInfoType;
-
-            let responseBottles = await fetch(`${apiUrl}/api/bottles/my`, {
-                credentials: "include"
-            });
-            let bottles = await responseBottles.json() as Array<BottleRequestType>;
-
-            let accessCount = userData.maxBottlesCount - bottles.length;
-            if(accessCount < 0){
-                accessCount = 0;
-            }
+            let accessCount = userData.remainingBottlesCount;            
             setCurrentAccessCountBottles(accessCount)
         }
 

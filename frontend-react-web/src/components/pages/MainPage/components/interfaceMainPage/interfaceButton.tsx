@@ -232,22 +232,21 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
 
     async function onClickOpenRightBar(changeBottleData?: BottleRequestType, currentData?: DataBottleDescType) {
         let userInfo =  await getUserInfo();
-        if(userInfo.isCommercial) {
-            let accessCountBottles = await getCurrentCountMyBottles();
-            if(userInfo.maxBottlesCount - accessCountBottles < 1) {
-                props.setQuestModal(<MapModal 
-                    imageUrl={bottleModalIcon}
-                    titleQuest='У вас закончились бутылочки :( Приобретите еще!'
-                    onClickOkButton={() => {
-                        props.setShowQuestModal(false);
-                        disableBackgroundGray();
-                    }}
-                />)
-                props.setShowQuestModal(true);
-                return;
-            }
-        } else if(!changeBottleData && !currentData) {
-            if((await getCurrentCountMyBottles()) > 0) {
+        if(!changeBottleData && !currentData) {
+            if(userInfo.isCommercial) {
+                if(userInfo.remainingBottlesCount < 1) {
+                    props.setQuestModal(<MapModal 
+                        imageUrl={bottleModalIcon}
+                        titleQuest='У вас закончились бутылочки :( Приобретите еще!'
+                        onClickOkButton={() => {
+                            props.setShowQuestModal(false);
+                            disableBackgroundGray();
+                        }}
+                    />)
+                    props.setShowQuestModal(true);
+                    return;
+                }
+            } else if((await getCurrentCountMyBottles()) > 0) {                 
                 props.setQuestModal(<MapModal 
                     imageUrl={bottleModalIcon}
                     titleQuest='Вы не можете создать больше одной бутылки :('
@@ -257,9 +256,10 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     }}
                 />)
                 props.setShowQuestModal(true);
-                return;
+                return;                
             }
         }
+        
 
         closeOtherBars(setRightBar);
         enableBackgroundGray();
