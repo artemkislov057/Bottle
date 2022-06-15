@@ -10,6 +10,7 @@ import { ContextWindowResolution } from 'windoResolutionContext';
 import { CommercRegistrationPage } from 'components/pages/StartPage/components/commercRegistrPage/commercRegisterPage';
 import { UserInfoType } from 'components/pages/MainPage/UserInfoType';
 import { PaymentPage } from 'components/pages/PaymentPage/paymentPage';
+import { ContextForRegisterOrdinaryCommerc } from 'registerOrdinaryToCommercContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,6 +24,7 @@ function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [isCommercial, setIsCommercial] = useState(false);
   const [currentWindowWidth, setCurrentWindowWidth] = useState(window.screen.availWidth);
+  const [registerOrdinaryUserToCommerc, setRegisterOrdinaryUserToCommerc] = useState<{email: string}>();
 
   window.addEventListener('resize', e => {
     //@ts-ignore
@@ -57,14 +59,16 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ContextLogin.Provider value={{isLogin: isLogin, setIsLogin:setIsLogin, isCommercial: isCommercial}}>
         <ContextWindowResolution.Provider value={currentWindowWidth}>
-          <BrowserRouter>
-            <Routes>
-              <Route path='/mainPage' element={<MainPage isLogin={isLogin} />} />
-              <Route path='/' element={<StartPage isLogin={isLogin} />} />
-              <Route path='/commercial-registration' element={<CommercRegistrationPage />} />
-              <Route path='/payment' element={<PaymentPage />} />
-            </Routes>        
-          </BrowserRouter>
+          <ContextForRegisterOrdinaryCommerc.Provider value={{registerOrdinaryUserToCommerc: registerOrdinaryUserToCommerc, setRegisterOrdinaryUserToCommerc: setRegisterOrdinaryUserToCommerc}}>
+            <BrowserRouter>
+              <Routes>
+                <Route path='/mainPage' element={<MainPage isLogin={isLogin} />} />
+                <Route path='/' element={<StartPage isLogin={isLogin} />} />
+                <Route path='/commercial-registration' element={<CommercRegistrationPage />} />
+                <Route path='/payment' element={<PaymentPage />} />
+              </Routes>        
+            </BrowserRouter>
+          </ContextForRegisterOrdinaryCommerc.Provider>          
         </ContextWindowResolution.Provider>
       </ContextLogin.Provider>      
     </QueryClientProvider>    

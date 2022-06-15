@@ -1,8 +1,9 @@
 import { apiUrl } from "components/connections/apiUrl";
 import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { ContextForRegisterOrdinaryCommerc } from "registerOrdinaryToCommercContext";
 import { BottlesCard } from "./cardBuyBottles";
 import './commercPart.css';
 
@@ -14,6 +15,8 @@ type TProps = {
 
 export const CommercPart:React.FC<TProps> =  React.memo((props) => {
     const [currentAccessCountBottles, setCurrentAccessCountBottles] = useState(0);
+    const {setRegisterOrdinaryUserToCommerc} = useContext(ContextForRegisterOrdinaryCommerc);
+    const [userInfo, setUserInfo] = useState<UserInfoType>();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,8 +25,9 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
                 credentials: "include"
             });
             let userData = await responseUserInfo.json() as UserInfoType;
-            let accessCount = userData.remainingBottlesCount;            
-            setCurrentAccessCountBottles(accessCount)
+            let accessCount = userData.remainingBottlesCount;
+            setCurrentAccessCountBottles(accessCount);
+            setUserInfo(userData);
         }
 
         getCurrentCount();
@@ -35,6 +39,7 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
     }
 
     function toCommercRegPage() {
+        setRegisterOrdinaryUserToCommerc({email: userInfo.email});
         navigate('/commercial-registration');
     }
 

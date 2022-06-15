@@ -246,7 +246,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
                     props.setShowQuestModal(true);
                     return;
                 }
-            } else if((await isHaveBottle())) {
+            } else if((await isHaveBottleOrdinaryUser())) {
                 props.setQuestModal(<MapModal 
                     imageUrl={bottleModalIcon}
                     titleQuest='Вы не можете создать больше одной бутылки :('
@@ -362,7 +362,7 @@ export const InterfaceButtonMainPage:React.FC<TProps> = React.memo((props) => {
         return bottles.length;
     }
 
-    async function isHaveBottle() {
+    async function isHaveBottleOrdinaryUser() {
         let responseBottles = await fetch(`${apiUrl}/api/bottles/my/active/has`, {
             credentials: "include"
         });

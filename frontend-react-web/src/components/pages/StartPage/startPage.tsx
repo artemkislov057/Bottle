@@ -11,6 +11,7 @@ import { ContextLogin } from "loginContext";
 import { ContextWindowResolution } from "windoResolutionContext";
 import { MobileSignModal } from "./components/mobileSignModal/mobileSignModal";
 import { CSSTransition } from "react-transition-group";
+import { ContextForRegisterOrdinaryCommerc } from "registerOrdinaryToCommercContext";
 
 type TProps = {
     isLogin: boolean
@@ -24,7 +25,8 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     const currentWindowWidth = useContext(ContextWindowResolution);
     const [mobileBodyState, setMobileBodyState] = useState(<BodyStartPage onClickBegin={onClickBeginMobile}/>);
     const [mobileModal, setMobileModal] = useState(<></>);
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState(false);
+    const {setRegisterOrdinaryUserToCommerc} = useContext(ContextForRegisterOrdinaryCommerc);
         
     function toMainPage() {
         navigate('/mainPage');
@@ -187,6 +189,7 @@ export const StartPage:React.FC<TProps> = React.memo((props) => {
     }
 
     function onClickCommercialSignUp() {
+        setRegisterOrdinaryUserToCommerc({email: ''});
         navigate('/commercial-registration');
     }
 

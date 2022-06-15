@@ -2,8 +2,8 @@ import React from "react";
 
 type TProps = {
     headerName: string,
-    fieldsNames: Array<{field: string, title: string, type?: string}>
-    updateData: Function
+    fieldsNames: Array<{field: string, title: string, type?: string, value?: string, accessChange?: boolean}>
+    updateData: Function,    
 }
 
 export const DataContainer:React.FC<TProps> = React.memo((props) => {
@@ -29,6 +29,9 @@ export const DataContainer:React.FC<TProps> = React.memo((props) => {
                         onChange={e => props.updateData(data.field, e.target.value)}
                         required
                         type={data.type ? data.type : 'text'}
+                        readOnly={data.accessChange ? true : false}
+                        // value={data.value ? data.value : ''}
+                        defaultValue={data.value ? data.value : ''}
                     >
                     </input>
                 </div>                
