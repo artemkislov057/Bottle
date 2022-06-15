@@ -19,8 +19,8 @@ export class RequestsService {
       map(requests => {
       return requests.map(request => new RequestItem(
           request.id,
-          request.data.fullName,
           request.data.contactPerson,
+          request.data.fullName,
           request.data.identificationNumber,
           request.data.psrn
         ))
