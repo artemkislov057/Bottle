@@ -5,6 +5,7 @@ type TProps = {
     count: number
     discount: number
     type: string
+    onClick: Function
 }
 
 export const BottlesCard:React.FC<TProps> = React.memo((props) => {
@@ -20,7 +21,7 @@ export const BottlesCard:React.FC<TProps> = React.memo((props) => {
                 <span className="commerc-part-data-side-bottles-info-buy-card-price">{props.price} &#8381;</span>                
                 <span className="commerc-part-data-side-bottles-info-buy-card-count">/ {props.count} шт</span>
             </div>
-            <button className="commerc-part-data-side-bottles-info-buy-card-try-button">Попробовать</button>
+            <button className="commerc-part-data-side-bottles-info-buy-card-try-button" onClick={() => props.onClick(props.price)}>Попробовать</button>
         </div>
     </div>
 })

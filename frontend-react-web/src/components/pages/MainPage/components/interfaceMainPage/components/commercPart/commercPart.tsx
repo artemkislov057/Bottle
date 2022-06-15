@@ -47,6 +47,10 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
         navigate('/commercial-registration');
     }
 
+    function toPaymentPage(price: number) {
+        navigate('/payment');
+    }
+
     if(props.isOrdinary) {
         return <div className="commerc-part-container">
         <div className="commerc-part-data-side">
@@ -95,18 +99,21 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
                         discount={0}
                         price={150}
                         type={'one'}
+                        onClick={toPaymentPage}
                     />
                     <BottlesCard 
                         count={5}
                         discount={20}
                         price={600}
                         type={'five'}
+                        onClick={toPaymentPage}
                     />
                     <BottlesCard 
                         count={15}
                         discount={50}
                         price={1125}
                         type={'fiveteen'}
+                        onClick={toPaymentPage}
                     />
                 </div>
             </div>

@@ -9,6 +9,7 @@ import { ContextLogin } from 'loginContext';
 import { ContextWindowResolution } from 'windoResolutionContext';
 import { CommercRegistrationPage } from 'components/pages/StartPage/components/commercRegistrPage/commercRegisterPage';
 import { UserInfoType } from 'components/pages/MainPage/UserInfoType';
+import { PaymentPage } from 'components/pages/PaymentPage/paymentPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +62,7 @@ function App() {
               <Route path='/mainPage' element={<MainPage isLogin={isLogin} />} />
               <Route path='/' element={<StartPage isLogin={isLogin} />} />
               <Route path='/commercial-registration' element={<CommercRegistrationPage />} />
+              <Route path='/payment' element={<PaymentPage />} />
             </Routes>        
           </BrowserRouter>
         </ContextWindowResolution.Provider>
