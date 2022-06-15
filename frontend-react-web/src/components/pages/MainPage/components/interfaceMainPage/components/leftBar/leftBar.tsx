@@ -111,7 +111,7 @@ export const LeftBar : React.FC<TProps> = React.memo((props) => {
         <div className="left-bar-map-body">
             <ul className="left-bar-map-body-items">
                 <LeftBarItem urlIconItem={onMapIcon} title='На карту' onClick={onClickOnMapButton} />
-                <LeftBarItem urlIconItem={chatIcon} title='Диалоги тет а тет' onClick={onClickChatButton} />
+                <LeftBarItem urlIconItem={chatIcon} title='Диалоги' onClick={onClickChatButton} />
                 <LeftBarItem urlIconItem={createIcon} title='Создать записку' onClick={onClickCreateBottleButton} />
                 <LeftBarItem urlIconItem={myBottlesIcon} title='Мои записки' onClick={onClickMyBottles} />
                 <LeftBarItem urlIconItem={commercIcon} title='Коммерческий аккаунт' onClick={onClickCommercPart} />                

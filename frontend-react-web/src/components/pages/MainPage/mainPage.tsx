@@ -101,16 +101,16 @@ export const MainPage:React.FC<TProps> = React.memo((props) => {
             <ContextForSearch.Provider value={[latLngForSearch, setLatLng]}>
                 <WsEventContext.Provider value={wsEvent}>
                     {chatPageContainer}
-                    {backgroundGray}
                     {interfaceMainPageContainer}
                     <CSSTransition
                         in={showQuestModal}
                         timeout={300}
                         classNames='show-quest-modal'
                         unmountOnExit
-                    >
+                        >
                         {questModal}
                     </CSSTransition>                    
+                    {backgroundGray}
                 </WsEventContext.Provider>
             </ContextForSearch.Provider>
         </CurrentCoordinationsContext.Provider>        
