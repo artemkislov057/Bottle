@@ -1,3 +1,4 @@
+import './commercPart.css';
 import { apiUrl } from "components/connections/apiUrl";
 import { BottleRequestType } from "components/pages/MainPage/BottleRequestType";
 import { UserInfoType } from "components/pages/MainPage/UserInfoType";
@@ -6,7 +7,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { ContextForRegisterOrdinaryCommerc } from "registerOrdinaryToCommercContext";
 import { BottlesCard } from "./cardBuyBottles";
-import './commercPart.css';
+import reviewFirstIcon from 'components/pages/StartPage/components/commercRegistrPage/reviewCard/reviewFirstIcon.svg';
+import reviewSecondIcon from 'components/pages/StartPage/components/commercRegistrPage/reviewCard/reviewSecondIcon.svg';
+import reviewThirdIcon from 'components/pages/StartPage/components/commercRegistrPage/reviewCard/reviewThirdIcon.svg';
 
 type TProps = {
     openLeftBar: Function
@@ -61,17 +64,17 @@ export const CommercPart:React.FC<TProps> =  React.memo((props) => {
                 <ReviewCard
                     cards={[
                         {
-                            imageUrl: "asdads",
+                            imageUrl: reviewFirstIcon,
                             title: "Кому подойдет бизнес-аккаунт?",
                             description: "Если вы предприниматель, заинтересованный в быстром и легком продвижении ваших услуг, то данный аккаунт специально для вас"
                         },
                         {
-                            imageUrl: "asdads",
+                            imageUrl: reviewSecondIcon,
                             title: "Продвижение вашего бизнеса?",
                             description: "Наш сервиса поможет обратить внимание людей на ваши услуги, без особых затрат "
                         },
                         {
-                            imageUrl: "asdads",
+                            imageUrl: reviewThirdIcon,
                             title: "Особые бутылочки",
                             description: "После офрмления бизнес-аккаунта, вам становятся доступны бутылочки с расширенным функционалом "
                         },                    

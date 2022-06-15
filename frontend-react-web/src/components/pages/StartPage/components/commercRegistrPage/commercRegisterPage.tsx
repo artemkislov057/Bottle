@@ -10,6 +10,9 @@ import letterModalIcon from '../../../MainPage/components/questModal/letterModal
 import { CSSTransition } from "react-transition-group";
 import { ContextForRegisterOrdinaryCommerc } from "registerOrdinaryToCommercContext";
 import { ReviewCard } from "./reviewCard/reviewCard";
+import reviewFirstIcon from './reviewCard/reviewFirstIcon.svg';
+import reviewSecondIcon from './reviewCard/reviewSecondIcon.svg';
+import reviewThirdIcon from './reviewCard/reviewThirdIcon.svg';
 
 type CommercialData = {
     fullname: string
@@ -263,17 +266,17 @@ export const CommercRegistrationPage:React.FC = React.memo(() => {
             <ReviewCard
                 cards={[
                     {
-                        imageUrl: "asdads",
+                        imageUrl: reviewFirstIcon,
                         title: "Кому подойдет бизнес-аккаунт?",
                         description: "Если вы предприниматель, заинтересованный в быстром и легком продвижении ваших услуг, то данный аккаунт специально для вас"
                     },
                     {
-                        imageUrl: "asdads",
+                        imageUrl: reviewSecondIcon,
                         title: "Продвижение вашего бизнеса?",
                         description: "Наш сервиса поможет обратить внимание людей на ваши услуги, без особых затрат "
                     },
                     {
-                        imageUrl: "asdads",
+                        imageUrl: reviewThirdIcon,
                         title: "Особые бутылочки",
                         description: "После офрмления бизнес-аккаунта, вам становятся доступны бутылочки с расширенным функционалом "
                     },                    

@@ -23,8 +23,8 @@
 }
 
 .review-card-image {
-    width: 365px;
-    height: 285px;
+    /* width: 365px;
+    height: 285px; */
 }
 
 .review-card-title {
@@ -52,11 +52,11 @@
 }
 
 .review-card-navigate-button.left {
-    background: url('previewCommercArrowIcon.svg') 50% 50% no-repeat;
+    background: url('reviewCommercArrowIcon.svg') 50% 50% no-repeat;
 }
 
 .review-card-navigate-button.right {
-    background: url('previewCommercArrowIcon.svg') 50% 50% no-repeat ;
+    background: url('reviewCommercArrowIcon.svg') 50% 50% no-repeat ;
     transform: rotate(180deg);
 }
 
